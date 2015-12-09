@@ -8,4 +8,13 @@ import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerService
  */
 public class GPSController extends ControllerService {
 
+    @Override
+    public void onStartService(Bundle data) {
+
+    }
+
+    @Override
+    public void onDestroyService(Bundle data) {
+
+    }
 }

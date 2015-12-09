@@ -108,4 +108,19 @@ public class MapController extends ControllerActivity {
       //  this.mapView.getOverlayManager().add(this.routeController.getPolylineRoad());
         this.mapView.invalidate();
     }
+
+    @Override
+    public void onStart(Bundle data) {
+
+    }
+
+    @Override
+    public void onDestroy(Bundle data) {
+
+    }
+
+    @Override
+    public void onPause(Bundle data) {
+
+    }
 }
