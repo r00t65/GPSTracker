@@ -5,19 +5,6 @@ import android.os.Bundle;
 /**
  * Created by alex on 09.12.15.
  */
-public class ControllerActivity implements ControllerActivityInterface{
-    @Override
-    public void onStart(Bundle data) {
+public abstract class ControllerActivity implements ControllerActivityInterface{
 
-    }
-
-    @Override
-    public void onDestroy(Bundle data) {
-
-    }
-
-    @Override
-    public void onPause(Bundle data) {
-
-    }
 }
