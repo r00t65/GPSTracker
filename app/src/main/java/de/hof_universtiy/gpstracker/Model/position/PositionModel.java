@@ -1,5 +1,6 @@
 package de.hof_universtiy.gpstracker.Model.position;
 
+import de.hof_universtiy.gpstracker.Model.Model;
 import org.osmdroid.util.GeoPoint;
 
 import de.hof_universtiy.gpstracker.Model.ModelInterface;
@@ -7,7 +8,7 @@ import de.hof_universtiy.gpstracker.Model.ModelInterface;
 /**
  * Created by Patrick Büttner on 21.11.2015.
  */
-public class PositionModel implements ModelInterface
+public class PositionModel extends Model
 {
     private String id;
     private GeoPoint geoPoint;

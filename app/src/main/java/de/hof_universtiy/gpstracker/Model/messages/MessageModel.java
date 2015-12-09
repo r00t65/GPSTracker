@@ -1,11 +1,12 @@
 package de.hof_universtiy.gpstracker.Model.messages;
 
+import de.hof_universtiy.gpstracker.Model.Model;
 import de.hof_universtiy.gpstracker.Model.ModelInterface;
 
 /**
  * Created by Patrick Büttner on 29.11.2015.
  */
-public class MessageModel implements ModelInterface
+public class MessageModel extends Model
 {
     private String sender;
     private String timestamp;
