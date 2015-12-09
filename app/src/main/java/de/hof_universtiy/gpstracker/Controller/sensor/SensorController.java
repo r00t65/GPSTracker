@@ -10,7 +10,7 @@ public class SensorController extends ControllerService{
 
     @Override
     public void onStartService(Bundle data) {
-        
+
     }
 
     @Override

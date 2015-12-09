@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 
+import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,8 +42,8 @@ import de.hof_universtiy.gpstracker.Model.position.PositionModel;
 
 /**
  * Created by Lothar Mödl on 19.11.15.
- */
-public class ConnectionController{
+ */                                 //ControllerService soll verwendet werden!!! ->Löschen erst besprechen
+public class ConnectionController extends ControllerService{
 
     private static final String URL_SEND_LAST_WAYPOINT = "";
     private static final String URL_GET_WAYPOINTS_OF_FRIENDS = "https://aap.rt-dns.de/getFriends.php";
@@ -231,6 +233,16 @@ public class ConnectionController{
         ConnectivityManager connMgr = (ConnectivityManager) activity.getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
+
+    }
+
+    @Override
+    public void onStartService(Bundle data) {
+
+    }
+
+    @Override
+    public void onDestroyService(Bundle data) {
 
     }
 

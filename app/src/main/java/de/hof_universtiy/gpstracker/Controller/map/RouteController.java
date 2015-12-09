@@ -21,6 +21,21 @@ public class RouteController extends ControllerActivity/*,AddRouteListener*/ {
         this.mapController = mapController;
     }
 
+    @Override
+    public void onStart(Bundle data) {
+
+    }
+
+    @Override
+    public void onDestroy(Bundle data) {
+
+    }
+
+    @Override
+    public void onPause(Bundle data) {
+
+    }
+
 
     /*@Override
     public void addGeoPoint(GeoPoint geoPoint) {
