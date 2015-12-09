@@ -2,7 +2,8 @@ package de.hof_universtiy.gpstracker.Controller.map;
 
 import android.content.Context;
 import android.os.Bundle;
-import de.hof_universtiy.gpstracker.Controller.ControllerActivity;
+import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivity;
+import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivityInterface;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -17,7 +18,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 /**
  * Created by alex on 13.11.15.
  */
-public class MapController implements ControllerActivity {
+public class MapController extends ControllerActivity {
     private final MapView mapView;
     private final Context activityContext;
     private CompassOverlay mCompassOverlay;
@@ -106,20 +107,5 @@ public class MapController implements ControllerActivity {
     public void addRoadToMap(){
       //  this.mapView.getOverlayManager().add(this.routeController.getPolylineRoad());
         this.mapView.invalidate();
-    }
-
-    @Override
-    public void onStart(Bundle data) {
-
-    }
-
-    @Override
-    public void onDestroy(Bundle data) {
-
-    }
-
-    @Override
-    public void onPause(Bundle data) {
-
     }
 }

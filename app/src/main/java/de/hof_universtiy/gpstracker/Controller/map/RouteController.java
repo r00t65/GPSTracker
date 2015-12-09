@@ -1,7 +1,8 @@
 package de.hof_universtiy.gpstracker.Controller.map;
 
 import android.os.Bundle;
-import de.hof_universtiy.gpstracker.Controller.ControllerActivity;
+import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivity;
+import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivityInterface;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by alex on 19.11.15.
  */
-public class RouteController implements ControllerActivity/*,AddRouteListener*/ {
+public class RouteController extends ControllerActivity/*,AddRouteListener*/ {
 
    // private final RoadManager roadManager = new OSRMRoadManager();
     private final List<GeoPoint> path = new ArrayList<>();
@@ -20,20 +21,6 @@ public class RouteController implements ControllerActivity/*,AddRouteListener*/ 
         this.mapController = mapController;
     }
 
-    @Override
-    public void onStart(Bundle data) {
-
-    }
-
-    @Override
-    public void onDestroy(Bundle data) {
-
-    }
-
-    @Override
-    public void onPause(Bundle data) {
-
-    }
 
     /*@Override
     public void addGeoPoint(GeoPoint geoPoint) {
@@ -58,18 +45,5 @@ public class RouteController implements ControllerActivity/*,AddRouteListener*/ 
         return RoadManager.buildRoadOverlay( getRoad(), this.mapController.getContext());
     }
 
-    @Override
-    public void onStart(Bundle data) {
-
-    }
-
-    @Override
-    public void onDestroy(Bundle data) {
-
-    }
-
-    @Override
-    public void onPause(Bundle data) {
-
-    }*/
+   */
 }
