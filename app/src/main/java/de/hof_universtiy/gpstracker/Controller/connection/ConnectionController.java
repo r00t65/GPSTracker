@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 
-import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,17 +40,17 @@ import de.hof_universtiy.gpstracker.Model.position.PositionModel;
 
 /**
  * Created by Lothar Mödl on 19.11.15.
- */                                 //ControllerService soll verwendet werden!!! ->Löschen erst besprechen
-public class ConnectionController extends ControllerService{
+ */
+public class ConnectionController{
 
     private static final String URL_SEND_LAST_WAYPOINT = "";
     private static final String URL_GET_WAYPOINTS_OF_FRIENDS = "https://aap.rt-dns.de/getFriends.php";
     private static final String URL_GET_MESSAGES = "https://aap.rt-dns.de/getMessage.php";
 
-    final String FRIENDS_NEARBY = "FriendsNearby";
-    final String ID = "id";
-    final String LONGITUDE = "longitude";
-    final String LATITUDE = "latitude";
+    final String FRIENDS_NEARBY = "getFriends";
+    final String ID = "userID";
+    final String LONGITUDE = "lon";
+    final String LATITUDE = "lat";
 
     final String MESSAGE = "Message";
     final String TIMESTAMP = "timestamp";
@@ -61,7 +59,10 @@ public class ConnectionController extends ControllerService{
 
     private String LOG_TAG = ConnectionController.class.getSimpleName();
 
-    private String json;
+    private String receivedJson;
+
+    private List<MessageModel> messages;
+    private List<PositionModel> position;
 
     public void sendLastWaypoint(String id, GeoPoint geoPoint){
 
@@ -81,46 +82,17 @@ public class ConnectionController extends ControllerService{
         receiveJsonData(URL_SEND_LAST_WAYPOINT, json);
     }
 
-    public void getMessages(String json){
-        new HttpsAsyncTask().execute(URL_GET_MESSAGES);
-
-        //Beispiel
-        //{"Message":[{"from":"123456","timestamp":12341234,"message":"hi"},{"from":"543215","timestamp":48362158,"message":"wie gehts?"},{"from":"123456","timestamp":12341256,"message":"bock auf ne tour?"}]}
-
-        List<MessageModel> messages = new ArrayList<MessageModel>();
-        try
-        {
-            JSONObject jObj = new JSONObject(json);
-            JSONArray jMessages = jObj.getJSONArray(MESSAGE);
-
-            for (int i = 0; i < jMessages.length(); i++)
-            {
-                JSONObject jMessage = jMessages.getJSONObject(i);
-
-                String sender = jMessage.getString(SENDER);
-                String message = jMessage.getString(INFO);
-                String timestamp = jMessage.getString(TIMESTAMP);
-
-                MessageModel msgModel = new MessageModel(sender, message, timestamp);
-
-                messages.add(msgModel);
-
-                Log.d(LOG_TAG,"Messages:" + json);
-            }
-        }
-
-        catch(Exception e)
-        {
-            Log.e(LOG_TAG, "Fehler beim Parsen der Messages: " + e.getMessage());
-            e.printStackTrace();
-        }
+    public void getMessages(String id){
+        String idd = "1";
+        new HttpsAsyncTaskMessages().execute(URL_GET_MESSAGES, idd);
 
 
     }
 
-    public void getWaypointsOfFriends(String userId)
+    public void getWaypointsOfFriends(String id)
     {
-        new HttpsAsyncTask().execute(URL_GET_WAYPOINTS_OF_FRIENDS);
+        String jsonToSend = "{\"func\":\"getFriends\",\"userID\":" + new Integer(id) + "}";
+        new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, jsonToSend);
     }
 
 
@@ -148,7 +120,7 @@ public class ConnectionController extends ControllerService{
                         }
 
                         @Override
-                        public void checkServerTrusted(X509Certificate[] chain, String authType){
+                        public void checkServerTrusted(X509Certificate[] chain, String authType) {
 
                         }
 
@@ -176,11 +148,14 @@ public class ConnectionController extends ControllerService{
             urlConnection.setDoInput(true);
 
 
-            if(json != null) {
+           // if(json != null) {
+
+                Log.d("json to send", json);
+
                 urlConnection.setDoOutput(true);
                 //urlConnection.setChunkedStreamingMode(0);
                 urlConnection.setRequestMethod("POST");
-                urlConnection.setUseCaches(false);
+                //urlConnection.setUseCaches(false);
                 urlConnection.setRequestProperty("Content-Type", "application/json");
 
                 urlConnection.connect();
@@ -196,8 +171,9 @@ public class ConnectionController extends ControllerService{
                 out.close();
 
 
-            }
-            urlConnection.connect();
+           // }
+
+            //urlConnection.connect();
             InputStream is = new BufferedInputStream(urlConnection.getInputStream());
             //if(!url.getHost().equals(urlConnection.getURL().getHost())){
 
@@ -236,36 +212,31 @@ public class ConnectionController extends ControllerService{
 
     }
 
-    @Override
-    public void onStartService(Bundle data) {
-
-    }
-
-    @Override
-    public void onDestroyService(Bundle data) {
-
-    }
-
-    private class HttpsAsyncTask extends AsyncTask<String, Void, String> {
+    private class HttpsAsyncTaskPosition extends AsyncTask<String, Void, String>{
 
         @Override
         protected String doInBackground(String... params) {
-            return receiveJsonData(params[0], null);
+            return receiveJsonData(params[0], params[1]);
 
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            json = s;
+            receivedJson = s;
 
             Log.d(LOG_TAG, s);
 
-            List<PositionModel> position = new ArrayList<PositionModel>();
+            position = new ArrayList<PositionModel>();
 
             try
             {
+                Log.d("json", s);
                 JSONObject jObj = new JSONObject(s);
+                int status = jObj.getInt("status");
+
+                Log.d("status Code", "" + status);
+
                 JSONArray jFriends = jObj.getJSONArray(FRIENDS_NEARBY);
 
                 for(int i=0;i<jFriends.length();i++)
@@ -280,6 +251,8 @@ public class ConnectionController extends ControllerService{
 
                     position.add(positionModel);
                 }
+
+                Log.d("LASTPOSITION", position.get(0).toString());
             }
 
             catch(Exception e)
@@ -288,5 +261,64 @@ public class ConnectionController extends ControllerService{
                 e.printStackTrace();
             }
         }
+    }
+
+
+    private class HttpsAsyncTaskMessages extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            return receiveJsonData(params[0], params[1]);
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            receivedJson = s;
+
+            Log.d(LOG_TAG, s);
+
+            messages = new ArrayList<MessageModel>();
+            try {
+                JSONObject jObj = new JSONObject(s);
+                JSONArray jMessages = jObj.getJSONArray(MESSAGE);
+
+                for (int i = 0; i < jMessages.length(); i++) {
+                    JSONObject jMessage = jMessages.getJSONObject(i);
+
+                    String sender = jMessage.getString(SENDER);
+                    String message = jMessage.getString(INFO);
+                    String timestamp = jMessage.getString(TIMESTAMP);
+
+                    MessageModel msgModel = new MessageModel(sender, message, timestamp);
+
+                    messages.add(msgModel);
+
+                    Log.d(LOG_TAG, "Messages:" + receivedJson);
+                }
+            } catch (Exception e) {
+                Log.e(LOG_TAG, "Fehler beim Parsen der Messages: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+
+    public List<MessageModel> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<MessageModel> messages) {
+        this.messages = messages;
+    }
+
+    public List<PositionModel> getPosition() {
+        return position;
+    }
+
+    public void setPosition(List<PositionModel> position) {
+        this.position = position;
     }
 }
