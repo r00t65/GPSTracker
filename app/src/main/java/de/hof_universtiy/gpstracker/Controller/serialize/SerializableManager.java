@@ -24,7 +24,7 @@ public class SerializableManager
     private String LOG_TAG = ConnectionController.class.getSimpleName();
     ArrayList<MessageModel> messages = new ArrayList<MessageModel>();
 
-    public void saveFile(ArrayList<MessageModel> msg)
+    public void saveFile(ArrayList<?> msg)
     {
         try
         {
@@ -44,7 +44,7 @@ public class SerializableManager
         }
     }
 
-    public ArrayList<MessageModel> readFile(File f)
+    public ArrayList<?> readFile(File f)
     {
         try
         {

@@ -66,7 +66,7 @@ public class ConnectionController{
 
     public void sendLastWaypoint(String id, GeoPoint geoPoint){
 
-        String json = "{\"lastWaypoint\":{\"id\"" + id + ",\"latitude\":" + geoPoint.getLatitude() + ",\"longitude\":" + geoPoint.getLongitude() + "}}";
+        String json = "json={\"func\":\"setPosition\", \"id\"" + id + ",\"lat\":\"" + geoPoint.getLatitude() + "\",\"lon\":\"" + geoPoint.getLongitude() + "\"}";
 
         JSONObject jsonObject = new JSONObject();
 
@@ -83,15 +83,15 @@ public class ConnectionController{
     }
 
     public void getMessages(String id){
-        String idd = "1";
-        new HttpsAsyncTaskMessages().execute(URL_GET_MESSAGES, idd);
+
+        new HttpsAsyncTaskMessages().execute(URL_GET_MESSAGES, id);
 
 
     }
 
     public void getWaypointsOfFriends(String id)
     {
-        String jsonToSend = "{\"func\":\"getFriends\",\"userID\":" + new Integer(id) + "}";
+        String jsonToSend = "json={\"func\":\"getFriends\",\"userID\":\"" + id + "\"}";
         new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, jsonToSend);
     }
 
@@ -157,7 +157,7 @@ public class ConnectionController{
                 urlConnection.setRequestMethod("POST");
                 //urlConnection.setUseCaches(false);
                 urlConnection.setRequestProperty("Content-Type", "application/json");
-
+                urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.connect();
 
 
@@ -173,7 +173,6 @@ public class ConnectionController{
 
            // }
 
-            //urlConnection.connect();
             InputStream is = new BufferedInputStream(urlConnection.getInputStream());
             //if(!url.getHost().equals(urlConnection.getURL().getHost())){
 
@@ -212,10 +211,68 @@ public class ConnectionController{
 
     }
 
+
+
+    private void parsePosition(String json){
+        position = new ArrayList<PositionModel>();
+
+        try
+        {
+
+            JSONObject jObj = new JSONObject(json);
+            int status = jObj.getInt("status");
+
+            Log.d("status Code", "" + status);
+
+            JSONArray jFriends = jObj.getJSONArray(FRIENDS_NEARBY);
+
+            for(int i=0;i<jFriends.length();i++)
+            {
+                JSONObject jFriend = jFriends.getJSONObject(i);
+
+                String id =  jFriend.getString(ID);
+                Double latitude = jFriend.getDouble(LATITUDE);
+                Double longitude = jFriend.getDouble(LONGITUDE);
+
+                PositionModel positionModel = new PositionModel(id,latitude, longitude);
+
+                position.add(positionModel);
+            }
+
+            Log.d("LASTPOSITION", position.get(0).toString());
+        }
+
+        catch(Exception e)
+        {
+            Log.e(LOG_TAG, "Fehler beim Parsen der Position: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private class HttpsAsyncTaskPosition extends AsyncTask<String, Void, String>{
 
         @Override
         protected String doInBackground(String... params) {
+
             return receiveJsonData(params[0], params[1]);
 
         }
@@ -227,41 +284,38 @@ public class ConnectionController{
 
             Log.d(LOG_TAG, s);
 
-            position = new ArrayList<PositionModel>();
+            parsePosition(s);
 
-            try
-            {
-                Log.d("json", s);
-                JSONObject jObj = new JSONObject(s);
-                int status = jObj.getInt("status");
-
-                Log.d("status Code", "" + status);
-
-                JSONArray jFriends = jObj.getJSONArray(FRIENDS_NEARBY);
-
-                for(int i=0;i<jFriends.length();i++)
-                {
-                    JSONObject jFriend = jFriends.getJSONObject(i);
-
-                    String id =  jFriend.getString(ID);
-                    Double latitude = jFriend.getDouble(LATITUDE);
-                    Double longitude = jFriend.getDouble(LONGITUDE);
-
-                    PositionModel positionModel = new PositionModel(id,latitude, longitude);
-
-                    position.add(positionModel);
-                }
-
-                Log.d("LASTPOSITION", position.get(0).toString());
-            }
-
-            catch(Exception e)
-            {
-                Log.e(LOG_TAG, "Fehler beim Parsen der Position: " + e.getMessage());
-                e.printStackTrace();
-            }
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     private class HttpsAsyncTaskMessages extends AsyncTask<String, Void, String> {
@@ -276,8 +330,6 @@ public class ConnectionController{
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             receivedJson = s;
-
-            Log.d(LOG_TAG, s);
 
             messages = new ArrayList<MessageModel>();
             try {
