@@ -11,6 +11,9 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_login_logout">LoginLogoutActivity</string>
 
+    <string name="messageHint">Enter Message!</string>
+    <string name="sendMessage">Send</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
