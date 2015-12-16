@@ -88,7 +88,6 @@ public class TrackingService extends Service{
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)
                 .build();
-
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(1,n);
     }

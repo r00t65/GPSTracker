@@ -20,6 +20,9 @@ import de.hof_universtiy.gpstracker.View.*;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private boolean isStartedService;
+    private Intent trackingService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,14 +30,23 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Intent trackingService = new Intent(this, TrackingService.class);
+        trackingService = new Intent(this, TrackingService.class);
+        isStartedService = false;
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!isStartedService){
+                    startService(trackingService);
+                    isStartedService = true;
+                }else{
+                    stopService(trackingService);
+                    isStartedService = false;
+                }
 
-                startService(trackingService);
+
             }
         });
 
