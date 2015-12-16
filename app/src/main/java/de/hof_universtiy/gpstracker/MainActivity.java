@@ -1,5 +1,7 @@
 package de.hof_universtiy.gpstracker;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +22,6 @@ import de.hof_universtiy.gpstracker.View.*;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private boolean isStartedService;
     private Intent trackingService;
 
     @Override
@@ -31,22 +32,16 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         trackingService = new Intent(this, TrackingService.class);
-        isStartedService = false;
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isStartedService){
+                if(!isMyServiceRunning(TrackingService.class)){
                     startService(trackingService);
-                    isStartedService = true;
                 }else{
                     stopService(trackingService);
-                    isStartedService = false;
                 }
-
-
             }
         });
 
@@ -61,6 +56,16 @@ public class MainActivity extends AppCompatActivity
 
         ConnectionController connectionController = new ConnectionController();
         connectionController.getWaypointsOfFriends("1");
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

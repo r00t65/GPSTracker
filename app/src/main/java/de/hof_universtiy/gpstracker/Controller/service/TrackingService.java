@@ -20,6 +20,8 @@ public class TrackingService extends Service{
 
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
+    private Notification trackerNotification;
+    NotificationManager notificationManager;
 
     private final class ServiceHandler extends Handler {
         public ServiceHandler(Looper looper){
@@ -46,6 +48,7 @@ public class TrackingService extends Service{
     @Override
     public void onCreate(){
         Log.v("Service", "Service erstellt");
+
         HandlerThread thread = new HandlerThread("ServiceStartArg", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
 
@@ -62,7 +65,20 @@ public class TrackingService extends Service{
         msg.arg1 = startID;
         mServiceHandler.sendMessage(msg);
 
-        serviceNotification();
+        //Notification
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        trackerNotification = new Notification.Builder(this)
+                .setContentTitle("GPSTracker")
+                .setContentText("AUF EWIG OSTFRONT")
+                .setSmallIcon(R.drawable.person)
+                .setContentIntent(pIntent)
+                .setAutoCancel(true)
+                .build();
+        trackerNotification.flags = Notification.FLAG_ONGOING_EVENT;
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(1,trackerNotification);
+        //Notification ende
 
         return START_STICKY;
     }
@@ -70,26 +86,12 @@ public class TrackingService extends Service{
     @Override
     public void onDestroy() {
         Log.v("Service", "Service beendet");
-
+        notificationManager.cancel(1);
     }
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    public void serviceNotification(){
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        Notification n = new Notification.Builder(this)
-                .setContentTitle("GPSTracker")
-                .setContentText("AUF EWIG OSTFRONT")
-                .setSmallIcon(R.drawable.person)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true)
-                .build();
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(1,n);
     }
 }
 
