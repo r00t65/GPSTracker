@@ -10,7 +10,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import de.hof_universtiy.gpstracker.R;
-import de.hof_universtiy.gpstracker.View.MessengerActivity;
 
 /**
  * Created by Andreas Ziemer on 16.12.15.
@@ -77,7 +76,7 @@ public class MessengerService extends Service{
     }
 
     public void serviceNotification(){
-        Intent intent = new Intent(this, MessengerActivity.class);
+        Intent intent = new Intent(this, Messenger.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification n = new Notification.Builder(this)
                 .setContentTitle("GPSTracker Message")

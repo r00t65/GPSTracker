@@ -1,14 +1,18 @@
 package de.hof_universtiy.gpstracker;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,10 +22,19 @@ import de.hof_universtiy.gpstracker.Controller.service.TrackingService;
 import de.hof_universtiy.gpstracker.View.*;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, GPSTracker.OnFragmentInteractionListener,
+        LoginLogout.OnFragmentInteractionListener, Messenger.OnFragmentInteractionListener,
+        Radar.OnFragmentInteractionListener, Settings.OnFragmentInteractionListener {
 
     private boolean isStartedService;
     private Intent trackingService;
+
+    private Fragment fragment = null;
+    Class fragmentClass;
+
+    public void onFragmentInteraction(Uri uri){
+        //you can leave it empty bro
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +51,10 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isStartedService){
+                if (!isStartedService) {
                     startService(trackingService);
                     isStartedService = true;
-                }else{
+                } else {
                     stopService(trackingService);
                     isStartedService = false;
                 }
@@ -58,6 +71,22 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        fragmentClass = Radar.class;
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
+        }
+        else {
+            Log.i("Happening", "Nofragmentavailable");
+        }
+
 
         ConnectionController connectionController = new ConnectionController();
         connectionController.getWaypointsOfFriends("1");
@@ -101,28 +130,69 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_gpstracker) {
-//            Intent gpstrackerIntent = new Intent(this, MainActivity.class);
-//            this.startActivity(gpstrackerIntent);
+            selectDrawerItem(item);
 
         } else if (id == R.id.nav_radar) {
-            Intent radarIntent = new Intent(this, RadarActivity.class);
-            this.startActivity(radarIntent);
+            selectDrawerItem(item);
 
         } else if (id == R.id.nav_messenger) {
-            Intent messengerIntent = new Intent(this, MessengerActivity.class);
-            this.startActivity(messengerIntent);
+            selectDrawerItem(item);
 
         } else if (id == R.id.nav_loginLogout) {
-            Intent loginLogoutIntent = new Intent(this, LoginLogoutActivity.class);
-            this.startActivity(loginLogoutIntent);
+            selectDrawerItem(item);
 
         } else if (id == R.id.nav_settings) {
-            Intent settingsIntent = new Intent(this, SettingsActivity.class);
-            this.startActivity(settingsIntent);
+            selectDrawerItem(item);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void selectDrawerItem(MenuItem menuItem) {
+        // Create a new fragment and specify the planet to show based on
+        // position
+        //Fragment fragment = null;
+
+        //Class fragmentClass;
+        switch (menuItem.getItemId()) {
+            case R.id.nav_gpstracker:
+                fragmentClass = GPSTracker.class;
+                break;
+            case R.id.nav_radar:
+                fragmentClass = Radar.class;
+                break;
+            case R.id.nav_messenger:
+                fragmentClass = Messenger.class;
+                break;
+            case R.id.nav_loginLogout:
+                fragmentClass = LoginLogout.class;
+                break;
+            case R.id.nav_settings:
+                fragmentClass = Settings.class;
+                break;
+            default:
+                fragmentClass = GPSTracker.class;
+        }
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Insert the fragment by replacing any existing fragment
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
+        }
+        else {
+            Log.i("Happening","Nofragmentavailable");
+        }
+
+        // Highlight the selected item, update the title, and close the drawer
+        menuItem.setChecked(true);
     }
 }

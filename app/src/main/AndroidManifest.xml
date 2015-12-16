@@ -25,23 +25,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".View.RadarActivity"
-            android:label="Radar"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".View.MessengerActivity"
-            android:label="Messenger"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".View.LoginLogoutActivity"
-            android:label="Login Logout"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".View.SettingsActivity"
-            android:label="Settings"
-            android:theme="@style/AppTheme.NoActionBar" />
-
 
         <service android:name=".Controller.service.TrackingService"/>
         <service android:name=".Controller.service.MessengerService"/>
