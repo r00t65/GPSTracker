@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import de.hof_universtiy.gpstracker.Controller.map.MapController;
 import de.hof_universtiy.gpstracker.R;
+import org.osmdroid.views.MapView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +31,7 @@ public class GPSTracker extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private MapController mapController;
 
     public GPSTracker() {
         // Required empty public constructor
@@ -59,13 +62,22 @@ public class GPSTracker extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        final View rootView = inflater.inflate(R.layout.fragment_gpstracker, container, false);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gpstracker, container, false);
+        this.mapController = new MapController(this.getContext(), (MapView) rootView.findViewById(R.id.mapView));
+        return rootView;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        this.mapController.onStart(null);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -90,6 +102,18 @@ public class GPSTracker extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        this.mapController.onPause(null);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        this.mapController.onDestroy(null);
     }
 
     /**

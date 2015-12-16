@@ -31,11 +31,6 @@ public class MapController extends ControllerActivity {
         activityContext = context;
         this.mapView = mapView;
         this.routeController = new RouteController(this);
-        configMapView();
-        this.goTo((GeoPoint) this.mapView.getMapCenter());
-
-      //  ConnectionController connectionController = new ConnectionController();
-      //  connectionController.getWaypointsOfFriends("test");
     }
 
 
@@ -111,7 +106,8 @@ public class MapController extends ControllerActivity {
 
     @Override
     public void onStart(Bundle data) {
-
+        configMapView();
+        this.goTo((GeoPoint) this.mapView.getMapCenter());
     }
 
     @Override

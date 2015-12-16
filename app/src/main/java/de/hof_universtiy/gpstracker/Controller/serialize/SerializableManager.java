@@ -19,10 +19,10 @@ import de.hof_universtiy.gpstracker.Model.messages.MessageModel;
  * Created by Patrick Büttner on 02.12.2015.
  */
 
-public class SerializableManager
+public class SerializableManager//TODO:Fehlerbehandlung
 {
-    private String LOG_TAG = ConnectionController.class.getSimpleName();
-    ArrayList<MessageModel> messages = new ArrayList<MessageModel>();
+    private final String LOG_TAG = ConnectionController.class.getSimpleName();
+    private ArrayList<MessageModel> messages = new ArrayList<MessageModel>();
 
     public void saveFile(ArrayList<?> msg)
     {

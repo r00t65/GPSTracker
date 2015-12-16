@@ -1,6 +1,7 @@
 package de.hof_universtiy.gpstracker.Controller.connection;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -41,7 +42,7 @@ import de.hof_universtiy.gpstracker.Model.position.PositionModel;
 /**
  * Created by Lothar Mödl on 19.11.15.
  */
-public class ConnectionController{
+public class ConnectionController{//TODO:Fehlerbehandlung
 
     private static final String URL_SEND_LAST_WAYPOINT = "";
     private static final String URL_GET_WAYPOINTS_OF_FRIENDS = "https://aap.rt-dns.de/getFriends.php";
@@ -204,8 +205,8 @@ public class ConnectionController{
     }
 
 
-    public boolean isConnected(Activity activity){
-        ConnectivityManager connMgr = (ConnectivityManager) activity.getSystemService(Activity.CONNECTIVITY_SERVICE);
+    public boolean isConnected(Context context){
+        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
 
