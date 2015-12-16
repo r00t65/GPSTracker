@@ -63,8 +63,8 @@ public class LoginLogoutActivity extends AppCompatActivity
             this.startActivity(messengerIntent);
 
         } else if (id == R.id.nav_loginLogout) {
-            Intent loginLogoutIntent = new Intent(this, LoginLogoutActivity.class);
-            this.startActivity(loginLogoutIntent);
+  //          Intent loginLogoutIntent = new Intent(this, LoginLogoutActivity.class);
+  //          this.startActivity(loginLogoutIntent);
 
         } else if (id == R.id.nav_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);

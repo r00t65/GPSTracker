@@ -55,8 +55,8 @@ public class RadarActivity extends AppCompatActivity
             this.startActivity(gpstrackerIntent);
 
         } else if (id == R.id.nav_radar) {
-            Intent radarIntent = new Intent(this, RadarActivity.class);
-            this.startActivity(radarIntent);
+  //          Intent radarIntent = new Intent(this, RadarActivity.class);
+  //          this.startActivity(radarIntent);
 
         } else if (id == R.id.nav_messenger) {
             Intent messengerIntent = new Intent(this, MessengerActivity.class);

@@ -59,8 +59,8 @@ public class MessengerActivity extends AppCompatActivity
             this.startActivity(radarIntent);
 
         } else if (id == R.id.nav_messenger) {
-            Intent messengerIntent = new Intent(this, MessengerActivity.class);
-            this.startActivity(messengerIntent);
+ //           Intent messengerIntent = new Intent(this, MessengerActivity.class);
+ //           this.startActivity(messengerIntent);
 
         } else if (id == R.id.nav_loginLogout) {
             Intent loginLogoutIntent = new Intent(this, LoginLogoutActivity.class);
