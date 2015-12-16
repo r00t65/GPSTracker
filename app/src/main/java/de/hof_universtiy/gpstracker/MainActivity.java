@@ -106,8 +106,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_gpstracker) {
-            Intent gpstrackerIntent = new Intent(this, MainActivity.class);
-            this.startActivity(gpstrackerIntent);
+//            Intent gpstrackerIntent = new Intent(this, MainActivity.class);
+//            this.startActivity(gpstrackerIntent);
 
         } else if (id == R.id.nav_radar) {
             Intent radarIntent = new Intent(this, RadarActivity.class);

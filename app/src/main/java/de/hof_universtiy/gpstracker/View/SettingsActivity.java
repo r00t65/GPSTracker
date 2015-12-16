@@ -67,8 +67,8 @@ public class SettingsActivity extends AppCompatActivity
             this.startActivity(loginLogoutIntent);
 
         } else if (id == R.id.nav_settings) {
-            Intent settingsIntent = new Intent(this, SettingsActivity.class);
-            this.startActivity(settingsIntent);
+//            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+//            this.startActivity(settingsIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
