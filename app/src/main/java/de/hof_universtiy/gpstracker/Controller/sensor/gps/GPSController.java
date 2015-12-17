@@ -13,6 +13,8 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerService;
 
+import java.io.IOException;
+
 /**
  * Created by alex on 09.12.15.
  */
@@ -75,7 +77,7 @@ public class GPSController extends ControllerService implements LocationListener
         }
     }
 
-    public void pauseTracking(){
+    public void pauseTracking() throws IOException {
         this.isTracking = false;
         this.trackingListener.trackEnd();
     }
@@ -110,7 +112,7 @@ public class GPSController extends ControllerService implements LocationListener
     }
     public interface TrackingListener extends PositionChangeListener {
 
-        public void trackEnd();
+        public void trackEnd() throws IOException;
     }
 
     public class GPSException extends Exception {

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import de.hof_universtiy.gpstracker.Controller.map.MapController;
 import de.hof_universtiy.gpstracker.Controller.sensor.gps.GPSController;
+import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import de.hof_universtiy.gpstracker.Controller.tracking.TrackingController;
 import de.hof_universtiy.gpstracker.R;
 import org.osmdroid.views.MapView;
@@ -39,6 +40,7 @@ public class GPSTracker extends Fragment {
     //----------------------Test---GPS----------------
     private GPSController gpsController;
     private TrackingController trackingController;
+    private StorageController storageController;
     //----------------------Test ---GPS//---------------
 
     public GPSTracker() {
@@ -80,7 +82,8 @@ public class GPSTracker extends Fragment {
         // Inflate the layout for this fragment
         this.mapController = new MapController(this.getContext(), (MapView) rootView.findViewById(R.id.mapView));
         //----------------------Test---GPS----------------
-        this.trackingController = new TrackingController(this.getContext());
+        storageController = new StorageController(this.getContext());
+        this.trackingController = new TrackingController(this.getContext(),this.storageController);
         gpsController = new GPSController(this.getContext(), new GPSController.PositionChangeListener() {
             @Override
             public void setNewPosition(Location location) {
@@ -94,6 +97,8 @@ public class GPSTracker extends Fragment {
         } catch (GPSController.GPSException e) {
             e.printStackTrace();
         }
+
+
         //----------------------Test ---GPS//---------------
         return rootView;
     }

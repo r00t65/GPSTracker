@@ -1,9 +1,11 @@
 package de.hof_universtiy.gpstracker.Controller.map;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivity;
 import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivityInterface;
+import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -26,11 +28,20 @@ public class MapController extends ControllerActivity {
     private MyLocationNewOverlay mLocationOverlay;
     private ScaleBarOverlay mScaleBarOverlay;
     private final RouteController routeController;
+    private final SharedPreferences.OnSharedPreferenceChangeListener sharedPrefChangeListener;
+    private final SharedPreferences prefs;
 
     public MapController(Context context,MapView mapView) {
         activityContext = context;
         this.mapView = mapView;
         this.routeController = new RouteController(this);
+        this.prefs = this.getContext().getSharedPreferences(StorageController.KEY_SHAREDPREF_TRACK, 0);
+        this.sharedPrefChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                //refresh
+            }
+        };
     }
 
 
@@ -108,11 +119,12 @@ public class MapController extends ControllerActivity {
     public void onStart(Bundle data) {
         configMapView();
         this.goTo((GeoPoint) this.mapView.getMapCenter());
+        prefs.registerOnSharedPreferenceChangeListener(this.sharedPrefChangeListener);
     }
 
     @Override
     public void onDestroy(Bundle data) {
-
+        prefs.unregisterOnSharedPreferenceChangeListener(this.sharedPrefChangeListener);
     }
 
     @Override
