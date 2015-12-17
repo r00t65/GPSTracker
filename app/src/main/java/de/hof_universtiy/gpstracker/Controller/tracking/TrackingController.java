@@ -2,7 +2,9 @@ package de.hof_universtiy.gpstracker.Controller.tracking;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.Bundle;
 import android.widget.Toast;
+import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerService;
 import de.hof_universtiy.gpstracker.Controller.sensor.gps.GPSController;
 
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * Created by alex on 17.12.15.
  */
-public class TrackingController implements GPSController.TrackingListener {
+public class TrackingController extends ControllerService implements GPSController.TrackingListener {
 
     public final List<Location> track = new ArrayList<Location>();
     private final Context context;
@@ -33,5 +35,15 @@ public class TrackingController implements GPSController.TrackingListener {
     }
 
     private void saveTrack() {
+    }
+
+    @Override
+    public void onStartService(Bundle data) throws GPSController.GPSException {
+
+    }
+
+    @Override
+    public void onDestroyService(Bundle data) throws GPSController.GPSException {
+
     }
 }

@@ -11,15 +11,29 @@ import java.util.List;
  */
 public class Track extends Model{
 
+    private final Date startDate;
     private String title = "Track";
     private final List<Location> trackPoints = new ArrayList<>();
+    private Date endDate;
 
     public Track(){
-
+        this.startDate = new Date();
     }
 
     public void addNode(android.location.Location location){
         this.trackPoints.add(new Location(location));
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void trackEnd(){
+        this.endDate = new Date();
+    }
+
+    public String getRangeTime() {
+        return this.startDate + "--" + this.endDate;
     }
 
     public final class Location extends Model{
