@@ -13,13 +13,10 @@ import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,16 +33,19 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import de.hof_universtiy.gpstracker.Model.messages.MessageModel;
 import de.hof_universtiy.gpstracker.Model.position.PositionModel;
 
 /**
  * Created by Lothar Mödl on 19.11.15.
  */
-public class ConnectionController{//TODO:Fehlerbehandlung
+public class ConnectionController{
+
+    //- Einzelnen Track auf Server löschen
+    //- TrackID auf Server erstellen, wenn neuer Track hochgeladen wird und dann TrackID wieder zurücksenden, um lokal mit dem Track zu matchen
 
     private static final String URL_SEND_LAST_WAYPOINT = "";
-    private static final String URL_GET_WAYPOINTS_OF_FRIENDS = "https://aap.rt-dns.de/getFriends.php";
+    private static final String URL_GET_WAYPOINTS_OF_FRIENDS = "https://aap.rt-dns.de/connection.php";
+//    private static final String URL_GET_WAYPOINTS_OF_FRIENDS = "https://posttestserver.com/post.php";
     private static final String URL_GET_MESSAGES = "https://aap.rt-dns.de/getMessage.php";
 
     final String FRIENDS_NEARBY = "getFriends";
@@ -62,12 +62,11 @@ public class ConnectionController{//TODO:Fehlerbehandlung
 
     private String receivedJson;
 
-    private List<MessageModel> messages;
     private List<PositionModel> position;
 
     public void sendLastWaypoint(String id, GeoPoint geoPoint){
 
-        String json = "json={\"func\":\"setPosition\", \"id\"" + id + ",\"lat\":\"" + geoPoint.getLatitude() + "\",\"lon\":\"" + geoPoint.getLongitude() + "\"}";
+        String json = "json={\"func\":\"setPosition\", \"userID\"" + id + ",\"lat\":\"" + geoPoint.getLatitude() + "\",\"lon\":\"" + geoPoint.getLongitude() + "\"}";
 
         JSONObject jsonObject = new JSONObject();
 
@@ -83,18 +82,64 @@ public class ConnectionController{//TODO:Fehlerbehandlung
         receiveJsonData(URL_SEND_LAST_WAYPOINT, json);
     }
 
-    public void getMessages(String id){
-
-        new HttpsAsyncTaskMessages().execute(URL_GET_MESSAGES, id);
-
-
-    }
 
     public void getWaypointsOfFriends(String id)
     {
         String jsonToSend = "json={\"func\":\"getFriends\",\"userID\":\"" + id + "\"}";
+        JSONObject object = new JSONObject();
+        try {
+            object.put("func", "getFriends");
+            object.put("userID", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, jsonToSend);
     }
+
+    public void addTrack(String id, ArrayList<GeoPoint> geoPoints){
+        JSONObject object = new JSONObject();
+
+        try {
+            object.put("userID", id);
+            object.put("func", "addTrack");
+            JSONArray array = new JSONArray();
+
+            for(GeoPoint g : geoPoints){
+                JSONObject o = new JSONObject();
+                o.put("lat", g.getLatitude());
+                o.put("lon", g.getLongitude());
+                array.put(o);
+            }
+
+            object.put("track", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, "json=" + object.toString());
+
+    }
+
+    public void getTracks(String id){
+        String json = "json={\"func\":\"getTrack\",\"userID\"" + id + "\"}";
+
+        new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, json);
+
+    }
+
+    public void shareTrack(String userID, String friendID, String trackID){
+        String json = "json={\"func\":\"addShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
+
+        new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, json);
+    }
+
+    public void deleteShareTrack(String userID, String friendID, String trackID){
+        String json = "json={\"func\":\"delShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
+
+        new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, json);
+    }
+
 
 
 
@@ -141,36 +186,46 @@ public class ConnectionController{//TODO:Fehlerbehandlung
 
         HttpsURLConnection urlConnection = null;
 
+
+
+
+
         try {
             URL url = new URL(urlString);
 
             urlConnection = (HttpsURLConnection) url.openConnection();
-            urlConnection.setHostnameVerifier(hostnameVerifier);
-            urlConnection.setDoInput(true);
-
-
+          urlConnection.setHostnameVerifier(hostnameVerifier);
            // if(json != null) {
 
                 Log.d("json to send", json);
 
                 urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
                 //urlConnection.setChunkedStreamingMode(0);
                 urlConnection.setRequestMethod("POST");
-                //urlConnection.setUseCaches(false);
-                urlConnection.setRequestProperty("Content-Type", "application/json");
-                urlConnection.setRequestProperty("Accept", "application/json");
-                urlConnection.connect();
+                urlConnection.setUseCaches(false);
+                urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                //urlConnection.setRequestProperty("Accept", "application/json");
 
 
-                OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
 
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os, "utf8"));
 
-                out.write(json);
-                out.flush();
-                os.close();
-                out.close();
+                //OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
 
+                //BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os, "utf8"));
+
+
+
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8");
+
+            outputStreamWriter.write(json);
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+                //out.write(json);
+                //out.flush();
+                //os.close();
+                //out.close();
+            urlConnection.connect();
 
            // }
 
@@ -291,81 +346,6 @@ public class ConnectionController{//TODO:Fehlerbehandlung
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private class HttpsAsyncTaskMessages extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            return receiveJsonData(params[0], params[1]);
-
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            receivedJson = s;
-
-            messages = new ArrayList<MessageModel>();
-            try {
-                JSONObject jObj = new JSONObject(s);
-                JSONArray jMessages = jObj.getJSONArray(MESSAGE);
-
-                for (int i = 0; i < jMessages.length(); i++) {
-                    JSONObject jMessage = jMessages.getJSONObject(i);
-
-                    String sender = jMessage.getString(SENDER);
-                    String message = jMessage.getString(INFO);
-                    String timestamp = jMessage.getString(TIMESTAMP);
-
-                    MessageModel msgModel = new MessageModel(sender, message, timestamp);
-
-                    messages.add(msgModel);
-
-                    Log.d(LOG_TAG, "Messages:" + receivedJson);
-                }
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Fehler beim Parsen der Messages: " + e.getMessage());
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-
-    public List<MessageModel> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<MessageModel> messages) {
-        this.messages = messages;
-    }
 
     public List<PositionModel> getPosition() {
         return position;
