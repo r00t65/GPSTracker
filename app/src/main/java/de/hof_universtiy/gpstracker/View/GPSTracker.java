@@ -1,14 +1,18 @@
 package de.hof_universtiy.gpstracker.View;
 
 import android.content.Context;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.hof_universtiy.gpstracker.Controller.map.MapController;
+import de.hof_universtiy.gpstracker.Controller.sensor.gps.GPSController;
+import de.hof_universtiy.gpstracker.Controller.tracking.TrackingController;
 import de.hof_universtiy.gpstracker.R;
 import org.osmdroid.views.MapView;
 
@@ -32,6 +36,10 @@ public class GPSTracker extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private MapController mapController;
+    //----------------------Test---GPS----------------
+    private GPSController gpsController;
+    private TrackingController trackingController;
+    //----------------------Test ---GPS//---------------
 
     public GPSTracker() {
         // Required empty public constructor
@@ -47,8 +55,8 @@ public class GPSTracker extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static GPSTracker newInstance(String param1, String param2) {
-        GPSTracker fragment = new GPSTracker();
-        Bundle args = new Bundle();
+        final GPSTracker fragment = new GPSTracker();
+        final Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
@@ -71,6 +79,22 @@ public class GPSTracker extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_gpstracker, container, false);
         // Inflate the layout for this fragment
         this.mapController = new MapController(this.getContext(), (MapView) rootView.findViewById(R.id.mapView));
+        //----------------------Test---GPS----------------
+        this.trackingController = new TrackingController(this.getContext());
+        gpsController = new GPSController(this.getContext(), new GPSController.PositionChangeListener() {
+            @Override
+            public void setNewPosition(Location location) {
+                Log.i(this.getClass().toString(),location.toString());
+            }
+        }, this.trackingController);
+        try {
+            final Bundle bundle = new Bundle();
+            bundle.putBoolean(GPSController.IS_TRACKING,true);
+            this.gpsController.onStartService(bundle);
+        } catch (GPSController.GPSException e) {
+            e.printStackTrace();
+        }
+        //----------------------Test ---GPS//---------------
         return rootView;
     }
 

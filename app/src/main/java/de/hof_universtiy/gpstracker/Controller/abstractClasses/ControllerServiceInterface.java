@@ -1,7 +1,7 @@
 package de.hof_universtiy.gpstracker.Controller.abstractClasses;
 
 import android.os.Bundle;
-import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
+import de.hof_universtiy.gpstracker.Controller.sensor.gps.GPSController;
 
 /**
  * Created by alex on 09.12.15.
@@ -9,5 +9,5 @@ import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
 public interface ControllerServiceInterface {
 
     public void onStartService(Bundle data) throws GPSController.GPSException;
-    public void onDestroyService(Bundle data);
+    public void onDestroyService(Bundle data) throws GPSController.GPSException;
 }

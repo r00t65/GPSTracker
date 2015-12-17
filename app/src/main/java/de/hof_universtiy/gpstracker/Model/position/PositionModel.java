@@ -11,7 +11,7 @@ import de.hof_universtiy.gpstracker.Model.ModelInterface;
 public class PositionModel extends Model
 {
     private String id;
-    private GeoPoint geoPoint;
+    private GeoPoint geoPoint;//TODO: Wieso Geopoints, es gibt doch Location
 
     public PositionModel()
     {
