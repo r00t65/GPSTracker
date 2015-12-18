@@ -5,7 +5,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.os.*;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.os.Process;
 import android.util.Log;
 import android.widget.Toast;
@@ -70,7 +74,7 @@ public class TrackingService extends Service{
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         trackerNotification = new Notification.Builder(this)
                 .setContentTitle("GPSTracker")
-                .setContentText("AUF EWIG OSTFRONT")
+                .setContentText("We are living, we are breathing, we are pieces of defecating meat")
                 .setSmallIcon(R.drawable.person)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)

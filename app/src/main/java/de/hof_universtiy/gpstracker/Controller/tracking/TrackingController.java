@@ -5,12 +5,13 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import java.io.IOException;
+
 import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerService;
 import de.hof_universtiy.gpstracker.Controller.sensor.gps.GPSController;
 import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import de.hof_universtiy.gpstracker.Model.track.Track;
-
-import java.io.IOException;
 
 
 /**

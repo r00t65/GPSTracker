@@ -1,9 +1,5 @@
 package de.hof_universtiy.gpstracker.Controller.map;
 
-import org.osmdroid.util.GeoPoint;
-
-import java.util.List;
-
 /**
  * Created by alex on 19.11.15.
  */

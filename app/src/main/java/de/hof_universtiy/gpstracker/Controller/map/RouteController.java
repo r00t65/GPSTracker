@@ -1,12 +1,13 @@
 package de.hof_universtiy.gpstracker.Controller.map;
 
 import android.os.Bundle;
-import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivity;
-import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivityInterface;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivity;
 
 /**
  * Created by alex on 19.11.15.

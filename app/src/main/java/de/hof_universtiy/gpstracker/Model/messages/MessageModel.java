@@ -1,7 +1,6 @@
 package de.hof_universtiy.gpstracker.Model.messages;
 
 import de.hof_universtiy.gpstracker.Model.Model;
-import de.hof_universtiy.gpstracker.Model.ModelInterface;
 
 /**
  * Created by Patrick Büttner on 29.11.2015.

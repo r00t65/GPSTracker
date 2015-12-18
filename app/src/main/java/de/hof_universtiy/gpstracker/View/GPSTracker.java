@@ -1,21 +1,26 @@
 package de.hof_universtiy.gpstracker.View;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.osmdroid.views.MapView;
+
 import de.hof_universtiy.gpstracker.Controller.map.MapController;
 import de.hof_universtiy.gpstracker.Controller.sensor.gps.GPSController;
 import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
+import de.hof_universtiy.gpstracker.Controller.service.TrackingService;
 import de.hof_universtiy.gpstracker.Controller.tracking.TrackingController;
 import de.hof_universtiy.gpstracker.R;
-import org.osmdroid.views.MapView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,6 +47,8 @@ public class GPSTracker extends Fragment {
     private TrackingController trackingController;
     private StorageController storageController;
     //----------------------Test ---GPS//---------------
+    private Intent trackingService;
+
 
     public GPSTracker() {
         // Required empty public constructor
@@ -100,7 +107,36 @@ public class GPSTracker extends Fragment {
 
 
         //----------------------Test ---GPS//---------------
+
+        //Tracking Service Button
+
+        trackingService = new Intent(this.getActivity(), TrackingService.class);
+
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isMyServiceRunning(TrackingService.class)) {
+                    getActivity().startService(trackingService);
+                } else {
+                    getActivity().stopService(trackingService);
+                }
+            }
+        });
+
+        //-----------------------
+
         return rootView;
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

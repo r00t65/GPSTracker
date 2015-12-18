@@ -3,9 +3,7 @@ package de.hof_universtiy.gpstracker.Controller.map;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivity;
-import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivityInterface;
-import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
+
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -16,6 +14,9 @@ import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
+import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerActivity;
+import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 
 /**
  * Created by alex on 13.11.15.

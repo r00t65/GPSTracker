@@ -1,10 +1,10 @@
 package de.hof_universtiy.gpstracker.Model.track;
 
-import de.hof_universtiy.gpstracker.Model.Model;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import de.hof_universtiy.gpstracker.Model.Model;
 
 /**
  * Created by alex on 17.12.15.

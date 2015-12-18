@@ -1,19 +1,16 @@
 package de.hof_universtiy.gpstracker.Controller.sensor.gps;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
-import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerService;
 
 import java.io.IOException;
+
+import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerService;
 
 /**
  * Created by alex on 09.12.15.

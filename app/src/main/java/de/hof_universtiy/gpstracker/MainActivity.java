@@ -1,9 +1,7 @@
 package de.hof_universtiy.gpstracker;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -15,19 +13,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
-import de.hof_universtiy.gpstracker.Controller.service.TrackingService;
-import de.hof_universtiy.gpstracker.View.*;
+import de.hof_universtiy.gpstracker.View.GPSTracker;
+import de.hof_universtiy.gpstracker.View.LoginLogout;
+import de.hof_universtiy.gpstracker.View.Messenger;
+import de.hof_universtiy.gpstracker.View.Radar;
+import de.hof_universtiy.gpstracker.View.Settings;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GPSTracker.OnFragmentInteractionListener,
         LoginLogout.OnFragmentInteractionListener, Messenger.OnFragmentInteractionListener,
         Radar.OnFragmentInteractionListener, Settings.OnFragmentInteractionListener {
 
-    private boolean isStartedService;
-    private Intent trackingService;
 
     private Fragment fragment = null;
     Class fragmentClass;
@@ -42,26 +40,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        trackingService = new Intent(this, TrackingService.class);
-        isStartedService = false;
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isStartedService) {
-                    startService(trackingService);
-                    isStartedService = true;
-                } else {
-                    stopService(trackingService);
-                    isStartedService = false;
-                }
-
-
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

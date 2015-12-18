@@ -1,9 +1,10 @@
 package de.hof_universtiy.gpstracker.Controller.abstractClasses;
 
 import android.os.Bundle;
-import de.hof_universtiy.gpstracker.Controller.sensor.gps.GPSController;
 
 import java.io.IOException;
+
+import de.hof_universtiy.gpstracker.Controller.sensor.gps.GPSController;
 
 /**
  * Created by alex on 09.12.15.
