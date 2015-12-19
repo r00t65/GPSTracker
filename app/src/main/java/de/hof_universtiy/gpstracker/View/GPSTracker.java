@@ -116,7 +116,7 @@ public class GPSTracker extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isMyServiceRunning(TrackingService.class)) {
+                if (!isMyServiceRunning(TrackingService.class)) {
                     getActivity().startService(trackingService);
                 } else {
                     getActivity().stopService(trackingService);

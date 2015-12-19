@@ -19,7 +19,7 @@ import de.hof_universtiy.gpstracker.R;
 /**
  * Created by Andreas Ziemer on 16.12.15.
  */
-public class MessengerService extends Service{
+public class RadarService extends Service{
 
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
@@ -84,8 +84,8 @@ public class MessengerService extends Service{
         Intent intent = new Intent(this, Messenger.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification n = new Notification.Builder(this)
-                .setContentTitle("GPSTracker Message")
-                .setContentText("Neue Nachricht")
+                .setContentTitle("Radar")
+                .setContentText("asd")
                 .setSmallIcon(R.drawable.ic_menu_send)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)

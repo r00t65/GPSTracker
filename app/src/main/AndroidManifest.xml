@@ -27,7 +27,7 @@
 
 
         <service android:name=".Controller.service.TrackingService"/>
-        <service android:name=".Controller.service.MessengerService"/>
+        <service android:name=".Controller.service.RadarService"/>
     </application>
 
 </manifest>
