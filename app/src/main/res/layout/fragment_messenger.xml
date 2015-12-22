@@ -41,7 +41,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_above="@+id/sendButton"
-            android:background="@color/colorAccent"
             android:focusable="false"
             android:focusableInTouchMode="false"
             />

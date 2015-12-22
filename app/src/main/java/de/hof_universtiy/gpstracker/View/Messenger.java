@@ -4,9 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -24,6 +26,7 @@ public class Messenger extends Fragment {
     private Button sendButton;
 
     private MessengerController ctrl;
+    private ArrayAdapter<String> messageAdapter;
 
 
     @Override
@@ -41,21 +44,18 @@ public class Messenger extends Fragment {
         messageList = (ListView) view.findViewById(R.id.messagesList);
         sendButton = (Button) view.findViewById(R.id.sendButton);
 
-        ctrl = new MessengerController();
+        messageAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1);
 
+        Log.e("start","start");
+        ctrl = new MessengerController();
+       // ctrl.execute();
 
         return view;
     }
 
+//--------------------------------------------------------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-    @Override
+   @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -81,4 +81,5 @@ public class Messenger extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
 }
