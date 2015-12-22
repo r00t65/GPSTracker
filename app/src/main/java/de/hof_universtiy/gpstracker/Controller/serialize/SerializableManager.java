@@ -2,26 +2,13 @@ package de.hof_universtiy.gpstracker.Controller.serialize;
 
 //**
 
-import android.os.Environment;
-import android.util.Log;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-
-import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
-import de.hof_universtiy.gpstracker.Model.messages.MessageModel;
-
 /**
  * Created by Patrick Büttner on 02.12.2015.
  */
 
 public class SerializableManager//TODO:Fehlerbehandlung
 {
-    private final String LOG_TAG = ConnectionController.class.getSimpleName();
+  /*  private final String LOG_TAG = ConnectionController.class.getSimpleName();
     private ArrayList<MessageModel> messages = new ArrayList<MessageModel>();
 
     public void saveFile(ArrayList<?> msg)
@@ -64,5 +51,5 @@ public class SerializableManager//TODO:Fehlerbehandlung
         }
 
         return null;
-    }
+    }*/
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import de.hof_universtiy.gpstracker.Controller.messenger.MessengerController;
+import de.hof_universtiy.gpstracker.Controller.messenger.OnTaskCompleted;
 import de.hof_universtiy.gpstracker.R;
 
 
-public class Messenger extends Fragment {
+public class Messenger extends Fragment implements OnTaskCompleted{
 
     private OnFragmentInteractionListener mListener;
 
@@ -27,6 +29,7 @@ public class Messenger extends Fragment {
 
     private MessengerController ctrl;
     private ArrayAdapter<String> messageAdapter;
+    private ArrayList<String> messageArrayList;
 
 
     @Override
@@ -44,16 +47,59 @@ public class Messenger extends Fragment {
         messageList = (ListView) view.findViewById(R.id.messagesList);
         sendButton = (Button) view.findViewById(R.id.sendButton);
 
-        messageAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ctrl.sendMessage(messageField.getText().toString());
+                messageField.setText("");
+            }
+        });
 
-        Log.e("start","start");
-        ctrl = new MessengerController();
-       // ctrl.execute();
+        messageAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1);
+        messageArrayList = new ArrayList<>();
+
+        ctrl = new MessengerController(Messenger.this);
+        ctrl.execute();
+
 
         return view;
     }
 
+
+
+    @Override
+    public void onTaskCompleted() {
+        sendButton.setEnabled(true);
+    }
+
+    @Override
+    public void addMessageToList(final String Message, final String Sender) {
+
+        messageList.post(new Runnable() {
+            @Override
+            public void run() {
+
+                messageArrayList.clear();
+
+                int start =  Sender.lastIndexOf("/");
+                String name = Sender.substring(start + 1);
+
+                messageArrayList.add(name + ": " + Message);
+                messageAdapter.addAll(messageArrayList);
+                messageAdapter.notifyDataSetChanged();
+
+                messageList.setAdapter(messageAdapter);
+                messageList.setSelection(messageAdapter.getCount() - 1);
+
+            }
+        });
+
+
+    }
+
+
 //--------------------------------------------------------------------------------------------------------------------------
+
 
    @Override
     public void onAttach(Context context) {
@@ -77,6 +123,7 @@ public class Messenger extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);

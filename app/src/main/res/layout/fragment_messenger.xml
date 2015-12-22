@@ -18,20 +18,21 @@
             android:layout_height="wrap_content"
             android:text="@string/sendMessage"
             android:id="@+id/sendButton"
+            android:enabled="false"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/messageField"
-            android:layout_alignTop="@+id/sendButton"
-            android:layout_toRightOf="@+id/sendButton"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:hint="@string/messageHint"/>
+            android:hint="@string/messageHint"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/sendButton"
+            android:layout_toStartOf="@+id/sendButton" />
 
         <ListView
             android:layout_width="wrap_content"
@@ -44,5 +45,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             />
+
+
     </RelativeLayout>
 </FrameLayout>
