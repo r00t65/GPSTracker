@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import de.hof_universtiy.gpstracker.Controller.messenger.MessengerController;
 import de.hof_universtiy.gpstracker.R;
 
 
@@ -21,6 +22,8 @@ public class Messenger extends Fragment {
     private EditText messageField;
     private ListView messageList;
     private Button sendButton;
+
+    private MessengerController ctrl;
 
 
     @Override
@@ -38,8 +41,18 @@ public class Messenger extends Fragment {
         messageList = (ListView) view.findViewById(R.id.messagesList);
         sendButton = (Button) view.findViewById(R.id.sendButton);
 
+        ctrl = new MessengerController();
+
+
         return view;
     }
+
+
+
+
+
+
+
 
 
     @Override
