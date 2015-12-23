@@ -30,4 +30,7 @@ dependencies {
     compile "org.igniterealtime.smack:smack-tcp:4.1.0"
     compile "org.igniterealtime.smack:smack-android:4.1.0"
     compile "org.igniterealtime.smack:smack-android-extensions:4.1.0"
+    compile "org.apache.commons:commons-lang3:3.0"
+
+
 }

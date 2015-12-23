@@ -11,6 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 
@@ -50,8 +53,16 @@ public class Messenger extends Fragment implements OnTaskCompleted{
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ctrl.sendMessage(messageField.getText().toString());
-                messageField.setText("");
+
+                String message = messageField.getText().toString();
+
+                if (StringUtils.isNotBlank(message)) {
+                    ctrl.sendMessage(message);
+                    messageField.setText("");
+                }
+                else
+                    Toast.makeText(getContext(),"Not possible to send empty message!",Toast.LENGTH_SHORT).show();
+
             }
         });
 
