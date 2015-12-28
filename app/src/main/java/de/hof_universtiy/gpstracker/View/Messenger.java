@@ -13,16 +13,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 
 import de.hof_universtiy.gpstracker.Controller.messenger.MessengerController;
-import de.hof_universtiy.gpstracker.Controller.messenger.OnTaskCompleted;
+import de.hof_universtiy.gpstracker.Controller.messenger.MessengerInterface;
 import de.hof_universtiy.gpstracker.R;
 
 
-public class Messenger extends Fragment implements OnTaskCompleted{
+public class Messenger extends Fragment implements MessengerInterface, View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
@@ -50,21 +48,7 @@ public class Messenger extends Fragment implements OnTaskCompleted{
         messageList = (ListView) view.findViewById(R.id.messagesList);
         sendButton = (Button) view.findViewById(R.id.sendButton);
 
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String message = messageField.getText().toString();
-
-                if (StringUtils.isNotBlank(message)) {
-                    ctrl.sendMessage(message);
-                    messageField.setText("");
-                }
-                else
-                    Toast.makeText(getContext(),"Not possible to send empty message!",Toast.LENGTH_SHORT).show();
-
-            }
-        });
+        sendButton.setOnClickListener(this);
 
         messageAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1);
         messageArrayList = new ArrayList<>();
@@ -72,10 +56,21 @@ public class Messenger extends Fragment implements OnTaskCompleted{
         ctrl = new MessengerController(Messenger.this);
         ctrl.execute();
 
-
         return view;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.sendButton:
+                    String message = messageField.getText().toString();
+                    ctrl.sendMessage(message);
+                break;
+
+            default:
+                break;
+        }
+    }
 
 
     @Override
@@ -84,7 +79,28 @@ public class Messenger extends Fragment implements OnTaskCompleted{
     }
 
     @Override
-    public void addMessageToList(final String Message, final String Sender) {
+    public void clearTextField(){
+        messageField.setText("");
+    }
+
+    @Override
+    public void showEmptyMessageToast(){
+        Toast.makeText(getContext(), "Not possible to send empty message!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCouldNotSendMessageToast(){
+        Toast.makeText(getContext(), "Error occured while sending message; check your internet connection and try to reload chat", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showCouldNotConnectToChatToast(){
+        Toast.makeText(getContext(), "Error occured while connecting to chat; check your internet connection and try to reload chat", Toast.LENGTH_LONG).show();
+    }
+
+
+    @Override
+    public void addMessageToList(final String message, final String sender) {
 
         messageList.post(new Runnable() {
             @Override
@@ -92,10 +108,7 @@ public class Messenger extends Fragment implements OnTaskCompleted{
 
                 messageArrayList.clear();
 
-                int start =  Sender.lastIndexOf("/");
-                String name = Sender.substring(start + 1);
-
-                messageArrayList.add(name + ": " + Message);
+                messageArrayList.add(sender + ": " + message);
                 messageAdapter.addAll(messageArrayList);
                 messageAdapter.notifyDataSetChanged();
 

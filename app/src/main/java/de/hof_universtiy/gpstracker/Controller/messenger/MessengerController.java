@@ -2,6 +2,7 @@ package de.hof_universtiy.gpstracker.Controller.messenger;
 
 import android.os.AsyncTask;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.MessageListener;
@@ -20,11 +21,13 @@ public class MessengerController extends AsyncTask {
     private AbstractXMPPConnection connection;
     private MultiUserChatManager manager;
     private MultiUserChat chat;
-    private OnTaskCompleted listener;
+    private MessengerInterface listener;
 
+    private boolean successfullConnected;
 
-    public MessengerController(OnTaskCompleted listener){
+    public MessengerController(MessengerInterface listener){
         this.listener = listener;
+        successfullConnected = true;
     }
 
     @Override
@@ -36,8 +39,9 @@ public class MessengerController extends AsyncTask {
             joinMultiUserChat();
             addMessageListener();
         }
-        catch (Exception e){}
-
+        catch (Exception e){
+            successfullConnected = false;
+        }
 
         return null;
     }
@@ -76,7 +80,6 @@ public class MessengerController extends AsyncTask {
 
         //ToDo: statt "nickname" Facebook-Nutzernamen einfügen
         chat.join("nickname", "hochschulehof", chatHistory, SmackConfiguration.getDefaultPacketReplyTimeout());
-
     }
 
 
@@ -86,7 +89,10 @@ public class MessengerController extends AsyncTask {
             @Override
             public void processMessage(Message message) {
 
-                listener.addMessageToList(message.getBody(),message.getFrom());
+                int start =  message.getFrom().lastIndexOf("/");
+                String name = message.getFrom().substring(start + 1);
+
+                listener.addMessageToList(message.getBody(),name);
             }
         });
 
@@ -94,10 +100,20 @@ public class MessengerController extends AsyncTask {
 
 
     public void sendMessage(String message) {
-        try {
-            chat.sendMessage(message);
+
+        if(StringUtils.isNotBlank(message)) {
+
+            try {
+                chat.sendMessage(message);
+                listener.clearTextField();
+            }
+            catch (Exception e) {
+                listener.showCouldNotSendMessageToast();
+            }
         }
-        catch (Exception e){}
+        else{
+            listener.showEmptyMessageToast();
+        }
     }
 
 
@@ -105,7 +121,11 @@ public class MessengerController extends AsyncTask {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        listener.onTaskCompleted();
+
+        if(successfullConnected)
+            listener.onTaskCompleted();
+        else
+            listener.showCouldNotConnectToChatToast();
     }
 
 }
