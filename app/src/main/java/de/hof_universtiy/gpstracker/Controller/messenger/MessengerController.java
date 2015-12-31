@@ -22,12 +22,14 @@ public class MessengerController extends AsyncTask {
     private MultiUserChatManager manager;
     private MultiUserChat chat;
     private MessengerInterface listener;
+    private MessageListener messageListener = null;
 
-    private boolean successfullConnected;
+
+    private boolean successfullyConnected;
 
     public MessengerController(MessengerInterface listener){
         this.listener = listener;
-        successfullConnected = true;
+        successfullyConnected = true;
     }
 
     @Override
@@ -40,12 +42,15 @@ public class MessengerController extends AsyncTask {
             addMessageListener();
         }
         catch (Exception e){
-            successfullConnected = false;
+            successfullyConnected = false;
         }
 
         return null;
     }
 
+    public void disconnect(){
+        connection.disconnect();
+    }
 
 
     private void buildConfiguration() throws Exception{
@@ -62,7 +67,6 @@ public class MessengerController extends AsyncTask {
     private void establishConnection() throws  Exception{
 
         connection = new XMPPTCPConnection(configuration.build());
-
         connection.connect();
         connection.login();
 
@@ -85,19 +89,19 @@ public class MessengerController extends AsyncTask {
 
     public void addMessageListener() throws Exception{
 
-        chat.addMessageListener(new MessageListener() {
-            @Override
-            public void processMessage(Message message) {
+            messageListener = new MessageListener() {
+                @Override
+                public void processMessage(Message message) {
+                    int start = message.getFrom().lastIndexOf("/");
+                    String name = message.getFrom().substring(start + 1);
 
-                int start =  message.getFrom().lastIndexOf("/");
-                String name = message.getFrom().substring(start + 1);
+                    listener.addMessageToList(message.getBody(), name);
+                }
+            };
 
-                listener.addMessageToList(message.getBody(),name);
-            }
-        });
+            chat.addMessageListener(messageListener);
 
     }
-
 
     public void sendMessage(String message) {
 
@@ -122,10 +126,15 @@ public class MessengerController extends AsyncTask {
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
 
-        if(successfullConnected)
-            listener.onTaskCompleted();
-        else
+        if(successfullyConnected) {
+            listener.showSuccessfullyConnectedToast();
+            listener.enableSendButton();
+            listener.enableReloadButton();
+        }
+        else {
             listener.showCouldNotConnectToChatToast();
+            listener.enableReloadButton();
+        }
     }
 
 }

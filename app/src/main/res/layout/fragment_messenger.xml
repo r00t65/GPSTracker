@@ -31,8 +31,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/sendButton"
-            android:layout_toStartOf="@+id/sendButton" />
+            android:layout_toStartOf="@+id/reloadButton"
+            android:layout_toLeftOf="@+id/reloadButton" />
 
         <ListView
             android:layout_width="wrap_content"
@@ -46,6 +46,21 @@
             android:focusableInTouchMode="false"
             android:choiceMode="none" />
 
+        <ImageButton
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:id="@+id/reloadButton"
+            android:src="@drawable/reload"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_alignTop="@+id/messageField"
+            android:layout_toLeftOf="@+id/sendButton"
+            android:layout_toStartOf="@+id/sendButton"
+            android:layout_alignBottom="@+id/sendButton"
+            android:background="@android:color/transparent"
+            />
+
 
     </RelativeLayout>
+
 </FrameLayout>

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class Messenger extends Fragment implements MessengerInterface, View.OnCl
     private EditText messageField;
     private ListView messageList;
     private Button sendButton;
+    private ImageButton reloadButton;
 
     private MessengerController ctrl;
     private ArrayAdapter<String> messageAdapter;
@@ -47,8 +49,11 @@ public class Messenger extends Fragment implements MessengerInterface, View.OnCl
         messageField = (EditText) view.findViewById(R.id.messageField);
         messageList = (ListView) view.findViewById(R.id.messagesList);
         sendButton = (Button) view.findViewById(R.id.sendButton);
+        reloadButton = (ImageButton) view.findViewById(R.id.reloadButton);
 
         sendButton.setOnClickListener(this);
+        reloadButton.setOnClickListener(this);
+        reloadButton.setEnabled(false);
 
         messageAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1);
         messageArrayList = new ArrayList<>();
@@ -67,6 +72,17 @@ public class Messenger extends Fragment implements MessengerInterface, View.OnCl
                     ctrl.sendMessage(message);
                 break;
 
+            case R.id.reloadButton:
+                    disableAllButtons();
+
+                    messageAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1);
+                    messageArrayList = new ArrayList<>();
+
+                    ctrl.disconnect();
+                    ctrl = new MessengerController(Messenger.this);
+                    ctrl.execute();
+                break;
+
             default:
                 break;
         }
@@ -74,8 +90,19 @@ public class Messenger extends Fragment implements MessengerInterface, View.OnCl
 
 
     @Override
-    public void onTaskCompleted() {
+    public void enableSendButton() {
         sendButton.setEnabled(true);
+    }
+
+    @Override
+    public void enableReloadButton(){
+        reloadButton.setEnabled(true);
+    }
+
+    @Override
+    public void disableAllButtons(){
+        reloadButton.setEnabled(false);
+        sendButton.setEnabled(false);
     }
 
     @Override
@@ -98,6 +125,10 @@ public class Messenger extends Fragment implements MessengerInterface, View.OnCl
         Toast.makeText(getContext(), "Error occured while connecting to chat; check your internet connection and try to reload chat", Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void showSuccessfullyConnectedToast(){
+        Toast.makeText(getContext(), "Successfully connected to chat", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void addMessageToList(final String message, final String sender) {
@@ -113,11 +144,10 @@ public class Messenger extends Fragment implements MessengerInterface, View.OnCl
                 messageAdapter.notifyDataSetChanged();
 
                 messageList.setAdapter(messageAdapter);
-                messageList.setSelection(messageAdapter.getCount() - 1);
+                messageList.setSelection(messageAdapter.getCount()-1);
 
             }
         });
-
 
     }
 
@@ -141,13 +171,11 @@ public class Messenger extends Fragment implements MessengerInterface, View.OnCl
         super.onDetach();
         mListener = null;
     }
-
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
-
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
