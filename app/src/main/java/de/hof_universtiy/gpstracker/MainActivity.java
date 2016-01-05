@@ -14,6 +14,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
 import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
 import de.hof_universtiy.gpstracker.View.GPSTracker;
 import de.hof_universtiy.gpstracker.View.LoginLogout;
@@ -25,6 +33,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GPSTracker.OnFragmentInteractionListener,
         LoginLogout.OnFragmentInteractionListener, Messenger.OnFragmentInteractionListener,
         Radar.OnFragmentInteractionListener, Settings.OnFragmentInteractionListener {
+
+
 
 
     private Fragment fragment = null;
@@ -68,6 +78,8 @@ public class MainActivity extends AppCompatActivity
 
         ConnectionController connectionController = new ConnectionController();
         connectionController.getWaypointsOfFriends("1");
+
+
     }
 
     @Override
@@ -172,5 +184,21 @@ public class MainActivity extends AppCompatActivity
 
         // Highlight the selected item, update the title, and close the drawer
         menuItem.setChecked(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Logs 'app deactivate' App Event.
+        AppEventsLogger.deactivateApp(this);
     }
 }
