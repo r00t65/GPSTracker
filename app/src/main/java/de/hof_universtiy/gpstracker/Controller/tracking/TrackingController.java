@@ -1,63 +1,53 @@
 package de.hof_universtiy.gpstracker.Controller.tracking;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.location.Location;
-import android.os.Bundle;
-import android.widget.Toast;
-
-import java.io.IOException;
-
-import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerService;
-import de.hof_universtiy.gpstracker.Controller.sensor.gps.GPSController;
+import android.support.annotation.NonNull;
+import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
 import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import de.hof_universtiy.gpstracker.Model.track.Track;
+
+import java.io.IOException;
 
 
 /**
  * Created by alex on 17.12.15.
  */
-public class TrackingController extends ControllerService implements GPSController.TrackingListener {
+public class TrackingController implements TrackingControllerInterface {
 
-    private final TrackingController.TrackingSaveListener listener;
-    public Track track ;
+    public Track track;
     private final Context context;
-    private final SharedPreferences prefs;
 
-    public TrackingController(Context context, StorageController trackingSaveListener) {
-        this.track = new Track();
+    public TrackingController(@NonNull final Context context, StorageController trackingSaveListener) {
         this.context = context;
-        this.prefs = context.getSharedPreferences(StorageController.KEY_SHAREDPREF_TRACK, 0);
-        this.listener = trackingSaveListener;
-    }
-
-    @Override
-    public void setNewPosition(Location location) {
-        track.addNode(location);
-        Toast.makeText(this.context,"add Location",Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void trackEnd() throws IOException {
-        this.saveTrack();
-        this.track = new Track();
+        //this.listener = trackingSaveListener;
     }
 
     private void saveTrack() throws IOException {
-        this.listener.saveTrack(this.track);
+        //this.listener.saveTrack(this.track);
+    }
+
+    /**
+     * Für den Listener im MapController
+     *
+     * @param gpsChangeListener
+     */
+    @Override
+    public void registerListener(@NonNull GPSChangeListener gpsChangeListener) {
+
     }
 
     @Override
-    public void onStartService(Bundle data) throws GPSController.GPSException {
+    public void unregisterListener() {
+
     }
 
     @Override
-    public void onDestroyService(Bundle data) throws GPSController.GPSException {
+    public void onStartService() {
 
     }
 
-    public interface TrackingSaveListener {
+    @Override
+    public void onDestroyService() {
 
-        public void saveTrack(Track track) throws IOException;
     }
 }

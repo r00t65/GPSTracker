@@ -1,29 +1,19 @@
 package de.hof_universtiy.gpstracker.Controller.serialize;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import de.hof_universtiy.gpstracker.Model.track.Track;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.hof_universtiy.gpstracker.Controller.abstractClasses.ControllerService;
-import de.hof_universtiy.gpstracker.Controller.sensor.gps.GPSController;
-import de.hof_universtiy.gpstracker.Controller.tracking.TrackingController;
-import de.hof_universtiy.gpstracker.Model.track.Track;
 
 /**
  * Created by alex on 17.12.15.
  GPSTracker
  */
-public class StorageController extends ControllerService implements TrackingController.TrackingSaveListener {
+public class StorageController implements StorageControllerInterface{
 
     private final static String TRACKS = "track.list";
     private final static String TRACKSBIN = "tracklist.bin";
@@ -33,7 +23,7 @@ public class StorageController extends ControllerService implements TrackingCont
     private final Context context;
     private final List<String> listOfTracks = new ArrayList<>();
 
-    public StorageController(final Context context){
+    public StorageController(@NonNull final Context context){
         this.context = context;
     }
 
@@ -41,14 +31,14 @@ public class StorageController extends ControllerService implements TrackingCont
         return  this.listOfTracks;
     }
 
-    public Track getTrack(final String key){
+    public Track getTrack(@NonNull final String key){
         return null;
     }
 
-    private void updateFiles(final Track track) throws IOException {
+    private void updateFiles(@NonNull final Track track) throws IOException {
         if(track != null) {
             final FileWriter fileWriter = new FileWriter(new File(Environment.getExternalStorageDirectory().getPath() + StorageController.TRACKS));
-            fileWriter.append(track.getTitle() + " " + track.getRangeTime() + " || ");
+            fileWriter.append(track.getName() + " " + " || ");
             fileWriter.close();
 
             final FileOutputStream fos = new FileOutputStream(new File(Environment.getExternalStorageDirectory().getPath() + StorageController.TRACKSBIN));
@@ -72,8 +62,8 @@ public class StorageController extends ControllerService implements TrackingCont
         this.listOfTracks.addAll(list);
     }
 
-    private void saveTrackInFile(Track track) throws IOException {
-        final FileOutputStream fos = new FileOutputStream(new File(Environment.getExternalStorageDirectory().getPath() + StorageController.DIR_TRACKS+"/"+track.getTitle()+".track"));
+    private void saveTrackInFile(@NonNull final Track track) throws IOException {
+        final FileOutputStream fos = new FileOutputStream(new File(Environment.getExternalStorageDirectory().getPath() + StorageController.DIR_TRACKS+"/"+track.getName()+".track"));
 
         final ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(this.listOfTracks);
@@ -82,22 +72,19 @@ public class StorageController extends ControllerService implements TrackingCont
     }
 
     @Override
-    public void onStartService(Bundle data) throws GPSController.GPSException, IOException, ClassNotFoundException {
+    public void onStartService() throws IOException, ClassNotFoundException {
         new File(Environment.getExternalStorageDirectory().getPath() + StorageController.DIR_TRACKS).mkdir();
         this.loadFiles();
     }
 
     @Override
-    public void onDestroyService(Bundle data) throws GPSController.GPSException, IOException {
+    public void onDestroyService() throws IOException {
         this.updateFiles(null);
     }
 
-    @Override
+    /*@Override
     public void saveTrack(Track track) throws IOException {
         this.updateFiles(track);
         this.saveTrackInFile(track);
-    }
-
-
-
+    }*/
 }

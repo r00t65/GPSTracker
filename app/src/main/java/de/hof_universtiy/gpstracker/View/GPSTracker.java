@@ -16,11 +16,13 @@ import android.view.ViewGroup;
 import org.osmdroid.views.MapView;
 
 import de.hof_universtiy.gpstracker.Controller.map.MapController;
-import de.hof_universtiy.gpstracker.Controller.sensor.gps.GPSController;
+import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
 import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import de.hof_universtiy.gpstracker.Controller.service.TrackingService;
 import de.hof_universtiy.gpstracker.Controller.tracking.TrackingController;
 import de.hof_universtiy.gpstracker.R;
+
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -89,7 +91,7 @@ public class GPSTracker extends Fragment {
         // Inflate the layout for this fragment
         this.mapController = new MapController(this.getContext(), (MapView) rootView.findViewById(R.id.mapView));
         //----------------------Test---GPS----------------
-        storageController = new StorageController(this.getContext());
+        /*storageController = new StorageController(this.getContext());
         this.trackingController = new TrackingController(this.getContext(),this.storageController);
         gpsController = new GPSController(this.getContext(), new GPSController.PositionChangeListener() {
             @Override
@@ -104,7 +106,15 @@ public class GPSTracker extends Fragment {
         } catch (GPSController.GPSException e) {
             e.printStackTrace();
         }
-
+        try {
+            this.storageController.onStartService(null);
+        } catch (GPSController.GPSException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }*/
 
         //----------------------Test ---GPS//---------------
 
@@ -142,7 +152,7 @@ public class GPSTracker extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        this.mapController.onStart(null);
+        this.mapController.onStart();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -172,13 +182,12 @@ public class GPSTracker extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-        this.mapController.onPause(null);
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        this.mapController.onDestroy(null);
+        this.mapController.onDestroy();
     }
 
     /**
