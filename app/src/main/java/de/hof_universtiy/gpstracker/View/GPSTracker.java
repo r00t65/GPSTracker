@@ -1,11 +1,14 @@
 package de.hof_universtiy.gpstracker.View;
 
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -49,7 +52,9 @@ public class GPSTracker extends Fragment {
     private TrackingController trackingController;
     private StorageController storageController;
     //----------------------Test ---GPS//---------------
-    private Intent trackingService;
+    private Intent trackingServiceIntent;
+    TrackingService mService;
+
 
 
     public GPSTracker() {
@@ -120,16 +125,22 @@ public class GPSTracker extends Fragment {
 
         //Tracking Service Button
 
-        trackingService = new Intent(this.getActivity(), TrackingService.class);
+        trackingServiceIntent = new Intent(this.getActivity(), TrackingService.class);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!isMyServiceRunning(TrackingService.class)) {
-                    getActivity().startService(trackingService);
+                    getActivity().startService(trackingServiceIntent);
+                    getActivity().bindService(trackingServiceIntent, trackingConnection, Context.BIND_AUTO_CREATE);
+
+//                    String test = mService.getServiceInfo();
+//                    Log.v("BoundService", test);
+
                 } else {
-                    getActivity().stopService(trackingService);
+                    getActivity().stopService(trackingServiceIntent);
+                    getActivity().unbindService(trackingConnection);
                 }
             }
         });
@@ -138,6 +149,25 @@ public class GPSTracker extends Fragment {
 
         return rootView;
     }
+
+    private ServiceConnection trackingConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            TrackingService.LocalBinder binder = (TrackingService.LocalBinder) service;
+            mService = binder.getService();
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+
+        }
+    };
+
+
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);

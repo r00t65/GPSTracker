@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -26,8 +27,10 @@ public class TrackingService extends Service{
     private ServiceHandler mServiceHandler;
     private Notification trackerNotification;
     NotificationManager notificationManager;
+    private final IBinder mBinder = new LocalBinder();
 
     private final class ServiceHandler extends Handler {
+
         public ServiceHandler(Looper looper){
             super(looper);
         }
@@ -93,9 +96,23 @@ public class TrackingService extends Service{
         notificationManager.cancel(1);
     }
 
+
+    public class LocalBinder extends Binder {
+        public TrackingService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return TrackingService.this;
+        }
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mBinder;
+    }
+
+    /** method for clients */
+    public String getServiceInfo(){
+        String info = "Bound Service";
+        return info;
     }
 }
 
