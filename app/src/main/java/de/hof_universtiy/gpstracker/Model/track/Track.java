@@ -1,56 +1,50 @@
 package de.hof_universtiy.gpstracker.Model.track;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import android.support.annotation.NonNull;
 import de.hof_universtiy.gpstracker.Model.Model;
+import de.hof_universtiy.gpstracker.Model.position.Location;
 
 /**
  * Created by alex on 17.12.15.
  */
-public class Track extends Model{
+public final class Track extends Model {
 
-    private final Date startDate;
-    private String title = "Track";
-    private final List<Location> trackPoints = new ArrayList<>();
-    private Date endDate;
+    private final String NAME;
+    private final List<Location> trackList = new ArrayList<>();
 
-    public Track(){
-        this.startDate = new Date();
+    private boolean trackIsFinish = false;
+
+    public Track(@NonNull final String name){
+        this.NAME = name;
     }
 
-    public void addNode(android.location.Location location){
-        this.trackPoints.add(new Location(location));
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void trackEnd(){
-        this.endDate = new Date();
-    }
-
-    public String getRangeTime() {
-        return this.startDate + "--" + this.endDate;
-    }
-
-    public final class Location extends Model{
-        private final android.location.Location location;
-        private final Date date;
-
-        public Location(android.location.Location location){
-            this.location = location;
-            this.date = new Date();
+    public void addNode(@NonNull final Location location) throws TrackFinishException {
+        if(trackIsFinish){
+            throw new TrackFinishException();
         }
+        this.trackList.add((location));
+    }
 
-        public Date getDate(){
-            return this.date;
-        }
+    public String getName() {
+        return this.NAME;
+    }
 
-        public android.location.Location getLocation(){
-            return this.location;
-        }
+    public void finishTrack(){
+        trackIsFinish = true;
+    }
+
+    private void sortTrackList(){
+        Collections.sort(this.trackList, new Comparator<Location>() {
+            @Override
+            public int compare(Location lhs, Location rhs) {
+                return lhs.getDate().compareTo(rhs.getDate());
+            }
+        });
+    }
+
+    public final class TrackFinishException extends Exception{
+
     }
 }
