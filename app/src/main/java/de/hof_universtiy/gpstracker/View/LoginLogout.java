@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -18,6 +19,11 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+
+import de.hof_universtiy.gpstracker.Controller.facebook.FbConnector;
 import de.hof_universtiy.gpstracker.R;
 
 /**
@@ -84,11 +90,15 @@ public class LoginLogout extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login_logout, container, false);
 
+        // Create Userpermissions
+        List<String> facebookPermissions = Arrays.asList("email", "public_profile", "user_friends");
+
+        // Initialize Loginbutton
         LoginButton loginButton = (LoginButton) view.findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_friends");
+        loginButton.setReadPermissions(facebookPermissions);
+
         // If using in a fragment
         loginButton.setFragment(this);
-        // Other app specific specialization
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -107,6 +117,21 @@ public class LoginLogout extends Fragment {
                 Log.d("DFGDDÖFKFJÖJDFGD", "onError ");
             }
         });
+
+        // Initialize TestButton
+        /*
+        Button tmpButton = (Button) view.findViewById(R.id.clickME_button);
+        tmpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FbConnector fbConn = new FbConnector();
+                Log.d("TEST 1", String.valueOf(fbConn.isLoggedIn()));
+                Log.d("TEST 2", fbConn.getUserId());
+                fbConn.getUserInfoJSON();
+                fbConn.getUserFriendlistJSON();
+            }
+        });
+        */
 
         return view;
     }
@@ -155,4 +180,5 @@ public class LoginLogout extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }
