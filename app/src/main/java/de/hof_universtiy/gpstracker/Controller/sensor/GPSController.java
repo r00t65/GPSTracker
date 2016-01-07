@@ -2,17 +2,19 @@ package de.hof_universtiy.gpstracker.Controller.sensor;
 
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
+import de.hof_universtiy.gpstracker.Model.track.Track;
+
+import java.io.IOException;
 
 /**
  * Created by alex on 09.12.15.
  */
-public class GPSController implements LocationListener, GPSControllerInterface {
+public class GPSController implements GPSControllerInterface {
 
     private final LocationManager locationManager;
     private final Context context;
@@ -21,7 +23,6 @@ public class GPSController implements LocationListener, GPSControllerInterface {
     private boolean isTracking = false;
 
     public final static String IS_TRACKING = "IS_TR";
-    private GPSChangeListener mapChangeListener = null;
 
     public GPSController(@NonNull final Context context, @NonNull final GPSChangeListener listener) {
         this.context = context;
@@ -44,7 +45,7 @@ public class GPSController implements LocationListener, GPSControllerInterface {
     }
 
     @Override
-    public void onDestroyService() throws GPSException {
+    public void onDestroyService() throws GPSException, IOException, ClassNotFoundException {
         try {
             locationManager.removeUpdates(this);
         } catch (SecurityException e) {
@@ -76,31 +77,20 @@ public class GPSController implements LocationListener, GPSControllerInterface {
     }
 
     @Override
-    public void endTracking() {
+    public void endTracking() throws IOException, ClassNotFoundException {
         this.isTracking = false;
         this.listener.endTrack();
-    }
-
-    /**
-     * Für den Listener im MapController
-     *
-     * @param mapChangeListener
-     */
-    @Override
-    public void registerListener(@NonNull GPSChangeListener mapChangeListener) {
-        this.mapChangeListener = mapChangeListener;
-    }
-
-    @Override
-    public void unregisterListener() {
-        this.mapChangeListener = null;
     }
 
     @Override
     public void onLocationChanged(Location location) {
         this.listener.newPosition(new de.hof_universtiy.gpstracker.Model.position.Location(location));
         if(this.isTracking)
-            this.listener.newWayPoint(new de.hof_universtiy.gpstracker.Model.position.Location(location));
+            try {
+                this.listener.newWayPoint(new de.hof_universtiy.gpstracker.Model.position.Location(location));
+            } catch (Track.TrackFinishException e) {
+                e.printStackTrace();
+            }
     }
 
     @Override

@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -16,7 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.Toast;
+import de.hof_universtiy.gpstracker.Model.position.Location;
+import de.hof_universtiy.gpstracker.Model.track.Track;
 import org.osmdroid.views.MapView;
 
 import de.hof_universtiy.gpstracker.Controller.map.MapController;
@@ -99,31 +99,23 @@ public class GPSTracker extends Fragment {
         this.mapController.showMyPosition();
 
         //----------------------Test---GPS----------------
-        /*storageController = new StorageController(this.getContext());
-        this.trackingController = new TrackingController(this.getContext(),this.storageController);
-        gpsController = new GPSController(this.getContext(), new GPSController.PositionChangeListener() {
-            @Override
-            public void setNewPosition(Location location) {
-                Log.i(this.getClass().toString(),location.toString());
-            }
-        }, this.trackingController);
+
+        final TrackingController trackingController = new TrackingController((this.getContext()));
+        trackingController.onStartService();
+        trackingController.createTrack("Test1");
         try {
-            final Bundle bundle = new Bundle();
-            bundle.putBoolean(GPSController.IS_TRACKING,true);
-            this.gpsController.onStartService(bundle);
-        } catch (GPSController.GPSException e) {
+            trackingController.newWayPoint(new Location(new android.location.Location("Test1")));
+            trackingController.newWayPoint(new Location(new android.location.Location("Test2")));
+        } catch (Track.TrackFinishException e) {
             e.printStackTrace();
         }
         try {
-            this.storageController.onStartService(null);
-        } catch (GPSController.GPSException e) {
-            e.printStackTrace();
+            trackingController.endTrack();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }*/
-
+        }
         //----------------------Test ---GPS//---------------
 
         //Tracking Service Button
@@ -137,6 +129,10 @@ public class GPSTracker extends Fragment {
                 if (!isMyServiceRunning(TrackingService.class)) {
                     getActivity().startService(trackingServiceIntent);
                     getActivity().bindService(trackingServiceIntent, trackingConnection, Context.BIND_AUTO_CREATE);
+
+//                    String test = mService.getServiceInfo();
+//                    Log.v("BoundService", test);
+
                 } else {
                        String test = mService.getServiceInfo();
                        Log.v("BoundService", test);

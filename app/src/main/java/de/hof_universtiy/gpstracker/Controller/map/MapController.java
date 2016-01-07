@@ -38,12 +38,13 @@ public class MapController implements MapControllerInterface {
     private final Context activityContext;
     private CompassOverlay mCompassOverlay;
     private RotationGestureOverlay mRotationGestureOverlay;
-    private MyLocationNewOverlay mLocationOverlay;
     private MapOverlay myPosition;
+    private final GPSChangeListenerMap gpsChangeListenerMap;
 
     public MapController(final Context context, final MapView mapView) {
         activityContext = context;
         this.mapView = mapView;
+        this.gpsChangeListenerMap = new GPSChangeListenerMap();
     }
 
     @Override
@@ -64,6 +65,10 @@ public class MapController implements MapControllerInterface {
     public void showMyPosition() throws SecurityException {
         this.myPosition = new MapOverlay(this.activityContext, new Location(((LocationManager) this.activityContext.getSystemService(Context.LOCATION_SERVICE)).getLastKnownLocation(LocationManager.NETWORK_PROVIDER)));
         this.mapView.getOverlayManager().add(myPosition);
+    }
+
+    public GPSChangeListener getListener(){
+        return this.gpsChangeListenerMap;
     }
 
     private void configMapView() {

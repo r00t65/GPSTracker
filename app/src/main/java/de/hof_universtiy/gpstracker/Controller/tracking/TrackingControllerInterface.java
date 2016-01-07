@@ -7,7 +7,7 @@ import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
  * Created by alex on 05.01.16.
  * GPSTracker
  */
-public interface TrackingControllerInterface {
+public interface TrackingControllerInterface extends GPSChangeListener {
     /**
      * Für den Listener im MapController
      * @param gpsChangeListener

@@ -3,6 +3,7 @@ package de.hof_universtiy.gpstracker.Controller.serialize;
 import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 
 import java.io.*;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class StorageController implements StorageControllerInterface{
 
-    private final static String TRACKS = "track.list";
+    private final static String TRACKS = "track.txt";
     private final static String TRACKSBIN = "tracklist.bin";
     private final static String DIR_TRACKS = "tracks";
     public final static String KEY_SHAREDPREF_TRACK = "aktTrack";
@@ -37,11 +38,16 @@ public class StorageController implements StorageControllerInterface{
 
     private void updateFiles(@NonNull final Track track) throws IOException {
         if(track != null) {
-            final FileWriter fileWriter = new FileWriter(new File(Environment.getExternalStorageDirectory().getPath() + StorageController.TRACKS));
-            fileWriter.append(track.getName() + " " + " || ");
+            File file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+ StorageController.DIR_TRACKS +"/"+ StorageController.TRACKS);
+            file.createNewFile();
+
+            final FileWriter fileWriter = new FileWriter(file,true);
+            fileWriter.write(track.getName()  + "\n");
             fileWriter.close();
 
-            final FileOutputStream fos = new FileOutputStream(new File(Environment.getExternalStorageDirectory().getPath() + StorageController.TRACKSBIN));
+            file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+ StorageController.DIR_TRACKS +"/"+ StorageController.TRACKSBIN);
+            file.createNewFile();
+            final FileOutputStream fos = new FileOutputStream(file);
 
             final ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(this.listOfTracks);
@@ -51,7 +57,11 @@ public class StorageController implements StorageControllerInterface{
     }
 
     private void loadFiles() throws IOException, ClassNotFoundException {
-        final FileInputStream fis = new FileInputStream(new File(Environment.getExternalStorageDirectory().getPath() + StorageController.TRACKSBIN));
+        final File file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+ StorageController.DIR_TRACKS +"/"+ StorageController.TRACKSBIN);
+        if(file.createNewFile()){
+            this.updateFiles(new Track("Liste aller Tracks:\n"));
+        }
+        final FileInputStream fis = new FileInputStream(file);
 
         final ObjectInputStream ois = new ObjectInputStream(fis);
         final List<String> list = (List<String>) ois.readObject();
@@ -63,8 +73,9 @@ public class StorageController implements StorageControllerInterface{
     }
 
     private void saveTrackInFile(@NonNull final Track track) throws IOException {
-        final FileOutputStream fos = new FileOutputStream(new File(Environment.getExternalStorageDirectory().getPath() + StorageController.DIR_TRACKS+"/"+track.getName()+".track"));
-
+        final File file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+ StorageController.DIR_TRACKS+"/"+track.getName()+".track");
+        file.createNewFile();
+        final FileOutputStream fos = new FileOutputStream(file);
         final ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(this.listOfTracks);
         oos.close();
@@ -73,7 +84,8 @@ public class StorageController implements StorageControllerInterface{
 
     @Override
     public void onStartService() throws IOException, ClassNotFoundException {
-        final File parent = new File(Environment.getExternalStorageDirectory().getPath() + StorageController.DIR_TRACKS);
+        final File parent = new File(Environment.getExternalStorageDirectory().getPath() +"/"+ StorageController.DIR_TRACKS);
+        Log.d("ParentFile",parent.getAbsolutePath());
         if(!parent.exists())
             parent.mkdir();
         this.loadFiles();
