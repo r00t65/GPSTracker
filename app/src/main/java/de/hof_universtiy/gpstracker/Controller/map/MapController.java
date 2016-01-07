@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
 import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.position.MapOverlay;
@@ -84,7 +85,7 @@ public class MapController implements MapControllerInterface {
         return this.mapView.getController();
     }
 
-    private void addNewOverlayPoint(final Location point) {
+    private void addNewOverlayPoint(@NonNull final Location point) {
         MapOverlay mapPoint = new MapOverlay(this.activityContext, point);
         this.mapView.getOverlayManager().add(mapPoint);
         this.mapView.invalidate();
@@ -113,16 +114,17 @@ public class MapController implements MapControllerInterface {
 
         @Override
         public void createTrack(@NonNull String name) {
-
+            Toast.makeText(activityContext,"Create Track",Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void newWayPoint(@NonNull Location location) {
-
+            Toast.makeText(activityContext,"New Point",Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void endTrack() {
+            Toast.makeText(activityContext,"End Track",Toast.LENGTH_LONG).show();
 
         }
     }

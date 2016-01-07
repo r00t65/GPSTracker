@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
@@ -15,6 +16,8 @@ import android.os.Process;
 import android.util.Log;
 import android.widget.Toast;
 
+import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
+import de.hof_universtiy.gpstracker.Controller.tracking.TrackingController;
 import de.hof_universtiy.gpstracker.MainActivity;
 import de.hof_universtiy.gpstracker.R;
 
@@ -29,6 +32,11 @@ public class TrackingService extends Service{
     private Notification trackerNotification;
     NotificationManager notificationManager;
     private final IBinder mBinder = new LocalBinder();
+
+    //-------------------------------Controller---------------------------
+    private  GPSController gpsController;
+    private  TrackingController trackingController;
+    //--------------------------------------------------------------------
 
     private final class ServiceHandler extends Handler {
 
@@ -59,7 +67,10 @@ public class TrackingService extends Service{
     @Override
     public void onCreate(){
         Log.v("Service", "Service erstellt");
-
+        //-------------------------------Controller---------------------------
+        trackingController = new TrackingController(this.getBaseContext());
+        gpsController = new GPSController(this.getBaseContext(),this.trackingController);
+        //--------------------------------------------------------------------
         HandlerThread thread = new HandlerThread("ServiceStartArg", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
 

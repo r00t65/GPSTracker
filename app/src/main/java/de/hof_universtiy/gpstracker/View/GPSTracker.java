@@ -99,10 +99,28 @@ public class GPSTracker extends Fragment {
         this.mapController.showMyPosition();
 
         //----------------------Test---GPS----------------
-
         final TrackingController trackingController = new TrackingController((this.getContext()));
+        final GPSController gpsController = new GPSController(this.getContext(),trackingController);
+        trackingController.registerListener(this.mapController.getListener());
+        try {
+            gpsController.onStartService();
+        } catch (GPSController.GPSException e) {
+            e.printStackTrace();
+        }
+        try {
+            gpsController.startTracking("Test3");
+        } catch (GPSController.GPSException e) {
+            e.printStackTrace();
+        }
+        try {
+            gpsController.endTracking();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         trackingController.onStartService();
-        trackingController.createTrack("Test1");
+        /*trackingController.createTrack("Test1");
         try {
             trackingController.newWayPoint(new Location(new android.location.Location("Test1")));
             trackingController.newWayPoint(new Location(new android.location.Location("Test2")));
@@ -115,7 +133,7 @@ public class GPSTracker extends Fragment {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
         //----------------------Test ---GPS//---------------
 
         //Tracking Service Button
