@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Toast;
 import org.osmdroid.views.MapView;
 
 import de.hof_universtiy.gpstracker.Controller.map.MapController;
@@ -95,6 +96,8 @@ public class GPSTracker extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_gpstracker, container, false);
         // Inflate the layout for this fragment
         this.mapController = new MapController(this.getContext(), (MapView) rootView.findViewById(R.id.mapView));
+        this.mapController.showMyPosition();
+
         //----------------------Test---GPS----------------
         /*storageController = new StorageController(this.getContext());
         this.trackingController = new TrackingController(this.getContext(),this.storageController);

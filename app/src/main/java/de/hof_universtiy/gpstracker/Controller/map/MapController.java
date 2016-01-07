@@ -1,17 +1,34 @@
 package de.hof_universtiy.gpstracker.Controller.map;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Canvas;
+import android.graphics.Point;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.Menu;
+import android.view.MenuItem;
+import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
+import de.hof_universtiy.gpstracker.Model.position.Location;
+import de.hof_universtiy.gpstracker.Model.position.MapOverlay;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
+import org.osmdroid.api.IMapView;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.*;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
+import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
+import java.util.ArrayList;
 
 /**
  * Created by alex on 13.11.15.
@@ -23,13 +40,13 @@ public class MapController implements MapControllerInterface {
     private RotationGestureOverlay mRotationGestureOverlay;
     private MyLocationNewOverlay mLocationOverlay;
 
-    public MapController(final Context context,final MapView mapView) {
+    public MapController(final Context context, final MapView mapView) {
         activityContext = context;
         this.mapView = mapView;
     }
 
     @Override
-    public void goTo(@NonNull final GeoPoint point){
+    public void goTo(@NonNull final GeoPoint point) {
         getMapController().setZoom(5);
         getMapController().setCenter(point);
     }
@@ -41,6 +58,15 @@ public class MapController implements MapControllerInterface {
 
     @Override
     public void onDestroy() {
+    }
+
+    public void showMyPosition() {
+        GeoPoint point3 = new GeoPoint(53554070 + 1000, -2959520 + 1000); // icon goes here
+        this.mapView.getController().setCenter(point3);
+
+        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+        // Put overlay icon a little way from map centre
+        items.add(new OverlayItem("Here", "SampleDescription", point3));
     }
 
     private void configMapView(){
@@ -58,8 +84,8 @@ public class MapController implements MapControllerInterface {
     }
 
     private void addNewOverlayPoint(final GeoPoint point){
-        //final MapOverlay mapPoint = new MapOverlay(this.activityContext,point);
-        //this.mapView.getOverlayManager().add(mapPoint);
+        final MapOverlay mapPoint = new MapOverlay(this.activityContext,point);
+        this.mapView.getOverlayManager().add(mapPoint);
         this.mapView.invalidate();
     }
 
@@ -81,5 +107,28 @@ public class MapController implements MapControllerInterface {
         this.mapView.getOverlayManager().add(this.mRotationGestureOverlay);
         this.mapView.invalidate();
 
+    }
+
+    public class GPSChangeListenerMap implements GPSChangeListener{
+
+        @Override
+        public void newPosition(@NonNull Location location) {
+
+        }
+
+        @Override
+        public void createTrack(@NonNull String name) {
+
+        }
+
+        @Override
+        public void newWayPoint(@NonNull Location location) {
+
+        }
+
+        @Override
+        public void endTrack() {
+
+        }
     }
 }

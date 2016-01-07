@@ -73,7 +73,9 @@ public class StorageController implements StorageControllerInterface{
 
     @Override
     public void onStartService() throws IOException, ClassNotFoundException {
-        new File(Environment.getExternalStorageDirectory().getPath() + StorageController.DIR_TRACKS).mkdir();
+        final File parent = new File(Environment.getExternalStorageDirectory().getPath() + StorageController.DIR_TRACKS);
+        if(!parent.exists())
+            parent.mkdir();
         this.loadFiles();
     }
 
@@ -82,9 +84,9 @@ public class StorageController implements StorageControllerInterface{
         this.updateFiles(null);
     }
 
-    /*@Override
+    @Override
     public void saveTrack(Track track) throws IOException {
         this.updateFiles(track);
         this.saveTrackInFile(track);
-    }*/
+    }
 }
