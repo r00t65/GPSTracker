@@ -18,6 +18,8 @@ import de.hof_universtiy.gpstracker.R;
 
 /**
  * Created by Andreas Ziemer on 16.12.15.
+ * Position an Server
+ *
  */
 public class RadarService extends Service{
 
@@ -31,47 +33,39 @@ public class RadarService extends Service{
 
         @Override
         public void handleMessage(Message msg){
-            //work
-            long endTime = System.currentTimeMillis() + 30*1000;
+            //alle 20 minuten update
+            long endTime = System.currentTimeMillis() + 20*60*1000;
             while(System.currentTimeMillis() < endTime){
                 synchronized (this){
                     try{
                         wait(endTime - System.currentTimeMillis());
+                        //überarbeiten und position an server
                     }catch (Exception e){
                     }
                 }
             }
             //ende
-            stopSelf(msg.arg1);
         }
     }
 
     @Override
     public void onCreate(){
-        Log.v("Service", "Service erstellt");
         HandlerThread thread = new HandlerThread("ServiceStartArg", android.os.Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
-
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startID){
-        Log.v("Service", "Service gestartet");
-        Toast.makeText(this, "Service gestartet", Toast.LENGTH_SHORT).show();
-
         Message msg = mServiceHandler.obtainMessage();
         msg.arg1 = startID;
         mServiceHandler.sendMessage(msg);
-
         return START_STICKY;
     }
 
     @Override
     public void onDestroy(){
-        Log.v("Service", "MessengerService beendet");
-
         serviceNotification();
     }
 
@@ -79,6 +73,7 @@ public class RadarService extends Service{
     public IBinder onBind(Intent intent) {
         return null;
     }
+
 
     public void serviceNotification(){
         Intent intent = new Intent(this, Messenger.class);
@@ -91,7 +86,7 @@ public class RadarService extends Service{
                 .setAutoCancel(true)
                 .build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0,n);
+        notificationManager.notify(1,n);
     }
 
 }

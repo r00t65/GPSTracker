@@ -137,13 +137,11 @@ public class GPSTracker extends Fragment {
                 if (!isMyServiceRunning(TrackingService.class)) {
                     getActivity().startService(trackingServiceIntent);
                     getActivity().bindService(trackingServiceIntent, trackingConnection, Context.BIND_AUTO_CREATE);
-
-//                    String test = mService.getServiceInfo();
-//                    Log.v("BoundService", test);
-
                 } else {
-                    getActivity().stopService(trackingServiceIntent);
+                       String test = mService.getServiceInfo();
+                       Log.v("BoundService", test);
                     getActivity().unbindService(trackingConnection);
+                    getActivity().stopService(trackingServiceIntent);
                 }
             }
         });
@@ -159,14 +157,16 @@ public class GPSTracker extends Fragment {
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
+            Log.d("Binder", "binder");
             TrackingService.LocalBinder binder = (TrackingService.LocalBinder) service;
             mService = binder.getService();
-
+            mService.registerListener();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-
+            mService.saveTrack();
+            mService.unregisterListener();
         }
     };
 

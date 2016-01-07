@@ -1,5 +1,6 @@
 package de.hof_universtiy.gpstracker;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -23,6 +24,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
+import de.hof_universtiy.gpstracker.Controller.service.RadarService;
 import de.hof_universtiy.gpstracker.View.GPSTracker;
 import de.hof_universtiy.gpstracker.View.LoginLogout;
 import de.hof_universtiy.gpstracker.View.Messenger;
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity
 
     private Fragment fragment = null;
     Class fragmentClass;
+
+    private Intent radarServiceIntent;
 
     public void onFragmentInteraction(Uri uri){
         //you can leave it empty bro
@@ -78,6 +82,10 @@ public class MainActivity extends AppCompatActivity
 
         ConnectionController connectionController = new ConnectionController();
         connectionController.getWaypointsOfFriends("1");
+
+        //Service fuer Positionsupdates
+        //radarServiceIntent = new Intent(this, RadarService.class);
+        //startService(radarServiceIntent);
 
 
     }

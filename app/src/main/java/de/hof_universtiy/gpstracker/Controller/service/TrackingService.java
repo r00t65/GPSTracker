@@ -20,6 +20,7 @@ import de.hof_universtiy.gpstracker.R;
 
 /**
  * Created by Andreas Ziemer on 16.12.15.
+ * Track aufzeichnen und an Server senden
  */
 public class TrackingService extends Service{
 
@@ -38,7 +39,8 @@ public class TrackingService extends Service{
         @Override
         public void handleMessage(Message msg){
             //work
-            long endTime = System.currentTimeMillis() + 30*1000;
+            /**
+             long endTime = System.currentTimeMillis() + 30*1000;
             while(System.currentTimeMillis() < endTime){
                 synchronized (this){
                     try{
@@ -47,8 +49,10 @@ public class TrackingService extends Service{
                     }
                 }
             }
+
             //ende
-            stopSelf(msg.arg1);
+            (msg.arg1);
+             */
         }
     }
 
@@ -77,7 +81,7 @@ public class TrackingService extends Service{
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         trackerNotification = new Notification.Builder(this)
                 .setContentTitle("GPSTracker")
-                .setContentText("We are living, we are breathing, we are pieces of defecating meat")
+                .setContentText(getString(R.string.tracking))
                 .setSmallIcon(R.drawable.person)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)
@@ -113,6 +117,18 @@ public class TrackingService extends Service{
     public String getServiceInfo(){
         String info = "Bound Service";
         return info;
+    }
+
+    public void registerListener(){
+
+    }
+
+    public void unregisterListener(){
+
+    }
+
+    public void saveTrack(){
+
     }
 }
 
