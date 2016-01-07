@@ -1,10 +1,8 @@
 package de.hof_universtiy.gpstracker.Model.position;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
+import android.graphics.*;
+import de.hof_universtiy.gpstracker.R;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
@@ -16,13 +14,13 @@ import java.util.Date;
  */
 public class MapOverlay extends org.osmdroid.views.overlay.Overlay {
 
-    private final GeoPoint point;
-    private final Date date;
+    private final Context context;
+    private final Location location;
 
-    public MapOverlay(Context ctx, GeoPoint point) {
+    public MapOverlay(Context ctx, Location point) {
         super(ctx);
-        this.point = point;
-        this.date = new Date();
+        this.context = ctx;
+        this.location = point;
     }
 
     @Override
@@ -31,15 +29,21 @@ public class MapOverlay extends org.osmdroid.views.overlay.Overlay {
             return;
         }
         Point out = new Point();
-        mapView.getProjection().toPixels(point, out);
-
+        mapView.getProjection().toPixels(new GeoPoint(this.location.getLocation()), out);
         Paint paint = new Paint();
         paint.setStrokeWidth(20);
         paint.setColor(Color.RED);
-        canvas.drawPoint(out.x,out.y,paint);
+
+        Bitmap b=BitmapFactory.decodeResource(this.context.getResources(), R.drawable.person);
+        canvas.drawBitmap(b, out.x-b.getWidth()/2,out.y-b.getHeight()/2, paint);
+
+        //canvas.drawPoint(out.x,out.y,paint);
         Paint textPaint = new Paint();
         textPaint.setColor(Color.RED);
         textPaint.setStrokeWidth(5);
-        canvas.drawText(this.date.toString(),out.x,out.y+22,textPaint);
+        canvas.drawText(this.location.getDate().toString(),out.x,out.y+22,textPaint);
+    }
+
+    public void setNewPosition(Location location) {
     }
 }

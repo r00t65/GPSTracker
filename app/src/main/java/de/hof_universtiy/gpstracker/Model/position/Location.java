@@ -1,6 +1,8 @@
 package de.hof_universtiy.gpstracker.Model.position;
 
+import android.support.annotation.NonNull;
 import de.hof_universtiy.gpstracker.Model.Model;
+import org.osmdroid.util.GeoPoint;
 
 import java.util.Date;
 
@@ -12,7 +14,7 @@ public final class Location extends Model {
     private final android.location.Location location;
     private final Date date;
 
-    public Location(final android.location.Location location){
+    public Location(@NonNull final android.location.Location location){
         this.location = location;
         this.date = new Date();
     }

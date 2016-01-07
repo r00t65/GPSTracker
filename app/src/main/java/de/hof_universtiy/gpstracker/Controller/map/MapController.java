@@ -39,6 +39,7 @@ public class MapController implements MapControllerInterface {
     private CompassOverlay mCompassOverlay;
     private RotationGestureOverlay mRotationGestureOverlay;
     private MyLocationNewOverlay mLocationOverlay;
+    private MapOverlay myPosition;
 
     public MapController(final Context context, final MapView mapView) {
         activityContext = context;
@@ -60,48 +61,37 @@ public class MapController implements MapControllerInterface {
     public void onDestroy() {
     }
 
-    public void showMyPosition() {
-        GeoPoint point3 = new GeoPoint(53554070 + 1000, -2959520 + 1000); // icon goes here
-        this.mapView.getController().setCenter(point3);
-
-        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-        // Put overlay icon a little way from map centre
-        items.add(new OverlayItem("Here", "SampleDescription", point3));
+    public void showMyPosition() throws SecurityException {
+        this.myPosition = new MapOverlay(this.activityContext, new Location(((LocationManager) this.activityContext.getSystemService(Context.LOCATION_SERVICE)).getLastKnownLocation(LocationManager.NETWORK_PROVIDER)));
+        this.mapView.getOverlayManager().add(myPosition);
     }
 
-    private void configMapView(){
+    private void configMapView() {
         this.mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
         this.mapView.setBuiltInZoomControls(true);
         this.mapView.setMultiTouchControls(true);
         this.mapView.getController().setZoom(5);
         enableCompass(true);
         enableRotationGesture();
-        setOwnPosition();
     }
 
-    private IMapController getMapController(){
+    private IMapController getMapController() {
         return this.mapView.getController();
     }
 
-    private void addNewOverlayPoint(final GeoPoint point){
-        final MapOverlay mapPoint = new MapOverlay(this.activityContext,point);
+    private void addNewOverlayPoint(final Location point) {
+        MapOverlay mapPoint = new MapOverlay(this.activityContext, point);
         this.mapView.getOverlayManager().add(mapPoint);
         this.mapView.invalidate();
     }
 
-    private void setOwnPosition(){
-        this.mLocationOverlay = new MyLocationNewOverlay(this.activityContext, new GpsMyLocationProvider(this.activityContext),this.mapView);
-        this.mapView.getOverlays().add(this.mLocationOverlay);
-        this.mapView.invalidate();
-    }
-
-    private void enableCompass(final boolean value){
+    private void enableCompass(final boolean value) {
         this.mCompassOverlay = new CompassOverlay(this.activityContext, new InternalCompassOrientationProvider(this.activityContext), this.mapView);
         this.mapView.getOverlayManager().add(this.mCompassOverlay);
         this.mapView.invalidate();
     }
 
-    private void enableRotationGesture(){
+    private void enableRotationGesture() {
         mRotationGestureOverlay = new RotationGestureOverlay(this.activityContext, this.mapView);
         mRotationGestureOverlay.setEnabled(true);
         this.mapView.getOverlayManager().add(this.mRotationGestureOverlay);
@@ -109,11 +99,11 @@ public class MapController implements MapControllerInterface {
 
     }
 
-    public class GPSChangeListenerMap implements GPSChangeListener{
+    public class GPSChangeListenerMap implements GPSChangeListener {
 
         @Override
         public void newPosition(@NonNull Location location) {
-
+            myPosition.setNewPosition(location);
         }
 
         @Override
