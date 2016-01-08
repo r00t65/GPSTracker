@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
+import de.hof_universtiy.gpstracker.Controller.listener.NotificationTrackListener;
 import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.track.Track;
@@ -19,16 +20,10 @@ public final class TrackingController implements TrackingControllerInterface {
     public Track track;
     private final Context context;
     private GPSChangeListener gpsChangeListener;
+    private NotificationTrackListener listenerForServerConnetion;
 
     public TrackingController(@NonNull final Context context) {
         this.context = context;
-    }
-
-    private void saveTrack() throws IOException, ClassNotFoundException {
-        final StorageController str = new StorageController(this.context);
-        str.onStartService();
-        str.saveTrack(this.track);
-
     }
 
     /**
@@ -37,13 +32,23 @@ public final class TrackingController implements TrackingControllerInterface {
      * @param gpsChangeListener
      */
     @Override
-    public void registerListener(@NonNull GPSChangeListener gpsChangeListener) {
+    public void registerGPSListener(@NonNull GPSChangeListener gpsChangeListener) {
         this.gpsChangeListener = gpsChangeListener;
     }
 
     @Override
-    public void unregisterListener() {
+    public void unregisterGPSListener() {
         this.gpsChangeListener = null;
+    }
+
+    @Override
+    public void registerServerListener(@NonNull NotificationTrackListener listener) {
+        this.listenerForServerConnetion = listener;
+    }
+
+    @Override
+    public void unregisterServerListener() {
+        this.listenerForServerConnetion = null;
     }
 
     @Override
@@ -85,5 +90,12 @@ public final class TrackingController implements TrackingControllerInterface {
             this.gpsChangeListener.endTrack();
         }
         this.saveTrack();
+    }
+
+    private void saveTrack() throws IOException, ClassNotFoundException {
+        final StorageController str = new StorageController(this.context);
+        str.onStartService();
+        str.saveTrack(this.track);
+
     }
 }
