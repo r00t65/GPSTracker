@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * Created by alex on 17.12.15.
  */
-public class TrackingController implements TrackingControllerInterface {
+public final class TrackingController implements TrackingControllerInterface {
 
     public Track track;
     private final Context context;
@@ -85,6 +85,5 @@ public class TrackingController implements TrackingControllerInterface {
             this.gpsChangeListener.endTrack();
         }
         this.saveTrack();
-        this.track = null;
     }
 }

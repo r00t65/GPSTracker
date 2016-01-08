@@ -16,10 +16,13 @@ import android.os.Process;
 import android.util.Log;
 import android.widget.Toast;
 
+import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
 import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
 import de.hof_universtiy.gpstracker.Controller.tracking.TrackingController;
 import de.hof_universtiy.gpstracker.MainActivity;
 import de.hof_universtiy.gpstracker.R;
+
+import java.io.IOException;
 
 /**
  * Created by Andreas Ziemer on 16.12.15.
@@ -82,7 +85,19 @@ public class TrackingService extends Service{
     public int onStartCommand(Intent intent, int flags, int startID){
         Log.v("Service", "Service gestartet");
         Toast.makeText(this, "Service gestartet", Toast.LENGTH_SHORT).show();
-
+        //-------------------------------Controller---------------------------
+        trackingController.onStartService();
+        try {
+            gpsController.onStartService();
+        } catch (GPSController.GPSException e) {
+            e.printStackTrace();
+        }
+        try {
+            gpsController.startTracking("Test");
+        } catch (GPSController.GPSException e) {
+            e.printStackTrace();
+        }
+        //--------------------------------------------------------------------
         Message msg = mServiceHandler.obtainMessage();
         msg.arg1 = startID;
         mServiceHandler.sendMessage(msg);
@@ -107,6 +122,25 @@ public class TrackingService extends Service{
 
     @Override
     public void onDestroy() {
+        //-------------------------------Controller---------------------------
+        try {
+            gpsController.endTracking();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        trackingController.onDestroyService();
+        try {
+            gpsController.onDestroyService();
+        } catch (GPSController.GPSException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        //--------------------------------------------------------------------
         Log.v("Service", "Service beendet");
         notificationManager.cancel(1);
     }
@@ -130,12 +164,12 @@ public class TrackingService extends Service{
         return info;
     }
 
-    public void registerListener(){
-
+    public void registerListener(GPSChangeListener gpsChangeListener){
+        trackingController.registerListener(gpsChangeListener);
     }
 
     public void unregisterListener(){
-
+        trackingController.unregisterListener();
     }
 
     public void saveTrack(){

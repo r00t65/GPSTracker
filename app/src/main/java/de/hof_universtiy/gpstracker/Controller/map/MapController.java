@@ -1,35 +1,18 @@
 package de.hof_universtiy.gpstracker.Controller.map;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.Canvas;
-import android.graphics.Point;
-import android.location.LocationManager;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
+import de.hof_universtiy.gpstracker.Model.mapoverlays.RouteMapOverlay;
 import de.hof_universtiy.gpstracker.Model.position.Location;
-import de.hof_universtiy.gpstracker.Model.position.MapOverlay;
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.api.IMapView;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.*;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
-import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-
-import java.util.ArrayList;
 
 /**
  * Created by alex on 13.11.15.
@@ -39,7 +22,6 @@ public class MapController implements MapControllerInterface {
     private final Context activityContext;
     private CompassOverlay mCompassOverlay;
     private RotationGestureOverlay mRotationGestureOverlay;
-    private MapOverlay myPosition;
     private final GPSChangeListenerMap gpsChangeListenerMap;
 
     public MapController(final Context context, final MapView mapView) {
@@ -64,8 +46,8 @@ public class MapController implements MapControllerInterface {
     }
 
     public void showMyPosition() throws SecurityException {
-        this.myPosition = new MapOverlay(this.activityContext, new Location(((LocationManager) this.activityContext.getSystemService(Context.LOCATION_SERVICE)).getLastKnownLocation(LocationManager.NETWORK_PROVIDER)));
-        this.mapView.getOverlayManager().add(myPosition);
+       // this.myPosition = new MapOverlay(this.activityContext, new Location(((LocationManager) this.activityContext.getSystemService(Context.LOCATION_SERVICE)).getLastKnownLocation(LocationManager.GPS_PROVIDER)));
+        //this.mapView.getOverlayManager().add(myPosition);
     }
 
     public GPSChangeListener getListener(){
@@ -86,7 +68,7 @@ public class MapController implements MapControllerInterface {
     }
 
     private void addNewOverlayPoint(@NonNull final Location point) {
-        MapOverlay mapPoint = new MapOverlay(this.activityContext, point);
+        final RouteMapOverlay mapPoint = new RouteMapOverlay(this.activityContext, point);
         this.mapView.getOverlayManager().add(mapPoint);
         this.mapView.invalidate();
     }
@@ -109,7 +91,7 @@ public class MapController implements MapControllerInterface {
 
         @Override
         public void newPosition(@NonNull Location location) {
-            myPosition.setNewPosition(location);
+            addNewOverlayPoint(location);
         }
 
         @Override
@@ -119,7 +101,7 @@ public class MapController implements MapControllerInterface {
 
         @Override
         public void newWayPoint(@NonNull Location location) {
-            Toast.makeText(activityContext,"New Point",Toast.LENGTH_LONG).show();
+            Toast.makeText(activityContext,"New Point: "+location.getDate()+" | "+ location.getLocation().toString(),Toast.LENGTH_LONG).show();
         }
 
         @Override

@@ -53,7 +53,6 @@ public class GPSController implements GPSControllerInterface {
             ex.setStackTrace(e.getStackTrace());
             throw ex;
         }
-        this.endTracking();
     }
 
     @Override

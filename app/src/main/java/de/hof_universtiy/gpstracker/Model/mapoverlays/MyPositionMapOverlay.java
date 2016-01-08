@@ -1,7 +1,8 @@
-package de.hof_universtiy.gpstracker.Model.position;
+package de.hof_universtiy.gpstracker.Model.mapoverlays;
 
 import android.content.Context;
 import android.graphics.*;
+import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.R;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -12,14 +13,14 @@ import java.util.Date;
  * Created by alex on 07.01.16.
  * GPSTracker
  */
-public class MapOverlay extends org.osmdroid.views.overlay.Overlay {
+public class MyPositionMapOverlay extends org.osmdroid.views.overlay.Overlay {
 
     private final Context context;
     private final Location location;
 
-    public MapOverlay(Context ctx, Location point) {
-        super(ctx);
-        this.context = ctx;
+    public MyPositionMapOverlay(Context context, Location point) {
+        super(context);
+        this.context = context;
         this.location = point;
     }
 
@@ -40,8 +41,5 @@ public class MapOverlay extends org.osmdroid.views.overlay.Overlay {
         textPaint.setColor(Color.RED);
         textPaint.setStrokeWidth(5);
         canvas.drawText(this.location.getDate().toString(),out.x,out.y+22,textPaint);
-    }
-
-    public void setNewPosition(Location location) {
     }
 }

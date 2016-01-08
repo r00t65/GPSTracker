@@ -4,10 +4,12 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,8 +34,15 @@ public class StorageController implements StorageControllerInterface{
         return  this.listOfTracks;
     }
 
-    public Track getTrack(@NonNull final String key){
-        return null;
+    public Track getTrack(@NonNull final String key) throws IOException, ClassNotFoundException {
+        Track track = null;
+        final File file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+ StorageController.DIR_TRACKS+"/"+key+".track");
+        final FileInputStream fis = new FileInputStream(file);
+        final ObjectInputStream ois = new ObjectInputStream(fis);
+        track = (Track) ois.readObject();
+        ois.close();
+        fis.close();
+        return track;
     }
 
     private void updateFiles(@NonNull final Track track) throws IOException {
@@ -73,13 +82,28 @@ public class StorageController implements StorageControllerInterface{
     }
 
     private void saveTrackInFile(@NonNull final Track track) throws IOException {
+        this.saveTrackLOG(track);
+
         final File file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+ StorageController.DIR_TRACKS+"/"+track.getName()+".track");
         file.createNewFile();
         final FileOutputStream fos = new FileOutputStream(file);
         final ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(this.listOfTracks);
+        oos.writeObject(track);
         oos.close();
         fos.close();
+    }
+
+    private void saveTrackLOG(@NonNull final Track track) throws IOException{
+        final File file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+ StorageController.DIR_TRACKS+"/"+track.getName()+"_track.txt");
+        file.createNewFile();
+        final FileWriter fileWriter = new FileWriter(file,true);
+        fileWriter.append("Das ist der Track "+track.getName() + " || Aufgenommen am "+new Date().toString()+"\n");
+        fileWriter.append("---------------------------------------------------------------\n");
+        for(Location location:track.getTracks())
+            fileWriter.append(location.getLocation() + " | " + location.getDate()+ "\n");
+        fileWriter.append("---------------------------------------------------------------\n");
+        fileWriter.append("End of Track\n");
+        fileWriter.close();
     }
 
     @Override

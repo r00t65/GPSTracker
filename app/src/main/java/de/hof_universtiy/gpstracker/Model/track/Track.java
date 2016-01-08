@@ -44,6 +44,10 @@ public final class Track extends Model {
         });
     }
 
+    public List<Location> getTracks() {
+        return this.trackList;
+    }
+
     public final class TrackFinishException extends Exception{
 
     }
