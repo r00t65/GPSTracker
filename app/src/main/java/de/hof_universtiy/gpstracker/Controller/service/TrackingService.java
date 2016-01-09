@@ -165,11 +165,11 @@ public class TrackingService extends Service{
     }
 
     public void registerListener(GPSChangeListener gpsChangeListener){
-        trackingController.registerListener(gpsChangeListener);
+        trackingController.registerGPSListener(gpsChangeListener);
     }
 
     public void unregisterListener(){
-        trackingController.unregisterListener();
+        trackingController.unregisterGPSListener();
     }
 
     public void saveTrack(){
