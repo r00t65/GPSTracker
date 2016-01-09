@@ -84,7 +84,6 @@ public class TrackingService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startID){
         Log.v("Service", "Service gestartet");
-        Toast.makeText(this, "Service gestartet", Toast.LENGTH_SHORT).show();
         //-------------------------------Controller---------------------------
         trackingController.onStartService();
         try {
@@ -165,11 +164,13 @@ public class TrackingService extends Service{
     }
 
     public void registerListener(GPSChangeListener gpsChangeListener){
-        trackingController.registerListener(gpsChangeListener);
+        //trackingController.registerListener(gpsChangeListener);
+        trackingController.registerGPSListener(gpsChangeListener);
     }
 
     public void unregisterListener(){
-        trackingController.unregisterListener();
+       // trackingController.unregisterListener();
+        trackingController.unregisterGPSListener();
     }
 
     public void saveTrack(){

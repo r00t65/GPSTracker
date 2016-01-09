@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:title="Radar">
+
+        <CheckBoxPreference
+            android:key="radar_active"
+            android:title="Radar aktivieren"
+            android:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Chat">
+
+        <EditTextPreference
+            android:key="nickname"
+            android:title="Nickname"
+            android:defaultValue="name"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>         
