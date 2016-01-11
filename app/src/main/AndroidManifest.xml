@@ -36,12 +36,10 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".Controller.service.RadarServiceReceiver" android:process=":remote"/>
         <service android:name=".Controller.service.TrackingService" />
         <service android:name=".Controller.service.RadarService" />
-        <service
-            android:name="xml.TestService"
-            android:enabled="true"
-            android:exported="true"></service>
+
     </application>
 
 </manifest>

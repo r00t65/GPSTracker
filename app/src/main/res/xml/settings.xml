@@ -4,21 +4,17 @@
     <PreferenceCategory
         android:title="Radar">
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="radar_active"
             android:title="Radar aktivieren"
             android:defaultValue="false"/>
 
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="Chat">
-
-        <EditTextPreference
-            android:key="nickname"
-            android:title="Nickname"
-            android:defaultValue="name"/>
-
+        <ListPreference
+            android:key="radar_interval"
+            android:title="Aktualisierung"
+            android:summary="Interval für Radaraktualisierung"
+            android:entries="@array/listentries"
+            android:entryValues="@array/listvalues"/>
     </PreferenceCategory>
 
 </PreferenceScreen>         

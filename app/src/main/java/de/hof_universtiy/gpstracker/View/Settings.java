@@ -3,14 +3,14 @@ package de.hof_universtiy.gpstracker.View;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
+import android.preference.ListPreference;
+import android.preference.SwitchPreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
+
 
 import de.hof_universtiy.gpstracker.R;
 
@@ -26,8 +26,8 @@ public class Settings extends PreferenceFragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private CheckBoxPreference radarStatus;
-    private EditTextPreference nickname;
+    private SwitchPreference radarStatus;
+    private ListPreference radarInt;
 
     public Settings() {
         // Required empty public constructor
@@ -68,15 +68,15 @@ public class Settings extends PreferenceFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        radarStatus = (CheckBoxPreference) getPreferenceManager().findPreference("radar_active");
-        nickname = (EditTextPreference) getPreferenceManager().findPreference("nickname");
+        radarStatus = (SwitchPreference) getPreferenceManager().findPreference("radar_active");
+        radarInt = (ListPreference) getPreferenceManager().findPreference("radar_interval");
 
-        radarStatus.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                return false;
-            }
-        });
+      //  radarStatus.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+      //      @Override
+      //      public boolean onPreferenceChange(Preference preference, Object newValue) {
+      //          return true;
+      //      }
+      //  });
 
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
