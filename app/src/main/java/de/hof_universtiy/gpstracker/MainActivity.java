@@ -29,9 +29,6 @@ public class MainActivity extends AppCompatActivity
         LoginLogoutFragment.OnFragmentInteractionListener, MessengerFragment.OnFragmentInteractionListener,
         RadarFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
 
-
-
-
     private Fragment fragment = null;
     Class fragmentClass;
 
@@ -58,7 +55,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        fragmentClass = RadarFragment.class;
+        fragmentClass = GPSTrackerFragment.class;
 
         try {
             fragment = (Fragment) fragmentClass.newInstance();

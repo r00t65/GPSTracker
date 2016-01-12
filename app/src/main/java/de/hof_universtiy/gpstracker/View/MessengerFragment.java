@@ -37,6 +37,7 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getActivity().setTitle("Messenger");
         super.onCreate(savedInstanceState);
 
     }

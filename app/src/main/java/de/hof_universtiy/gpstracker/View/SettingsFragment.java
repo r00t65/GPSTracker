@@ -50,6 +50,7 @@ public class SettingsFragment extends PreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getActivity().setTitle("Settings");
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {

@@ -1,8 +1,10 @@
 package de.hof_universtiy.gpstracker.View;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
@@ -10,11 +12,15 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import de.hof_universtiy.gpstracker.MainActivity;
 import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 import org.osmdroid.views.MapView;
@@ -45,6 +51,7 @@ public class GPSTrackerFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private  String trackName;
 
     private OnFragmentInteractionListener mListener;
     private MapController mapController;
@@ -76,6 +83,7 @@ public class GPSTrackerFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getActivity().setTitle("GPSTracker");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -102,6 +110,12 @@ public class GPSTrackerFragment extends Fragment {
                 if (!isMyServiceRunning(TrackingService.class)) {
                     getActivity().startService(trackingServiceIntent);
                     getActivity().bindService(trackingServiceIntent, trackingConnection, Context.BIND_AUTO_CREATE);
+                    Context context = getContext();
+                    CharSequence text = "Track wurde gestartet";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
 
 
 //                    String test = mService.getServiceInfo();
@@ -109,9 +123,29 @@ public class GPSTrackerFragment extends Fragment {
 
                 } else {
                     String test = mService.getServiceInfo();
-                       Log.v("BoundService", test);
+                    Log.v("BoundService", test);
                     getActivity().unbindService(trackingConnection);
                     getActivity().stopService(trackingServiceIntent);
+
+                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                    alertDialog.setTitle("Track speichern");
+                    alertDialog.setMessage("Bitte geben sie den Namen des Tracks ein: ");
+
+                    final EditText input = new EditText(getActivity());
+                    input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    alertDialog.setView(input);
+
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    trackName = input.getText().toString();
+                                    if (input.getText().toString().isEmpty()) {
+                                        trackName = "Unbenannter Track";
+                                        dialog.dismiss();
+                                    }
+                                }
+                            });
+                    alertDialog.show();
                 }
             }
         });
