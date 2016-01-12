@@ -1,14 +1,13 @@
 package de.hof_universtiy.gpstracker.Controller.map;
 
-import android.support.annotation.NonNull;
-import org.osmdroid.util.GeoPoint;
+
+import de.hof_universtiy.gpstracker.Controller.listener.GPSMapChangeListener;
 
 /**
  * Created by alex on 05.01.16.
  * GPSTracker
  */
 public interface MapControllerInterface {
-    public void goTo(@NonNull GeoPoint point);
-    public void onStart();
-    public void onDestroy();
+    public void showMyPosition() throws SecurityException;
+    public GPSMapChangeListener getListener();
 }
