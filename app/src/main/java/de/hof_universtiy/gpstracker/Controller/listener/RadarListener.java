@@ -1,5 +1,7 @@
 package de.hof_universtiy.gpstracker.Controller.listener;
 
+import android.support.annotation.NonNull;
+import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.radar.Friend;
 
 import java.util.List;
@@ -9,5 +11,5 @@ import java.util.List;
  * GPSTracker
  */
 public interface RadarListener {
-    public void setListOfFriends(List<Friend> friendList);
+    public void setListOfFriends(@NonNull final Location myPosition,@NonNull final List<Friend> friendList);
 }

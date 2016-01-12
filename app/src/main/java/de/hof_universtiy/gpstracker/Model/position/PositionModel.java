@@ -1,8 +1,7 @@
 package de.hof_universtiy.gpstracker.Model.position;
 
-import org.osmdroid.util.GeoPoint;
-
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Patrick Büttner on 21.11.2015.
@@ -10,17 +9,17 @@ import java.io.Serializable;
 public class PositionModel implements Serializable
 {
     private String id;
-    private GeoPoint geoPoint;//TODO: Wieso Geopoints, es gibt doch Location
+    private Location location;
 
     public PositionModel()
     {
 
     }
 
-    public PositionModel(String id, double latitude, double longitude)
+    public PositionModel(String id, double latitude, double longitude,Date time)
     {
         this.id = id;
-        geoPoint = new GeoPoint(latitude, longitude);
+        location = new Location(latitude, longitude,time);
     }
 
     public String getId()
@@ -35,7 +34,7 @@ public class PositionModel implements Serializable
 
     public double getLongitude()
     {
-        return geoPoint.getLongitude();
+        return location.getLocation().getLongitude();
     }
 
     /*public void setLongitude(double longitude)
@@ -45,7 +44,7 @@ public class PositionModel implements Serializable
 
     public double getLatitude()
     {
-        return geoPoint.getLatitude();
+        return location.getLocation().getLatitude();
     }
 
     /*public void setLatitude(double latitude)

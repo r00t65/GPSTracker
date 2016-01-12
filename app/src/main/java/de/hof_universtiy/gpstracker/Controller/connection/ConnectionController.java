@@ -24,6 +24,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
@@ -286,7 +287,7 @@ public class ConnectionController{
                 Double latitude = jFriend.getDouble(LATITUDE);
                 Double longitude = jFriend.getDouble(LONGITUDE);
 
-                PositionModel positionModel = new PositionModel(id,latitude, longitude);
+                PositionModel positionModel = new PositionModel(id,latitude, longitude,new Date());//TODO:Zeitpunkt der Aufnahme
 
                 position.add(positionModel);
             }

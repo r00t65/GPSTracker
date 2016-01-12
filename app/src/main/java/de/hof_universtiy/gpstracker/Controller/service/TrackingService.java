@@ -17,6 +17,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
+import de.hof_universtiy.gpstracker.Controller.listener.GPSMapChangeListener;
 import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
 import de.hof_universtiy.gpstracker.Controller.tracking.TrackingController;
 import de.hof_universtiy.gpstracker.MainActivity;
@@ -163,7 +164,7 @@ public class TrackingService extends Service{
         return info;
     }
 
-    public void registerListener(GPSChangeListener gpsChangeListener){
+    public void registerListener(GPSMapChangeListener gpsChangeListener){
         //trackingController.registerListener(gpsChangeListener);
         trackingController.registerGPSListener(gpsChangeListener);
     }

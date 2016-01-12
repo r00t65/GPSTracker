@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
+import de.hof_universtiy.gpstracker.Controller.listener.GPSMapChangeListener;
 import de.hof_universtiy.gpstracker.Controller.listener.NotificationTrackListener;
 import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import de.hof_universtiy.gpstracker.Model.position.Location;
@@ -19,7 +20,7 @@ public final class TrackingController implements TrackingControllerInterface {
 
     public Track track;
     private final Context context;
-    private GPSChangeListener gpsChangeListener;
+    private GPSMapChangeListener gpsChangeListener;
     private NotificationTrackListener listenerForServerConnetion;
 
     public TrackingController(@NonNull final Context context) {
@@ -32,7 +33,7 @@ public final class TrackingController implements TrackingControllerInterface {
      * @param gpsChangeListener
      */
     @Override
-    public void registerGPSListener(@NonNull GPSChangeListener gpsChangeListener) {
+    public void registerGPSListener(@NonNull GPSMapChangeListener gpsChangeListener) {
         this.gpsChangeListener = gpsChangeListener;
     }
 
@@ -72,16 +73,16 @@ public final class TrackingController implements TrackingControllerInterface {
 
     @Override
     public void createTrack(@NonNull String name) {
-        if(this.gpsChangeListener != null){
-            this.gpsChangeListener.createTrack(name);
-        }
         this.track = new Track(name);
+        if(this.gpsChangeListener != null){
+            this.gpsChangeListener.updateTrack(this.track);
+        }
     }
 
     @Override
     public void newWayPoint(@NonNull Location location) throws Track.TrackFinishException {
         if(this.gpsChangeListener != null){
-            this.gpsChangeListener.newWayPoint(location);
+            this.gpsChangeListener.updateTrack(this.track);
         }
         if(this.listenerForServerConnetion != null)
             this.listenerForServerConnetion.newPosition(location);
@@ -91,7 +92,7 @@ public final class TrackingController implements TrackingControllerInterface {
     @Override
     public void endTrack() throws IOException, ClassNotFoundException {
         if(this.gpsChangeListener != null){
-            this.gpsChangeListener.endTrack();
+            this.gpsChangeListener.updateTrack(this.track);
         }
         if(this.listenerForServerConnetion != null)
             this.listenerForServerConnetion.trackFinish(this.track);

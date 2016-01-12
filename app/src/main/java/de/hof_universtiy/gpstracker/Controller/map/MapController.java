@@ -2,17 +2,26 @@ package de.hof_universtiy.gpstracker.Controller.map;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
-import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
-import de.hof_universtiy.gpstracker.Model.mapoverlays.RouteMapOverlay;
+import de.hof_universtiy.gpstracker.Controller.listener.GPSMapChangeListener;
+import de.hof_universtiy.gpstracker.Controller.listener.RadarListener;
+import de.hof_universtiy.gpstracker.Model.mapoverlays.MyPositionMapOverlay;
 import de.hof_universtiy.gpstracker.Model.position.Location;
+import de.hof_universtiy.gpstracker.Model.radar.Friend;
+import de.hof_universtiy.gpstracker.Model.track.Track;
 import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.overlays.Polyline;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by alex on 13.11.15.
@@ -50,7 +59,7 @@ public class MapController implements MapControllerInterface {
         //this.mapView.getOverlayManager().add(myPosition);
     }
 
-    public GPSChangeListener getListener(){
+    public GPSMapChangeListener getListener(){
         return this.gpsChangeListenerMap;
     }
 
@@ -67,8 +76,8 @@ public class MapController implements MapControllerInterface {
         return this.mapView.getController();
     }
 
-    private void addNewOverlayPoint(@NonNull final Location point) {
-        final RouteMapOverlay mapPoint = new RouteMapOverlay(this.activityContext, point);
+    private void addMyPositionMapOverlayPoint(@NonNull final Location point) {
+        final MyPositionMapOverlay mapPoint = new MyPositionMapOverlay(this.activityContext, point);
         this.mapView.getOverlayManager().add(mapPoint);
         this.mapView.invalidate();
     }
@@ -87,26 +96,33 @@ public class MapController implements MapControllerInterface {
 
     }
 
-    public class GPSChangeListenerMap implements GPSChangeListener {
+    public class GPSChangeListenerMap implements GPSMapChangeListener {
 
         @Override
         public void newPosition(@NonNull Location location) {
-            addNewOverlayPoint(location);
+            addMyPositionMapOverlayPoint(location);
         }
 
         @Override
-        public void createTrack(@NonNull String name) {
-            Toast.makeText(activityContext,"Create Track",Toast.LENGTH_LONG).show();
+        public void updateTrack(@NonNull Track track) {
+            RoadManager roadManager = new OSRMRoadManager();
+            ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+
+            for(Location location: track.getTracks()){
+                waypoints.add(new GeoPoint(location.getLocation()));
+            }
+            Road road = roadManager.getRoad(waypoints);
+            Polyline roadOverlay = RoadManager.buildRoadOverlay(road, activityContext);
+            mapView.getOverlays().add(roadOverlay);
+            mapView.invalidate();
         }
 
-        @Override
-        public void newWayPoint(@NonNull Location location) {
-            Toast.makeText(activityContext,"New Point: "+location.getDate()+" | "+ location.getLocation().toString(),Toast.LENGTH_LONG).show();
-        }
+
+    }
+    public class RadarMapListener implements RadarListener {
 
         @Override
-        public void endTrack() {
-            Toast.makeText(activityContext,"End Track",Toast.LENGTH_LONG).show();
+        public void setListOfFriends(@NonNull Location myPosition, @NonNull List<Friend> friendList) {
 
         }
     }
