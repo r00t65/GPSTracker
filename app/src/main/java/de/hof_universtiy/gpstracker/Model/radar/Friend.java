@@ -1,6 +1,7 @@
 package de.hof_universtiy.gpstracker.Model.radar;
 
 import de.hof_universtiy.gpstracker.Model.position.Location;
+import org.osmdroid.util.GeoPoint;
 
 import java.io.Serializable;
 
@@ -14,5 +15,9 @@ public class Friend implements Serializable {
 
     public Friend(){
 
+    }
+
+    public Location getLocation() {
+        return this.lastKnowPosition;
     }
 }

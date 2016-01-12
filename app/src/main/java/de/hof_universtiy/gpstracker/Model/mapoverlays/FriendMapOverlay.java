@@ -2,27 +2,25 @@ package de.hof_universtiy.gpstracker.Model.mapoverlays;
 
 import android.content.Context;
 import android.graphics.*;
-import de.hof_universtiy.gpstracker.Model.position.Location;
+import android.support.annotation.NonNull;
 import de.hof_universtiy.gpstracker.Model.radar.Friend;
 import de.hof_universtiy.gpstracker.R;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
-import java.util.Date;
-
 /**
- * Created by alex on 07.01.16.
+ * Created by alex on 12.01.16 um 17:08
  * GPSTracker
  */
-public class MyPositionMapOverlay extends org.osmdroid.views.overlay.Overlay {
+public class FriendMapOverlay extends org.osmdroid.views.overlay.Overlay  {
 
+    private final Friend friend;
     private final Context context;
-    private final Location location;
 
-    public MyPositionMapOverlay(Context context, Location point) {
+    public FriendMapOverlay(@NonNull final Context context,@NonNull final Friend friend) {
         super(context);
         this.context = context;
-        this.location = point;
+        this.friend = friend;
     }
 
     @Override
@@ -31,16 +29,15 @@ public class MyPositionMapOverlay extends org.osmdroid.views.overlay.Overlay {
             return;
         }
         Point out = new Point();
-        mapView.getProjection().toPixels(new GeoPoint(this.location.getLocation()), out);
+        mapView.getProjection().toPixels(new GeoPoint(this.friend.getLocation().getLocation()), out);
         Paint paint = new Paint();
         paint.setStrokeWidth(20);
         paint.setColor(Color.RED);
-        Bitmap b=BitmapFactory.decodeResource(this.context.getResources(), R.drawable.person);
+        Bitmap b=BitmapFactory.decodeResource(this.context.getResources(), R.drawable.com_facebook_profile_picture_blank_portrait);
         canvas.drawBitmap(b, out.x-b.getWidth()/2,out.y-b.getHeight()/2, paint);
-        //canvas.drawPoint(out.x,out.y,paint);
         Paint textPaint = new Paint();
         textPaint.setColor(Color.RED);
         textPaint.setStrokeWidth(5);
-        canvas.drawText(this.location.getDate().toString(),out.x,out.y+22,textPaint);
+        canvas.drawText(this.friend.getLocation().getDate().toString(),out.x,out.y+22,textPaint);
     }
 }

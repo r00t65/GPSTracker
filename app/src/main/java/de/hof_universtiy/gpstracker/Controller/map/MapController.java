@@ -56,6 +56,7 @@ public class MapController implements MapControllerInterface {
 
     private void configMapView() {
         this.mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+
         this.mapView.setBuiltInZoomControls(true);
         this.mapView.setMultiTouchControls(true);
         this.mapView.getController().setZoom(5);
