@@ -1,16 +1,15 @@
 package de.hof_universtiy.gpstracker.Model.position;
 
 import android.support.annotation.NonNull;
-import de.hof_universtiy.gpstracker.Model.Model;
-import org.osmdroid.util.GeoPoint;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by alex on 05.01.16.
  * GPSTracker
  */
-public final class Location extends Model {
+public final class Location implements Serializable {
     private final android.location.Location location;
     private final Date date;
 

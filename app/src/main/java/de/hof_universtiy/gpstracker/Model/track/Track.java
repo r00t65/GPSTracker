@@ -1,15 +1,15 @@
 package de.hof_universtiy.gpstracker.Model.track;
 
+import java.io.Serializable;
 import java.util.*;
 
 import android.support.annotation.NonNull;
-import de.hof_universtiy.gpstracker.Model.Model;
 import de.hof_universtiy.gpstracker.Model.position.Location;
 
 /**
  * Created by alex on 17.12.15.
  */
-public final class Track extends Model {
+public final class Track implements Serializable {
 
     private final String NAME;
     private final List<Location> trackList = new ArrayList<>();

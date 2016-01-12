@@ -66,6 +66,8 @@ public final class TrackingController implements TrackingControllerInterface {
         if(this.gpsChangeListener != null){
             this.gpsChangeListener.newPosition(location);
         }
+        if(this.listenerForServerConnetion != null)
+            this.listenerForServerConnetion.newPosition(location);
     }
 
     @Override
@@ -81,6 +83,8 @@ public final class TrackingController implements TrackingControllerInterface {
         if(this.gpsChangeListener != null){
             this.gpsChangeListener.newWayPoint(location);
         }
+        if(this.listenerForServerConnetion != null)
+            this.listenerForServerConnetion.newPosition(location);
         this.track.addNode(location);
     }
 
@@ -89,6 +93,8 @@ public final class TrackingController implements TrackingControllerInterface {
         if(this.gpsChangeListener != null){
             this.gpsChangeListener.endTrack();
         }
+        if(this.listenerForServerConnetion != null)
+            this.listenerForServerConnetion.trackFinish(this.track);
         this.saveTrack();
     }
 

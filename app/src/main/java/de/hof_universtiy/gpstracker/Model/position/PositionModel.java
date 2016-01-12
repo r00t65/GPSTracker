@@ -2,12 +2,12 @@ package de.hof_universtiy.gpstracker.Model.position;
 
 import org.osmdroid.util.GeoPoint;
 
-import de.hof_universtiy.gpstracker.Model.Model;
+import java.io.Serializable;
 
 /**
  * Created by Patrick Büttner on 21.11.2015.
  */
-public class PositionModel extends Model
+public class PositionModel implements Serializable
 {
     private String id;
     private GeoPoint geoPoint;//TODO: Wieso Geopoints, es gibt doch Location
@@ -46,11 +46,6 @@ public class PositionModel extends Model
     public double getLatitude()
     {
         return geoPoint.getLatitude();
-    }
-
-    @Override
-    public String getID() {
-        return null;
     }
 
     /*public void setLatitude(double latitude)
