@@ -186,10 +186,6 @@ public class ConnectionController{
 
         HttpsURLConnection urlConnection = null;
 
-
-
-
-
         try {
             URL url = new URL(urlString);
 
