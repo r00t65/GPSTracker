@@ -3,22 +3,18 @@ package de.hof_universtiy.gpstracker.View;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.preference.ListPreference;
+import android.preference.SwitchPreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.machinarius.preferencefragment.PreferenceFragment;
+
+
 import de.hof_universtiy.gpstracker.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link Settings.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link Settings#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class Settings extends Fragment {
+public class Settings extends PreferenceFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,6 +25,9 @@ public class Settings extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private SwitchPreference radarStatus;
+    private ListPreference radarInt;
 
     public Settings() {
         // Required empty public constructor
@@ -55,16 +54,30 @@ public class Settings extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        addPreferencesFromResource(R.xml.settings);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        radarStatus = (SwitchPreference) getPreferenceManager().findPreference("radar_active");
+        radarInt = (ListPreference) getPreferenceManager().findPreference("radar_interval");
+
+      //  radarStatus.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+      //      @Override
+      //      public boolean onPreferenceChange(Preference preference, Object newValue) {
+      //          return true;
+      //      }
+      //  });
+
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 

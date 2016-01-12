@@ -1,8 +1,13 @@
 package de.hof_universtiy.gpstracker;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -25,6 +31,7 @@ import com.facebook.login.widget.LoginButton;
 
 import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
 import de.hof_universtiy.gpstracker.Controller.service.RadarService;
+import de.hof_universtiy.gpstracker.Controller.service.RadarServiceReceiver;
 import de.hof_universtiy.gpstracker.View.GPSTracker;
 import de.hof_universtiy.gpstracker.View.LoginLogout;
 import de.hof_universtiy.gpstracker.View.Messenger;
@@ -42,7 +49,9 @@ public class MainActivity extends AppCompatActivity
     private Fragment fragment = null;
     Class fragmentClass;
 
-    private Intent radarServiceIntent;
+    SharedPreferences sharedPref;
+    private boolean isRadarActive;
+    private long radarInterval;
 
     public void onFragmentInteraction(Uri uri){
         //you can leave it empty bro
@@ -83,11 +92,31 @@ public class MainActivity extends AppCompatActivity
         ConnectionController connectionController = new ConnectionController();
         connectionController.getWaypointsOfFriends("1");
 
+
         //Service fuer Positionsupdates
-        //radarServiceIntent = new Intent(this, RadarService.class);
-        //startService(radarServiceIntent);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        isRadarActive = sharedPref.getBoolean("radar_active",false);
+        if(isRadarActive){
+           // scheduleRadar();
+            Log.d("RadarStart","RadarService aktiv");
+        }
+        //Ende
+    }
 
+    private void scheduleRadar() {
+        //radarInterval = sharedPref.getLong("radar_interval",30) * 60 * 1000;
+        Intent intent = new Intent(getApplicationContext(), RadarServiceReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, RadarServiceReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        long firstMillis = System.currentTimeMillis();
+        AlarmManager radarAlarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        radarAlarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, 30*60*1000, pIntent);
+    }
 
+    private void cancelAlarm(){
+        Intent intent = new Intent(getApplicationContext(), RadarServiceReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, RadarServiceReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager radarAlarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        radarAlarm.cancel(pIntent);
     }
 
     @Override
