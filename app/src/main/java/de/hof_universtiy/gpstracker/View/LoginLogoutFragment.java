@@ -29,12 +29,12 @@ import de.hof_universtiy.gpstracker.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link LoginLogout.OnFragmentInteractionListener} interface
+ * {@link LoginLogoutFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link LoginLogout#newInstance} factory method to
+ * Use the {@link LoginLogoutFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LoginLogout extends Fragment {
+public class LoginLogoutFragment extends Fragment {
 
     CallbackManager callbackManager;
 
@@ -50,7 +50,7 @@ public class LoginLogout extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public LoginLogout() {
+    public LoginLogoutFragment() {
         // Required empty public constructor
     }
 
@@ -63,8 +63,8 @@ public class LoginLogout extends Fragment {
      * @return A new instance of fragment LoginLogout.
      */
     // TODO: Rename and change types and number of parameters
-    public static LoginLogout newInstance(String param1, String param2) {
-        LoginLogout fragment = new LoginLogout();
+    public static LoginLogoutFragment newInstance(String param1, String param2) {
+        LoginLogoutFragment fragment = new LoginLogoutFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

@@ -9,16 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.hof_universtiy.gpstracker.R;
+import org.osmdroid.views.MapView;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Radar.OnFragmentInteractionListener} interface
+ * {@link RadarFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Radar#newInstance} factory method to
+ * Use the {@link RadarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Radar extends Fragment {
+public class RadarFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +31,9 @@ public class Radar extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public Radar() {
+    private MapView radarView;
+
+    public RadarFragment() {
         // Required empty public constructor
     }
 
@@ -43,8 +46,8 @@ public class Radar extends Fragment {
      * @return A new instance of fragment Radar.
      */
     // TODO: Rename and change types and number of parameters
-    public static Radar newInstance(String param1, String param2) {
-        Radar fragment = new Radar();
+    public static RadarFragment newInstance(String param1, String param2) {
+        RadarFragment fragment = new RadarFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,7 +68,11 @@ public class Radar extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_radar, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_radar, container, false);
+        this.radarView = (MapView) rootView.findViewById(R.id.radar);
+        return rootView;
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

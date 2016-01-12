@@ -21,7 +21,7 @@ import de.hof_universtiy.gpstracker.Controller.messenger.MessengerInterface;
 import de.hof_universtiy.gpstracker.R;
 
 
-public class Messenger extends Fragment implements MessengerInterface, View.OnClickListener {
+public class MessengerFragment extends Fragment implements MessengerInterface, View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,7 +58,7 @@ public class Messenger extends Fragment implements MessengerInterface, View.OnCl
         messageAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1);
         messageArrayList = new ArrayList<>();
 
-        ctrl = new MessengerController(Messenger.this);
+        ctrl = new MessengerController(MessengerFragment.this);
         ctrl.execute();
 
         return view;
@@ -79,7 +79,7 @@ public class Messenger extends Fragment implements MessengerInterface, View.OnCl
                     messageArrayList = new ArrayList<>();
 
                     ctrl.disconnect();
-                    ctrl = new MessengerController(Messenger.this);
+                    ctrl = new MessengerController(MessengerFragment.this);
                     ctrl.execute();
                 break;
 

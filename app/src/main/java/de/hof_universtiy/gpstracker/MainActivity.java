@@ -19,29 +19,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-
 import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
-import de.hof_universtiy.gpstracker.Controller.service.RadarService;
 import de.hof_universtiy.gpstracker.Controller.service.RadarServiceReceiver;
-import de.hof_universtiy.gpstracker.View.GPSTracker;
-import de.hof_universtiy.gpstracker.View.LoginLogout;
-import de.hof_universtiy.gpstracker.View.Messenger;
-import de.hof_universtiy.gpstracker.View.Radar;
-import de.hof_universtiy.gpstracker.View.Settings;
+import de.hof_universtiy.gpstracker.View.*;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, GPSTracker.OnFragmentInteractionListener,
-        LoginLogout.OnFragmentInteractionListener, Messenger.OnFragmentInteractionListener,
-        Radar.OnFragmentInteractionListener, Settings.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, GPSTrackerFragment.OnFragmentInteractionListener,
+        LoginLogoutFragment.OnFragmentInteractionListener, MessengerFragment.OnFragmentInteractionListener,
+        RadarFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
 
 
 
@@ -72,7 +58,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        fragmentClass = Radar.class;
+        fragmentClass = RadarFragment.class;
 
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -185,22 +171,22 @@ public class MainActivity extends AppCompatActivity
         //Class fragmentClass;
         switch (menuItem.getItemId()) {
             case R.id.nav_gpstracker:
-                fragmentClass = GPSTracker.class;
+                fragmentClass = GPSTrackerFragment.class;
                 break;
             case R.id.nav_radar:
-                fragmentClass = Radar.class;
+                fragmentClass = RadarFragment.class;
                 break;
             case R.id.nav_messenger:
-                fragmentClass = Messenger.class;
+                fragmentClass = MessengerFragment.class;
                 break;
             case R.id.nav_loginLogout:
-                fragmentClass = LoginLogout.class;
+                fragmentClass = LoginLogoutFragment.class;
                 break;
             case R.id.nav_settings:
-                fragmentClass = Settings.class;
+                fragmentClass = SettingsFragment.class;
                 break;
             default:
-                fragmentClass = GPSTracker.class;
+                fragmentClass = GPSTrackerFragment.class;
         }
 
         try {
