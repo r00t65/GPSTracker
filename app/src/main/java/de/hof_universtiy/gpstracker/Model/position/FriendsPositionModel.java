@@ -6,15 +6,15 @@ import java.util.Date;
 /**
  * Created by Patrick Büttner on 21.11.2015.
  */
-public class PositionModel implements Serializable {
+public class FriendsPositionModel implements Serializable {
     private String id;
     private Location location;
 
-    public PositionModel() {
+    public FriendsPositionModel() {
 
     }
 
-    public PositionModel(String id, double latitude, double longitude, Date time) {
+    public FriendsPositionModel(String id, double latitude, double longitude, Date time) {
         this.id = id;
         location = new Location(latitude, longitude, time);
     }
