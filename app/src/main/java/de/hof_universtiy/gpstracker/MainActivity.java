@@ -80,19 +80,23 @@ public class MainActivity extends AppCompatActivity
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         isRadarActive = sharedPref.getBoolean("radar_active",false);
         if(isRadarActive){
-           // scheduleRadar();
+            scheduleRadar();
             Log.d("RadarStart","RadarService aktiv");
+        }if(!isRadarActive){
+            cancelAlarm();
+            Log.d("RadarStart", "RadarService inaktiv");
         }
         //Ende
     }
 
     private void scheduleRadar() {
         //radarInterval = sharedPref.getLong("radar_interval",30) * 60 * 1000;
+        radarInterval = 10*1000;
         Intent intent = new Intent(getApplicationContext(), RadarServiceReceiver.class);
         final PendingIntent pIntent = PendingIntent.getBroadcast(this, RadarServiceReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         long firstMillis = System.currentTimeMillis();
         AlarmManager radarAlarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        radarAlarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, 30*60*1000, pIntent);
+        radarAlarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, radarInterval, pIntent);
     }
 
     private void cancelAlarm(){
