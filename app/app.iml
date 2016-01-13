@@ -98,30 +98,30 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="smack-android-extensions-4.1.0" level="project" />
-    <orderEntry type="library" exported="" name="smack-extensions-4.1.0" level="project" />
-    <orderEntry type="library" exported="" name="play-services-appindexing-8.1.0" level="project" />
-    <orderEntry type="library" exported="" name="jxmpp-util-cache-0.4.2-beta1" level="project" />
     <orderEntry type="library" exported="" name="smack-tcp-4.1.0" level="project" />
-    <orderEntry type="library" exported="" name="preferencefragment-0.1.1" level="project" />
+    <orderEntry type="library" exported="" name="design-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="osmbonuspack_v5.1" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-23.1.1" level="project" />
-    <orderEntry type="library" exported="" name="commons-lang3-3.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-23.1.1" level="project" />
-    <orderEntry type="library" exported="" name="jxmpp-core-0.4.2-beta1" level="project" />
-    <orderEntry type="library" exported="" name="minidns-0.1.7" level="project" />
-    <orderEntry type="library" exported="" name="bolts-android-1.2.1" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-23.1.1" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
-    <orderEntry type="library" exported="" name="smack-im-4.1.0" level="project" />
+    <orderEntry type="library" exported="" name="smack-resolver-minidns-4.1.0" level="project" />
+    <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="facebook-android-sdk-4.8.2" level="project" />
+    <orderEntry type="library" exported="" name="smack-android-extensions-4.1.0" level="project" />
     <orderEntry type="library" exported="" name="smack-android-4.1.0" level="project" />
     <orderEntry type="library" exported="" name="smack-core-4.1.0" level="project" />
-    <orderEntry type="library" exported="" name="design-23.1.1" level="project" />
-    <orderEntry type="library" exported="" name="osmdroid-android-5.0.1" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-basement-8.1.0" level="project" />
-    <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="smack-resolver-minidns-4.1.0" level="project" />
+    <orderEntry type="library" exported="" name="osmdroid-android-5.0.1" level="project" />
+    <orderEntry type="library" exported="" name="smack-im-4.1.0" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-23.1.1" level="project" />
+    <orderEntry type="library" exported="" name="play-services-appindexing-8.1.0" level="project" />
+    <orderEntry type="library" exported="" name="bolts-android-1.2.1" level="project" />
+    <orderEntry type="library" exported="" name="smack-extensions-4.1.0" level="project" />
+    <orderEntry type="library" exported="" name="jxmpp-core-0.4.2-beta1" level="project" />
+    <orderEntry type="library" exported="" name="minidns-0.1.7" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-23.1.1" level="project" />
+    <orderEntry type="library" exported="" name="preferencefragment-0.1.1" level="project" />
+    <orderEntry type="library" exported="" name="jxmpp-util-cache-0.4.2-beta1" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="smack-sasl-provided-4.1.0" level="project" />
-    <orderEntry type="library" exported="" name="facebook-android-sdk-4.8.2" level="project" />
+    <orderEntry type="library" exported="" name="commons-lang3-3.0" level="project" />
   </component>
 </module>
