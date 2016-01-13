@@ -58,6 +58,7 @@ public class GPSTrackerFragment extends Fragment {
 
     private Intent trackingServiceIntent;
     TrackingService mService;
+    private Boolean isBound = false;
 
     public GPSTrackerFragment() {
         // Required empty public constructor
@@ -109,7 +110,7 @@ public class GPSTrackerFragment extends Fragment {
             public void onClick(View view) {
                 if (!isMyServiceRunning(TrackingService.class)) {
                     getActivity().startService(trackingServiceIntent);
-                    getActivity().bindService(trackingServiceIntent, trackingConnection, Context.BIND_AUTO_CREATE);
+                    isBound = getActivity().bindService(trackingServiceIntent, trackingConnection, Context.BIND_AUTO_CREATE);
                     Context context = getContext();
                     CharSequence text = "Track wurde gestartet";
                     int duration = Toast.LENGTH_SHORT;
@@ -122,10 +123,6 @@ public class GPSTrackerFragment extends Fragment {
 //                    Log.v("BoundService", test);
 
                 } else {
-                  /*  String test = mService.getServiceInfo();
-                    Log.v("BoundService", test);
-                    getActivity().unbindService(trackingConnection);
-                    getActivity().stopService(trackingServiceIntent);*/
 
                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                     alertDialog.setTitle("Track speichern");
@@ -143,9 +140,9 @@ public class GPSTrackerFragment extends Fragment {
                                         trackName = "Unbenannter Track";
                                         dialog.dismiss();
                                     }
-                                    String test = mService.getServiceInfo();
-                                    Log.v("BoundService", test);
-                                    getActivity().unbindService(trackingConnection);
+                                    if (isBound) {
+                                        getActivity().unbindService(trackingConnection);
+                                    }
                                     getActivity().stopService(trackingServiceIntent);
                                 }
                             });
