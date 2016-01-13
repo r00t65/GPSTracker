@@ -121,6 +121,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -128,10 +130,27 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            fragmentClass = SettingsFragment.class;
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Insert the fragment by replacing any existing fragment
+            if (fragment != null) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
+            }
+            else {
+                Log.i("Happening","Nofragmentavailable");
+            }
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+
     }
 
     @Override
@@ -151,9 +170,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_loginLogout) {
             selectDrawerItem(item);
 
-        } else if (id == R.id.nav_settings) {
-            selectDrawerItem(item);
         }
+       // else if (id == R.id.nav_settings) {
+         //   selectDrawerItem(item);
+       // }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -179,9 +199,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_loginLogout:
                 fragmentClass = LoginLogoutFragment.class;
                 break;
-            case R.id.nav_settings:
-                fragmentClass = SettingsFragment.class;
-                break;
+            //case R.id.nav_settings:
+             //   fragmentClass = SettingsFragment.class;
+              //  break;
             default:
                 fragmentClass = GPSTrackerFragment.class;
         }

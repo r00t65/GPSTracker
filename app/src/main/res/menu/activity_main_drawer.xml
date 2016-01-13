@@ -18,7 +18,7 @@
             android:id="@+id/nav_loginLogout"
             android:icon="@drawable/ic_menu_manage"
             android:title="Login/Logout" />
-        <item
+        //item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
             android:title="Settings" />
