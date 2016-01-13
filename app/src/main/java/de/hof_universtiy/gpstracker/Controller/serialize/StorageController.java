@@ -65,6 +65,21 @@ public class StorageController implements StorageControllerInterface {
         this.saveTrackInFile(track);
     }
 
+    @Override
+    public void renameFile(@NonNull String newName, @NonNull String oldName) {
+
+    }
+
+    @Override
+    public Track loadTrack(@NonNull String nameOfTrack) {
+        return null;
+    }
+
+    @Override
+    public List<String> getListOfTracks() {
+        return this.listOfTracks;
+    }
+
     private void updateFiles(@NonNull final Track track) throws IOException {
         if (track != null) {
             File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKS);

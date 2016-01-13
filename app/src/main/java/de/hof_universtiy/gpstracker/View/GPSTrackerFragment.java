@@ -122,10 +122,10 @@ public class GPSTrackerFragment extends Fragment {
 //                    Log.v("BoundService", test);
 
                 } else {
-                    String test = mService.getServiceInfo();
+                  /*  String test = mService.getServiceInfo();
                     Log.v("BoundService", test);
                     getActivity().unbindService(trackingConnection);
-                    getActivity().stopService(trackingServiceIntent);
+                    getActivity().stopService(trackingServiceIntent);*/
 
                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                     alertDialog.setTitle("Track speichern");
@@ -143,6 +143,10 @@ public class GPSTrackerFragment extends Fragment {
                                         trackName = "Unbenannter Track";
                                         dialog.dismiss();
                                     }
+                                    String test = mService.getServiceInfo();
+                                    Log.v("BoundService", test);
+                                    getActivity().unbindService(trackingConnection);
+                                    getActivity().stopService(trackingServiceIntent);
                                 }
                             });
                     alertDialog.show();
@@ -169,7 +173,13 @@ public class GPSTrackerFragment extends Fragment {
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-            mService.saveTrack();
+            try {
+                mService.saveTrack(trackName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             mService.unregisterListener();
         }
     };

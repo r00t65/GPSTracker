@@ -19,7 +19,7 @@ public final class Location implements Serializable {
         this.date = new Date();
     }
 
-    public Location(double latitude, double longitude, Date time) {
+    public Location(double latitude, double longitude, @NonNull final Date time) {
         this.location = new android.location.Location(Context.LOCATION_SERVICE);
         this.location.setLatitude(latitude);
         this.location.setLongitude(longitude);

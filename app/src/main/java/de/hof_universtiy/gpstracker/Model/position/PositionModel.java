@@ -1,5 +1,7 @@
 package de.hof_universtiy.gpstracker.Model.position;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,24 +9,16 @@ import java.util.Date;
  * Created by Patrick Büttner on 21.11.2015.
  */
 public class PositionModel implements Serializable {
-    private String id;
-    private Location location;
+    private final String id;
+    private final Location location;
 
-    public PositionModel() {
-
-    }
-
-    public PositionModel(String id, double latitude, double longitude, Date time) {
+    public PositionModel(@NonNull final String id, double latitude, double longitude, Date time) {
         this.id = id;
         location = new Location(latitude, longitude, time);
     }
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public double getLongitude() {
