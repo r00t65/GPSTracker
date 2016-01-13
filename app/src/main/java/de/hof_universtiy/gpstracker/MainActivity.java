@@ -19,10 +19,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.facebook.appevents.AppEventsLogger;
-import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
+
 import de.hof_universtiy.gpstracker.Controller.service.RadarServiceReceiver;
-import de.hof_universtiy.gpstracker.View.*;
+import de.hof_universtiy.gpstracker.View.GPSTrackerFragment;
+import de.hof_universtiy.gpstracker.View.LoginLogoutFragment;
+import de.hof_universtiy.gpstracker.View.MessengerFragment;
+import de.hof_universtiy.gpstracker.View.RadarFragment;
+import de.hof_universtiy.gpstracker.View.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GPSTrackerFragment.OnFragmentInteractionListener,
@@ -71,9 +76,6 @@ public class MainActivity extends AppCompatActivity
             Log.i("Happening", "Nofragmentavailable");
         }
 
-
-        ConnectionController connectionController = new ConnectionController();
-        connectionController.getWaypointsOfFriends("1");
 
 
         //Service fuer
