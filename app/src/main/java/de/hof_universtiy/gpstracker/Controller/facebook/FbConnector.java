@@ -7,8 +7,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 
-import org.jivesoftware.smack.AbstractXMPPConnection;
-
 /**
  * Created by bmairhoermann on 06.01.16.
  */

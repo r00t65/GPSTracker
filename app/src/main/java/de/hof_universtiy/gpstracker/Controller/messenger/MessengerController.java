@@ -2,6 +2,9 @@ package de.hof_universtiy.gpstracker.Controller.messenger;
 
 import android.os.AsyncTask;
 
+import com.facebook.AccessToken;
+import com.facebook.Profile;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -81,8 +84,15 @@ public class MessengerController extends AsyncTask {
 
         chat = manager.getMultiUserChat("16920719731286378643@chat.mvp.avinotec.de");
 
-        //ToDo: statt "nickname" Facebook-Nutzernamen einfügen
-        chat.join("nickname", "hochschulehof", chatHistory, SmackConfiguration.getDefaultPacketReplyTimeout());
+        String username = "unknown";
+
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        if(token != null){
+            Profile p = Profile.getCurrentProfile();
+            username = p.getName();
+        }
+
+        chat.join(username, "hochschulehof", chatHistory, SmackConfiguration.getDefaultPacketReplyTimeout());
     }
 
 

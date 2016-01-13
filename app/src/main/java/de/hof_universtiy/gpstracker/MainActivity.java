@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity
         LoginLogoutFragment.OnFragmentInteractionListener, MessengerFragment.OnFragmentInteractionListener,
         RadarFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
 
-
     private Fragment fragment = null;
     Class fragmentClass;
 
@@ -37,7 +36,7 @@ public class MainActivity extends AppCompatActivity
     private boolean isRadarActive;
     private long radarInterval;
 
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction(Uri uri){
         //you can leave it empty bro
     }
 
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        fragmentClass = RadarFragment.class;
+        fragmentClass = GPSTrackerFragment.class;
 
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -67,7 +66,8 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
-        } else {
+        }
+        else {
             Log.i("Happening", "Nofragmentavailable");
         }
 
@@ -78,10 +78,10 @@ public class MainActivity extends AppCompatActivity
 
         //Service fuer Positionsupdates
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        isRadarActive = sharedPref.getBoolean("radar_active", false);
-        if (isRadarActive) {
-            // scheduleRadar();
-            Log.d("RadarStart", "RadarService aktiv");
+        isRadarActive = sharedPref.getBoolean("radar_active",false);
+        if(isRadarActive){
+           // scheduleRadar();
+            Log.d("RadarStart","RadarService aktiv");
         }
         //Ende
     }
@@ -92,10 +92,10 @@ public class MainActivity extends AppCompatActivity
         final PendingIntent pIntent = PendingIntent.getBroadcast(this, RadarServiceReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         long firstMillis = System.currentTimeMillis();
         AlarmManager radarAlarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        radarAlarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, 30 * 60 * 1000, pIntent);
+        radarAlarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, 30*60*1000, pIntent);
     }
 
-    private void cancelAlarm() {
+    private void cancelAlarm(){
         Intent intent = new Intent(getApplicationContext(), RadarServiceReceiver.class);
         final PendingIntent pIntent = PendingIntent.getBroadcast(this, RadarServiceReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager radarAlarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
@@ -197,8 +197,9 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
-        } else {
-            Log.i("Happening", "Nofragmentavailable");
+        }
+        else {
+            Log.i("Happening","Nofragmentavailable");
         }
 
         // Highlight the selected item, update the title, and close the drawer
