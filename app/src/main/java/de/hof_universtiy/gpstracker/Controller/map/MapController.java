@@ -3,10 +3,8 @@ package de.hof_universtiy.gpstracker.Controller.map;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import de.hof_universtiy.gpstracker.Controller.listener.GPSMapChangeListener;
-import de.hof_universtiy.gpstracker.Controller.listener.RadarListener;
 import de.hof_universtiy.gpstracker.Model.mapoverlays.MyPositionMapOverlay;
 import de.hof_universtiy.gpstracker.Model.position.Location;
-import de.hof_universtiy.gpstracker.Model.radar.Friend;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
@@ -24,7 +22,7 @@ import java.util.List;
 
 /**
  * Created by alex on 13.11.15 um 16:09
- GPSTracker
+ * GPSTracker
  */
 public class MapController implements MapControllerInterface {
     private final MapView mapView;
@@ -50,7 +48,7 @@ public class MapController implements MapControllerInterface {
     }
 
     @Override
-    public GPSMapChangeListener getListener(){
+    public GPSMapChangeListener getListener() {
         return this.gpsChangeListenerMap;
     }
 
@@ -71,17 +69,17 @@ public class MapController implements MapControllerInterface {
 
     }
 
-    private void drawPosition(@NonNull final Location location){
+    private void drawPosition(@NonNull final Location location) {
         final MyPositionMapOverlay mapPoint = new MyPositionMapOverlay(this.activityContext, location);
         this.mapView.getOverlayManager().add(mapPoint);
         this.mapView.invalidate();
     }
 
-    private void drawTrack(@NonNull final List<Location> track){
+    private void drawTrack(@NonNull final List<Location> track) {
         RoadManager roadManager = new OSRMRoadManager();
         ArrayList<GeoPoint> geoPoints = new ArrayList<>();
 
-        for(Location location: track){
+        for (Location location : track) {
             geoPoints.add(new GeoPoint(location.getLocation()));
         }
 
@@ -91,7 +89,7 @@ public class MapController implements MapControllerInterface {
         mapView.invalidate();
     }
 
-    private void clearMap(){
+    private void clearMap() {
         this.mapView.getOverlays().clear();
         this.mapView.invalidate();
     }
@@ -103,7 +101,7 @@ public class MapController implements MapControllerInterface {
             clearMap();
             mPosition = location;
             drawPosition(location);
-            if(mTrack != null)
+            if (mTrack != null)
                 drawTrack(mTrack.getTracks());
         }
 
@@ -112,15 +110,8 @@ public class MapController implements MapControllerInterface {
             clearMap();
             mTrack = track;
             drawTrack(track.getTracks());
-            if(mPosition != null)
+            if (mPosition != null)
                 drawPosition(mPosition);
-        }
-    }
-    public class RadarMapListener implements RadarListener {
-
-        @Override
-        public void setListOfFriends(@NonNull Location myPosition, @NonNull List<Friend> friendList) {
-
         }
     }
 }

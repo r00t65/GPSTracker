@@ -6,34 +6,28 @@ import java.util.Date;
 /**
  * Created by Patrick Büttner on 21.11.2015.
  */
-public class PositionModel implements Serializable
-{
+public class PositionModel implements Serializable {
     private String id;
     private Location location;
 
-    public PositionModel()
-    {
+    public PositionModel() {
 
     }
 
-    public PositionModel(String id, double latitude, double longitude,Date time)
-    {
+    public PositionModel(String id, double latitude, double longitude, Date time) {
         this.id = id;
-        location = new Location(latitude, longitude,time);
+        location = new Location(latitude, longitude, time);
     }
 
-    public String getId()
-    {
+    public String getId() {
         return id;
     }
 
-    public void setId(String id)
-    {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public double getLongitude()
-    {
+    public double getLongitude() {
         return location.getLocation().getLongitude();
     }
 
@@ -42,8 +36,7 @@ public class PositionModel implements Serializable
         this.longitude = longitude;
     }*/
 
-    public double getLatitude()
-    {
+    public double getLatitude() {
         return location.getLocation().getLatitude();
     }
 

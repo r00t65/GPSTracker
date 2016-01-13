@@ -16,12 +16,12 @@ public final class Track implements Serializable {
 
     private boolean trackIsFinish = false;
 
-    public Track(@NonNull final String name){
+    public Track(@NonNull final String name) {
         this.NAME = name;
     }
 
     public void addNode(@NonNull final Location location) throws TrackFinishException {
-        if(trackIsFinish){
+        if (trackIsFinish) {
             throw new TrackFinishException();
         }
         this.trackList.add((location));
@@ -31,11 +31,11 @@ public final class Track implements Serializable {
         return this.NAME;
     }
 
-    public void finishTrack(){
+    public void finishTrack() {
         trackIsFinish = true;
     }
 
-    private void sortTrackList(){
+    private void sortTrackList() {
         Collections.sort(this.trackList, new Comparator<Location>() {
             @Override
             public int compare(Location lhs, Location rhs) {
@@ -48,7 +48,7 @@ public final class Track implements Serializable {
         return this.trackList;
     }
 
-    public final class TrackFinishException extends Exception{
+    public final class TrackFinishException extends Exception {
 
     }
 }

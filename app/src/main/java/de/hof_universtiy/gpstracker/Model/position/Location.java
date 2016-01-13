@@ -14,22 +14,23 @@ public final class Location implements Serializable {
     private final android.location.Location location;
     private final Date date;
 
-    public Location(@NonNull final android.location.Location location){
+    public Location(@NonNull final android.location.Location location) {
         this.location = location;
         this.date = new Date();
     }
 
     public Location(double latitude, double longitude, Date time) {
         this.location = new android.location.Location(Context.LOCATION_SERVICE);
-        this.location.setLatitude(latitude);this.location.setLongitude(longitude);
+        this.location.setLatitude(latitude);
+        this.location.setLongitude(longitude);
         this.date = time;
     }
 
-    public Date getDate(){
+    public Date getDate() {
         return this.date;
     }
 
-    public android.location.Location getLocation(){
+    public android.location.Location getLocation() {
         return this.location;
     }
 

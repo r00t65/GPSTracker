@@ -12,12 +12,12 @@ import org.osmdroid.views.MapView;
  * Created by alex on 12.01.16 um 17:08
  * GPSTracker
  */
-public class FriendMapOverlay extends org.osmdroid.views.overlay.Overlay  {
+public class FriendMapOverlay extends org.osmdroid.views.overlay.Overlay {
 
     private final Friend friend;
     private final Context context;
 
-    public FriendMapOverlay(@NonNull final Context context,@NonNull final Friend friend) {
+    public FriendMapOverlay(@NonNull final Context context, @NonNull final Friend friend) {
         super(context);
         this.context = context;
         this.friend = friend;
@@ -25,7 +25,7 @@ public class FriendMapOverlay extends org.osmdroid.views.overlay.Overlay  {
 
     @Override
     protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
-        if(shadow){
+        if (shadow) {
             return;
         }
         Point out = new Point();
@@ -33,11 +33,11 @@ public class FriendMapOverlay extends org.osmdroid.views.overlay.Overlay  {
         Paint paint = new Paint();
         paint.setStrokeWidth(20);
         paint.setColor(Color.RED);
-        Bitmap b=BitmapFactory.decodeResource(this.context.getResources(), R.drawable.com_facebook_profile_picture_blank_portrait);
-        canvas.drawBitmap(b, out.x-b.getWidth()/2,out.y-b.getHeight()/2, paint);
+        Bitmap b = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.com_facebook_profile_picture_blank_portrait);
+        canvas.drawBitmap(b, out.x - b.getWidth() / 2, out.y - b.getHeight() / 2, paint);
         Paint textPaint = new Paint();
         textPaint.setColor(Color.RED);
         textPaint.setStrokeWidth(5);
-        canvas.drawText(this.friend.getLocation().getDate().toString(),out.x,out.y+22,textPaint);
+        canvas.drawText(this.friend.getLocation().getDate().toString(), out.x, out.y + 22, textPaint);
     }
 }

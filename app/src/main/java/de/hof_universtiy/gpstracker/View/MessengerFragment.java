@@ -55,7 +55,7 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
         reloadButton.setOnClickListener(this);
         reloadButton.setEnabled(false);
 
-        messageAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1);
+        messageAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1);
         messageArrayList = new ArrayList<>();
 
         ctrl = new MessengerController(MessengerFragment.this);
@@ -66,21 +66,21 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.sendButton:
-                    String message = messageField.getText().toString();
-                    ctrl.sendMessage(message);
+                String message = messageField.getText().toString();
+                ctrl.sendMessage(message);
                 break;
 
             case R.id.reloadButton:
-                    disableAllButtons();
+                disableAllButtons();
 
-                    messageAdapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1);
-                    messageArrayList = new ArrayList<>();
+                messageAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1);
+                messageArrayList = new ArrayList<>();
 
-                    ctrl.disconnect();
-                    ctrl = new MessengerController(MessengerFragment.this);
-                    ctrl.execute();
+                ctrl.disconnect();
+                ctrl = new MessengerController(MessengerFragment.this);
+                ctrl.execute();
                 break;
 
             default:
@@ -95,38 +95,38 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
     }
 
     @Override
-    public void enableReloadButton(){
+    public void enableReloadButton() {
         reloadButton.setEnabled(true);
     }
 
     @Override
-    public void disableAllButtons(){
+    public void disableAllButtons() {
         reloadButton.setEnabled(false);
         sendButton.setEnabled(false);
     }
 
     @Override
-    public void clearTextField(){
+    public void clearTextField() {
         messageField.setText("");
     }
 
     @Override
-    public void showEmptyMessageToast(){
+    public void showEmptyMessageToast() {
         Toast.makeText(getContext(), "Not possible to send empty message!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void showCouldNotSendMessageToast(){
+    public void showCouldNotSendMessageToast() {
         Toast.makeText(getContext(), "Error occured while sending message; check your internet connection and try to reload chat", Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void showCouldNotConnectToChatToast(){
+    public void showCouldNotConnectToChatToast() {
         Toast.makeText(getContext(), "Error occured while connecting to chat; check your internet connection and try to reload chat", Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void showSuccessfullyConnectedToast(){
+    public void showSuccessfullyConnectedToast() {
         Toast.makeText(getContext(), "Successfully connected to chat", Toast.LENGTH_SHORT).show();
     }
 
@@ -144,7 +144,7 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
                 messageAdapter.notifyDataSetChanged();
 
                 messageList.setAdapter(messageAdapter);
-                messageList.setSelection(messageAdapter.getCount()-1);
+                messageList.setSelection(messageAdapter.getCount() - 1);
 
             }
         });
@@ -155,7 +155,7 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
 //--------------------------------------------------------------------------------------------------------------------------
 
 
-   @Override
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -171,6 +171,7 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
         super.onDetach();
         mListener = null;
     }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

@@ -14,33 +14,33 @@ import org.jivesoftware.smack.AbstractXMPPConnection;
  */
 public class FbConnector {
 
-    public boolean isLoggedIn(){
+    public boolean isLoggedIn() {
 
         // Returns boolean whether user is logged in or not.
 
         try {
             AccessToken.getCurrentAccessToken().getUserId();
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
-    public String getUserId(){
+    public String getUserId() {
 
         // Returns userID if user is logged in.
         // Returns empty string if user is NOT logged in.
 
-        if (isLoggedIn()==true){
+        if (isLoggedIn() == true) {
             return AccessToken.getCurrentAccessToken().getUserId();
-        }else {
+        } else {
             return "";
         }
     }
 
     // ################ Asynch Methods below! ################
 
-    public void getUserInfoJSON (){
+    public void getUserInfoJSON() {
 
         // Place AsynchMethodCall in onComplete() to receive UserInfo
 
@@ -50,8 +50,8 @@ public class FbConnector {
                     "/me",
                     null,
                     HttpMethod.GET,
-                    new GraphRequest.Callback(){
-                        public void onCompleted(GraphResponse response){
+                    new GraphRequest.Callback() {
+                        public void onCompleted(GraphResponse response) {
                             // String.valueOf(response.getJSONObject) gives you following String:  {"name":"Harald Junke","id":"1057563854267320"}
                             // If user is NOT logged in -> response will be null!
                             // Place you AsynchMethodCall below.
@@ -60,12 +60,12 @@ public class FbConnector {
                         }
                     }
             ).executeAsync();
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d("Facebook_ERROR: ", "getUserInfoJSON ");
         }
     }
 
-    public void getUserFriendlistJSON(){
+    public void getUserFriendlistJSON() {
 
         // Place AsynchMethodCall in onComplete() to receive UserFriendlist
 
@@ -90,7 +90,7 @@ public class FbConnector {
                         }
                     }
             ).executeAsync();
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d("Facebook_ERROR: ", "getUserFriendlistJSON ");
         }
     }

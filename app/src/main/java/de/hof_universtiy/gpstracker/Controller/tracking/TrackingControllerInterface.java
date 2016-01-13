@@ -12,12 +12,18 @@ import de.hof_universtiy.gpstracker.Controller.listener.NotificationTrackListene
 public interface TrackingControllerInterface extends GPSChangeListener {
     /**
      * Für den Listener im MapController
+     *
      * @param gpsChangeListener
      */
     public void registerGPSListener(@NonNull final GPSMapChangeListener gpsChangeListener);
+
     public void unregisterGPSListener();
+
     public void registerServerListener(@NonNull final NotificationTrackListener listener);
+
     public void unregisterServerListener();
+
     public void onStartService();
+
     public void onDestroyService();
 }

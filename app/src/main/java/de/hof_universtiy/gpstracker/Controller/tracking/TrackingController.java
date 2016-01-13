@@ -64,37 +64,37 @@ public final class TrackingController implements TrackingControllerInterface {
 
     @Override
     public void newPosition(@NonNull Location location) {
-        if(this.gpsChangeListener != null){
+        if (this.gpsChangeListener != null) {
             this.gpsChangeListener.newPosition(location);
         }
-        if(this.listenerForServerConnetion != null)
+        if (this.listenerForServerConnetion != null)
             this.listenerForServerConnetion.newPosition(location);
     }
 
     @Override
     public void createTrack(@NonNull String name) {
         this.track = new Track(name);
-        if(this.gpsChangeListener != null){
+        if (this.gpsChangeListener != null) {
             this.gpsChangeListener.updateTrack(this.track);
         }
     }
 
     @Override
     public void newWayPoint(@NonNull Location location) throws Track.TrackFinishException {
-        if(this.gpsChangeListener != null){
+        if (this.gpsChangeListener != null) {
             this.gpsChangeListener.updateTrack(this.track);
         }
-        if(this.listenerForServerConnetion != null)
+        if (this.listenerForServerConnetion != null)
             this.listenerForServerConnetion.newPosition(location);
         this.track.addNode(location);
     }
 
     @Override
     public void endTrack() throws IOException, ClassNotFoundException {
-        if(this.gpsChangeListener != null){
+        if (this.gpsChangeListener != null) {
             this.gpsChangeListener.updateTrack(this.track);
         }
-        if(this.listenerForServerConnetion != null)
+        if (this.listenerForServerConnetion != null)
             this.listenerForServerConnetion.trackFinish(this.track);
         this.saveTrack();
     }
@@ -103,6 +103,5 @@ public final class TrackingController implements TrackingControllerInterface {
         final StorageController str = new StorageController(this.context);
         str.onStartService();
         str.saveTrack(this.track);
-
     }
 }

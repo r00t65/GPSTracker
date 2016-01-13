@@ -29,7 +29,7 @@ import java.io.IOException;
  * Created by Andreas Ziemer on 16.12.15.
  * Track aufzeichnen und an Server senden
  */
-public class TrackingService extends Service{
+public class TrackingService extends Service {
 
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
@@ -38,42 +38,42 @@ public class TrackingService extends Service{
     private final IBinder mBinder = new LocalBinder();
 
     //-------------------------------Controller---------------------------
-    private  GPSController gpsController;
-    private  TrackingController trackingController;
+    private GPSController gpsController;
+    private TrackingController trackingController;
     //--------------------------------------------------------------------
 
     private final class ServiceHandler extends Handler {
 
-        public ServiceHandler(Looper looper){
+        public ServiceHandler(Looper looper) {
             super(looper);
         }
 
         @Override
-        public void handleMessage(Message msg){
+        public void handleMessage(Message msg) {
             //work
             /**
              long endTime = System.currentTimeMillis() + 30*1000;
-            while(System.currentTimeMillis() < endTime){
-                synchronized (this){
-                    try{
-                        wait(endTime - System.currentTimeMillis());
-                    }catch (Exception e){
-                    }
-                }
-            }
+             while(System.currentTimeMillis() < endTime){
+             synchronized (this){
+             try{
+             wait(endTime - System.currentTimeMillis());
+             }catch (Exception e){
+             }
+             }
+             }
 
-            //ende
-            (msg.arg1);
+             //ende
+             (msg.arg1);
              */
         }
     }
 
     @Override
-    public void onCreate(){
+    public void onCreate() {
         Log.v("Service", "Service erstellt");
         //-------------------------------Controller---------------------------
         trackingController = new TrackingController(this.getBaseContext());
-        gpsController = new GPSController(this.getBaseContext(),this.trackingController);
+        gpsController = new GPSController(this.getBaseContext(), this.trackingController);
         //--------------------------------------------------------------------
         HandlerThread thread = new HandlerThread("ServiceStartArg", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
@@ -83,7 +83,7 @@ public class TrackingService extends Service{
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startID){
+    public int onStartCommand(Intent intent, int flags, int startID) {
         Log.v("Service", "Service gestartet");
         //-------------------------------Controller---------------------------
         trackingController.onStartService();
@@ -114,7 +114,7 @@ public class TrackingService extends Service{
                 .build();
         trackerNotification.flags = Notification.FLAG_ONGOING_EVENT;
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(1,trackerNotification);
+        notificationManager.notify(1, trackerNotification);
         //Notification ende
 
         return START_STICKY;
@@ -158,23 +158,25 @@ public class TrackingService extends Service{
         return mBinder;
     }
 
-    /** method for clients */
-    public String getServiceInfo(){
+    /**
+     * method for clients
+     */
+    public String getServiceInfo() {
         String info = "Bound Service";
         return info;
     }
 
-    public void registerListener(GPSMapChangeListener gpsChangeListener){
+    public void registerListener(GPSMapChangeListener gpsChangeListener) {
         //trackingController.registerListener(gpsChangeListener);
         trackingController.registerGPSListener(gpsChangeListener);
     }
 
-    public void unregisterListener(){
-       // trackingController.unregisterListener();
+    public void unregisterListener() {
+        // trackingController.unregisterListener();
         trackingController.unregisterGPSListener();
     }
 
-    public void saveTrack(){
+    public void saveTrack() {
 
     }
 }

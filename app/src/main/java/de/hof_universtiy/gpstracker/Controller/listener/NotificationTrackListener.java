@@ -9,7 +9,6 @@ import de.hof_universtiy.gpstracker.Model.track.Track;
  * Created by alex on 05.01.16.
  * GPSTracker
  */
-public interface NotificationTrackListener {
-    public void newPosition(@NonNull final Location location);
+public interface NotificationTrackListener extends GPSListener{
     public void trackFinish(@NonNull final Track track);
 }

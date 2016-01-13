@@ -13,7 +13,7 @@ public class Friend implements Serializable {
     private Location lastKnowPosition;
     private String ID;//ändern nach Bedarf
 
-    public Friend(){
+    public Friend() {
 
     }
 

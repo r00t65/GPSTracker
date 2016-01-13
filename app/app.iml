@@ -113,8 +113,8 @@
     <orderEntry type="library" exported="" name="bolts-android-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
-    <orderEntry type="library" exported="" name="smack-im-4.1.0" level="project" />
     <orderEntry type="library" exported="" name="smack-android-4.1.0" level="project" />
+    <orderEntry type="library" exported="" name="smack-im-4.1.0" level="project" />
     <orderEntry type="library" exported="" name="smack-core-4.1.0" level="project" />
     <orderEntry type="library" exported="" name="design-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="osmdroid-android-5.0.1" level="project" />

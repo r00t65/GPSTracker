@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * Created by alex on 09.12.15.
  */
-public class GPSController implements GPSControllerInterface {
+public class GPSController implements GPSControllerInterface2 {
 
     private final LocationManager locationManager;
     private final Context context;
@@ -24,10 +24,11 @@ public class GPSController implements GPSControllerInterface {
 
     public final static String IS_TRACKING = "IS_TR";
 
-    public GPSController(@NonNull final Context context, @NonNull final GPSChangeListener listener) {
+    public GPSController(@NonNull final Context context, @NonNull final GPSChangeListener listener) throws GPSException {
         this.context = context;
         this.listener = listener;
         this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        this.onStartService();
     }
 
     @Override
@@ -37,7 +38,7 @@ public class GPSController implements GPSControllerInterface {
         }
         try {
             locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, this.context.getMainLooper());
-        }catch (SecurityException e){
+        } catch (SecurityException e) {
             GPSException ex = new GPSException(GPSException.ERROR_2);
             ex.setStackTrace(e.getStackTrace());
             throw ex;
@@ -66,8 +67,8 @@ public class GPSController implements GPSControllerInterface {
             throw ex;
         }
         try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10,100,this);
-        }catch (SecurityException e){
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 100, this);
+        } catch (SecurityException e) {
             GPSException ex = new GPSException(GPSException.ERROR_2);
             ex.setStackTrace(e.getStackTrace());
             throw ex;
@@ -84,7 +85,7 @@ public class GPSController implements GPSControllerInterface {
     @Override
     public void onLocationChanged(Location location) {
         this.listener.newPosition(new de.hof_universtiy.gpstracker.Model.position.Location(location));
-        if(this.isTracking)
+        if (this.isTracking)
             try {
                 this.listener.newWayPoint(new de.hof_universtiy.gpstracker.Model.position.Location(location));
             } catch (Track.TrackFinishException e) {
@@ -113,6 +114,7 @@ public class GPSController implements GPSControllerInterface {
     public class GPSException extends Exception {
         public final static String ERROR_1 = "GPS wurde nicht eingeschaltet";
         public final static String ERROR_2 = "GPS wird nicht unterstützt";
+
         public GPSException(final String message) {
             super(message);
         }

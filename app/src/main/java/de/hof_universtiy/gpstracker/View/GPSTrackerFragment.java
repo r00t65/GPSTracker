@@ -109,7 +109,7 @@ public class GPSTrackerFragment extends Fragment {
 
                 } else {
                     String test = mService.getServiceInfo();
-                       Log.v("BoundService", test);
+                    Log.v("BoundService", test);
                     getActivity().unbindService(trackingConnection);
                     getActivity().stopService(trackingServiceIntent);
                 }
@@ -141,7 +141,6 @@ public class GPSTrackerFragment extends Fragment {
     };
 
 
-
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -153,7 +152,7 @@ public class GPSTrackerFragment extends Fragment {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
     }
 
@@ -182,12 +181,12 @@ public class GPSTrackerFragment extends Fragment {
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
     }
 
@@ -196,7 +195,7 @@ public class GPSTrackerFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

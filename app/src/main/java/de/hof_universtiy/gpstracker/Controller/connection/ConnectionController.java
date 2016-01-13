@@ -39,14 +39,14 @@ import de.hof_universtiy.gpstracker.Model.position.PositionModel;
 /**
  * Created by Lothar Mödl on 19.11.15.
  */
-public class ConnectionController{
+public class ConnectionController {
 
     //- Einzelnen Track auf Server löschen
     //- TrackID auf Server erstellen, wenn neuer Track hochgeladen wird und dann TrackID wieder zurücksenden, um lokal mit dem Track zu matchen
 
     private static final String URL_SEND_LAST_WAYPOINT = "";
     private static final String URL_GET_WAYPOINTS_OF_FRIENDS = "https://aap.rt-dns.de/connection.php";
-//    private static final String URL_GET_WAYPOINTS_OF_FRIENDS = "https://posttestserver.com/post.php";
+    //    private static final String URL_GET_WAYPOINTS_OF_FRIENDS = "https://posttestserver.com/post.php";
     private static final String URL_GET_MESSAGES = "https://aap.rt-dns.de/getMessage.php";
 
     final String FRIENDS_NEARBY = "getFriends";
@@ -65,7 +65,7 @@ public class ConnectionController{
 
     private List<PositionModel> position;
 
-    public void sendLastWaypoint(String id, GeoPoint geoPoint){
+    public void sendLastWaypoint(String id, GeoPoint geoPoint) {
 
         String json = "json={\"func\":\"setPosition\", \"userID\"" + id + ",\"lat\":\"" + geoPoint.getLatitude() + "\",\"lon\":\"" + geoPoint.getLongitude() + "\"}";
 
@@ -84,8 +84,7 @@ public class ConnectionController{
     }
 
 
-    public void getWaypointsOfFriends(String id)
-    {
+    public void getWaypointsOfFriends(String id) {
         String jsonToSend = "json={\"func\":\"getFriends\",\"userID\":\"" + id + "\"}";
         JSONObject object = new JSONObject();
         try {
@@ -98,7 +97,7 @@ public class ConnectionController{
         new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, jsonToSend);
     }
 
-    public void addTrack(String id, ArrayList<GeoPoint> geoPoints){
+    public void addTrack(String id, ArrayList<GeoPoint> geoPoints) {
         JSONObject object = new JSONObject();
 
         try {
@@ -106,7 +105,7 @@ public class ConnectionController{
             object.put("func", "addTrack");
             JSONArray array = new JSONArray();
 
-            for(GeoPoint g : geoPoints){
+            for (GeoPoint g : geoPoints) {
                 JSONObject o = new JSONObject();
                 o.put("lat", g.getLatitude());
                 o.put("lon", g.getLongitude());
@@ -122,26 +121,24 @@ public class ConnectionController{
 
     }
 
-    public void getTracks(String id){
+    public void getTracks(String id) {
         String json = "json={\"func\":\"getTrack\",\"userID\"" + id + "\"}";
 
         new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, json);
 
     }
 
-    public void shareTrack(String userID, String friendID, String trackID){
+    public void shareTrack(String userID, String friendID, String trackID) {
         String json = "json={\"func\":\"addShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
 
         new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, json);
     }
 
-    public void deleteShareTrack(String userID, String friendID, String trackID){
+    public void deleteShareTrack(String userID, String friendID, String trackID) {
         String json = "json={\"func\":\"delShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
 
         new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, json);
     }
-
-
 
 
     private String receiveJsonData(String urlString, String json) {
@@ -152,7 +149,7 @@ public class ConnectionController{
             public boolean verify(String hostname, SSLSession session) {
 
                 HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
-                return  hv.verify("aap.rt-dns.de", session);
+                return hv.verify("aap.rt-dns.de", session);
             }
         };
 
@@ -191,26 +188,23 @@ public class ConnectionController{
             URL url = new URL(urlString);
 
             urlConnection = (HttpsURLConnection) url.openConnection();
-          urlConnection.setHostnameVerifier(hostnameVerifier);
-           // if(json != null) {
+            urlConnection.setHostnameVerifier(hostnameVerifier);
+            // if(json != null) {
 
-                Log.d("json to send", json);
+            Log.d("json to send", json);
 
-                urlConnection.setDoOutput(true);
+            urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
-                //urlConnection.setChunkedStreamingMode(0);
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setUseCaches(false);
-                urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                //urlConnection.setRequestProperty("Accept", "application/json");
+            //urlConnection.setChunkedStreamingMode(0);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setUseCaches(false);
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            //urlConnection.setRequestProperty("Accept", "application/json");
 
 
+            //OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
 
-
-                //OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
-
-                //BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os, "utf8"));
-
+            //BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os, "utf8"));
 
 
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8");
@@ -218,13 +212,13 @@ public class ConnectionController{
             outputStreamWriter.write(json);
             outputStreamWriter.flush();
             outputStreamWriter.close();
-                //out.write(json);
-                //out.flush();
-                //os.close();
-                //out.close();
+            //out.write(json);
+            //out.flush();
+            //os.close();
+            //out.close();
             urlConnection.connect();
 
-           // }
+            // }
 
             InputStream is = new BufferedInputStream(urlConnection.getInputStream());
             //if(!url.getHost().equals(urlConnection.getURL().getHost())){
@@ -233,7 +227,7 @@ public class ConnectionController{
 
             String line = "";
 
-            while ((line = in.readLine()) != null){
+            while ((line = in.readLine()) != null) {
                 result += line;
             }
 
@@ -247,7 +241,7 @@ public class ConnectionController{
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -257,7 +251,7 @@ public class ConnectionController{
     }
 
 
-    public boolean isConnected(Context context){
+    public boolean isConnected(Context context) {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
@@ -265,12 +259,10 @@ public class ConnectionController{
     }
 
 
-
-    private void parsePosition(String json){
+    private void parsePosition(String json) {
         position = new ArrayList<PositionModel>();
 
-        try
-        {
+        try {
 
             JSONObject jObj = new JSONObject(json);
             int status = jObj.getInt("status");
@@ -279,24 +271,20 @@ public class ConnectionController{
 
             JSONArray jFriends = jObj.getJSONArray(FRIENDS_NEARBY);
 
-            for(int i=0;i<jFriends.length();i++)
-            {
+            for (int i = 0; i < jFriends.length(); i++) {
                 JSONObject jFriend = jFriends.getJSONObject(i);
 
-                String id =  jFriend.getString(ID);
+                String id = jFriend.getString(ID);
                 Double latitude = jFriend.getDouble(LATITUDE);
                 Double longitude = jFriend.getDouble(LONGITUDE);
 
-                PositionModel positionModel = new PositionModel(id,latitude, longitude,new Date());//TODO:Zeitpunkt der Aufnahme
+                PositionModel positionModel = new PositionModel(id, latitude, longitude, new Date());//TODO:Zeitpunkt der Aufnahme
 
                 position.add(positionModel);
             }
 
             Log.d("LASTPOSITION", position.get(0).toString());
-        }
-
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             Log.e(LOG_TAG, "Fehler beim Parsen der Position: " + e.getMessage());
             e.printStackTrace();
         }
@@ -304,24 +292,7 @@ public class ConnectionController{
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private class HttpsAsyncTaskPosition extends AsyncTask<String, Void, String>{
+    private class HttpsAsyncTaskPosition extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -341,7 +312,6 @@ public class ConnectionController{
 
         }
     }
-
 
 
     public List<PositionModel> getPosition() {

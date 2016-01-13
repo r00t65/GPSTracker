@@ -10,6 +10,8 @@ import java.io.IOException;
  */
 public interface StorageControllerInterface {
     public void onStartService() throws IOException, ClassNotFoundException;
+
     public void onDestroyService() throws IOException;
+
     public void saveTrack(Track track) throws IOException;
 }
