@@ -11,6 +11,7 @@ import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 
 import java.io.IOException;
+import java.util.Date;
 
 
 /**
@@ -91,17 +92,24 @@ public final class TrackingController implements TrackingControllerInterface {
 
     @Override
     public void endTrack() throws IOException, ClassNotFoundException {
+        this.saveTrack();
+
         if (this.gpsChangeListener != null) {
             this.gpsChangeListener.updateTrack(this.track);
         }
         if (this.listenerForServerConnetion != null)
             this.listenerForServerConnetion.trackFinish(this.track);
-        this.saveTrack();
     }
 
     private void saveTrack() throws IOException, ClassNotFoundException {
         final StorageController str = new StorageController(this.context);
         str.onStartService();
+        if(str.getListOfTrackNames().contains(this.track.getName()))
+            this.track = new Track(this.track.getName()+"|"+new Date(),this.track);
         str.saveTrack(this.track);
+    }
+
+    public void setNewName(String newName) {
+        this.track = new Track(newName,this.track);
     }
 }

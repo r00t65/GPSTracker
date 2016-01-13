@@ -37,6 +37,6 @@ dependencies {
     compile 'org.igniterealtime.smack:smack-android-extensions:4.1.0'
     compile 'org.apache.commons:commons-lang3:3.0'
     compile 'com.facebook.android:facebook-android-sdk:4.8.2'
-    compile 'com.android.support:support-annotations:+'
+    compile 'com.android.support:support-annotations:23.1.1'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
 }

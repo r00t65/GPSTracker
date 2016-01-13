@@ -4,21 +4,21 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_gpstracker"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/gps96"
             android:title="GPSTracker" />
         <item
             android:id="@+id/nav_radar"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/radar96"
             android:title="Radar" />
         <item
             android:id="@+id/nav_messenger"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/chat96"
             android:title="Messenger" />
         <item
             android:id="@+id/nav_loginLogout"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/user96"
             android:title="Login/Logout" />
-        <item
+        //item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
             android:title="Settings" />

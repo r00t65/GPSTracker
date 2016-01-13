@@ -180,8 +180,9 @@ public class TrackingService extends Service {
         trackingController.unregisterGPSListener();
     }
 
-    public void saveTrack() {
-
+    public void saveTrack(final String trackName) throws IOException, ClassNotFoundException {
+        this.trackingController.setNewName(trackName);
+        this.trackingController.endTrack();
     }
 }
 
