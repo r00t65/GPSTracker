@@ -20,6 +20,11 @@ public final class Track implements Serializable {
         this.NAME = name;
     }
 
+    public Track(@NonNull final String newName,@NonNull final Track track) {
+        this.NAME = newName;
+        this.trackList.addAll(track.getTracks());
+    }
+
     public void addNode(@NonNull final Location location) throws TrackFinishException {
         if (trackIsFinish) {
             throw new TrackFinishException();

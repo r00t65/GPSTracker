@@ -85,6 +85,8 @@ public class MapController implements MapControllerInterface {
 
         Road road = roadManager.getRoad(geoPoints);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road, activityContext);
+        roadOverlay.setVisible(true);
+        roadOverlay.setWidth(4);
         mapView.getOverlays().add(roadOverlay);
         mapView.invalidate();
     }
