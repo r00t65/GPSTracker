@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity
         connectionController.getWaypointsOfFriends("1");
 
 
-        //Service fuer Positionsupdates
+        //Service fuer
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         isRadarActive = sharedPref.getBoolean("radar_active",false);
         if(isRadarActive){
