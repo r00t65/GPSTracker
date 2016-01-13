@@ -25,7 +25,7 @@ public class RadarController implements RadarControllerInterface {
     private CompassOverlay mCompassOverlay;
     private RotationGestureOverlay mRotationGestureOverlay;
 
-    public RadarController(@NonNull Context context,@NonNull MapView lRadarView){
+    public RadarController(@NonNull Context context, @NonNull MapView lRadarView) {
         this.context = context;
         this.radarView = lRadarView;
 
@@ -40,11 +40,11 @@ public class RadarController implements RadarControllerInterface {
     }
 
     private void drawFriends(@NonNull final List<Friend> friendList) {
-        for(final Friend friend:friendList)
+        for (final Friend friend : friendList)
             drawFriend(friend);
     }
 
-    private void drawFriend(@NonNull final Friend friend){
+    private void drawFriend(@NonNull final Friend friend) {
         final FriendMapOverlay mapPoint = new FriendMapOverlay(this.context, friend);
         this.radarView.getOverlayManager().add(mapPoint);
         radarIsInvalidate();
@@ -68,17 +68,17 @@ public class RadarController implements RadarControllerInterface {
         radarIsInvalidate();
     }
 
-    private void drawMyPosition(@NonNull final Location location){
+    private void drawMyPosition(@NonNull final Location location) {
         final MyPositionMapOverlay mapPoint = new MyPositionMapOverlay(this.context, location);
         this.radarView.getOverlayManager().add(mapPoint);
         radarIsInvalidate();
     }
 
-    private void radarIsInvalidate(){
+    private void radarIsInvalidate() {
         this.radarView.invalidate();
     }
 
-    private void clearRadar(){
+    private void clearRadar() {
         this.radarView.getOverlays().clear();
         this.radarView.invalidate();
     }

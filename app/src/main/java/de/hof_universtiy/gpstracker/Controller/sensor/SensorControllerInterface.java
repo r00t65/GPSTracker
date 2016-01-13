@@ -8,5 +8,6 @@ import android.os.Bundle;
  */
 public interface SensorControllerInterface {
     public void onStartService();
+
     public void onDestroyService();
 }

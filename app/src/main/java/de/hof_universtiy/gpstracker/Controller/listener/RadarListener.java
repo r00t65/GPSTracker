@@ -11,5 +11,5 @@ import java.util.List;
  * GPSTracker
  */
 public interface RadarListener {
-    public void setListOfFriends(@NonNull final Location myPosition,@NonNull final List<Friend> friendList);
+    public void setListOfFriends(@NonNull final Location myPosition, @NonNull final List<Friend> friendList);
 }

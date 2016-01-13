@@ -8,9 +8,8 @@ import android.util.Log;
 /**
  * Created by Andreas Ziemer on 16.12.15.
  * Position an Server
- *
  */
-public class RadarService extends IntentService{
+public class RadarService extends IntentService {
 
     public RadarService() {
         super("MyRadarService");

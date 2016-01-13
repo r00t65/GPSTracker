@@ -71,7 +71,7 @@ public class RadarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_radar, container, false);
-        this.mRadarController = new RadarController(this.getContext(),(MapView) rootView.findViewById(R.id.radar));
+        this.mRadarController = new RadarController(this.getContext(), (MapView) rootView.findViewById(R.id.radar));
         return rootView;
 
 

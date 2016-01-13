@@ -30,33 +30,32 @@ public class MessengerController extends AsyncTask {
 
     private boolean successfullyConnected;
 
-    public MessengerController(MessengerInterface listener){
+    public MessengerController(MessengerInterface listener) {
         this.listener = listener;
         successfullyConnected = true;
     }
 
     @Override
-    protected Object doInBackground(Object[] params)  {
+    protected Object doInBackground(Object[] params) {
 
         try {
             buildConfiguration();
             establishConnection();
             joinMultiUserChat();
             addMessageListener();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             successfullyConnected = false;
         }
 
         return null;
     }
 
-    public void disconnect(){
+    public void disconnect() {
         connection.disconnect();
     }
 
 
-    private void buildConfiguration() throws Exception{
+    private void buildConfiguration() throws Exception {
         configuration = XMPPTCPConnectionConfiguration.builder();
         configuration.setUsernameAndPassword("speedhammerapp", "hochschulehof")
                 .setServiceName("chat.mvp.avinotec.de")
@@ -67,7 +66,7 @@ public class MessengerController extends AsyncTask {
                 .build();
     }
 
-    private void establishConnection() throws  Exception{
+    private void establishConnection() throws Exception {
 
         connection = new XMPPTCPConnection(configuration.build());
         connection.connect();
@@ -76,7 +75,7 @@ public class MessengerController extends AsyncTask {
     }
 
 
-    private void joinMultiUserChat() throws Exception{
+    private void joinMultiUserChat() throws Exception {
 
         manager = MultiUserChatManager.getInstanceFor(connection);
 
@@ -97,51 +96,47 @@ public class MessengerController extends AsyncTask {
     }
 
 
-    public void addMessageListener() throws Exception{
+    public void addMessageListener() throws Exception {
 
-            messageListener = new MessageListener() {
-                @Override
-                public void processMessage(Message message) {
-                    int start = message.getFrom().lastIndexOf("/");
-                    String name = message.getFrom().substring(start + 1);
+        messageListener = new MessageListener() {
+            @Override
+            public void processMessage(Message message) {
+                int start = message.getFrom().lastIndexOf("/");
+                String name = message.getFrom().substring(start + 1);
 
-                    listener.addMessageToList(message.getBody(), name);
-                }
-            };
+                listener.addMessageToList(message.getBody(), name);
+            }
+        };
 
-            chat.addMessageListener(messageListener);
+        chat.addMessageListener(messageListener);
 
     }
 
     public void sendMessage(String message) {
 
-        if(StringUtils.isNotBlank(message)) {
+        if (StringUtils.isNotBlank(message)) {
 
             try {
                 chat.sendMessage(message);
                 listener.clearTextField();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 listener.showCouldNotSendMessageToast();
             }
-        }
-        else{
+        } else {
             listener.showEmptyMessageToast();
         }
     }
-
 
 
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
 
-        if(successfullyConnected) {
+        if (successfullyConnected) {
             listener.showSuccessfullyConnectedToast();
             listener.enableSendButton();
             listener.enableReloadButton();
-        }
-        else {
+        } else {
             listener.showCouldNotConnectToChatToast();
             listener.enableReloadButton();
         }

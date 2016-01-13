@@ -13,7 +13,6 @@ import java.io.IOException;
  */
 public interface GPSControllerInterface extends LocationListener {
     public void onStartService() throws GPSController.GPSException, IOException, ClassNotFoundException;
+
     public void onDestroyService() throws GPSController.GPSException, IOException, ClassNotFoundException;
-    public void startTracking(@NonNull final String name) throws GPSController.GPSException;
-    public void endTracking() throws IOException, ClassNotFoundException;
 }

@@ -9,5 +9,6 @@ import de.hof_universtiy.gpstracker.Controller.listener.GPSMapChangeListener;
  */
 public interface MapControllerInterface {
     public void showMyPosition() throws SecurityException;
+
     public GPSMapChangeListener getListener();
 }

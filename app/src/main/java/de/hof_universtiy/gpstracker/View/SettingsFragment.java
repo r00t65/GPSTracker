@@ -69,12 +69,12 @@ public class SettingsFragment extends PreferenceFragment {
         radarStatus = (SwitchPreference) getPreferenceManager().findPreference("radar_active");
         radarInt = (ListPreference) getPreferenceManager().findPreference("radar_interval");
 
-      //  radarStatus.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-      //      @Override
-      //      public boolean onPreferenceChange(Preference preference, Object newValue) {
-      //          return true;
-      //      }
-      //  });
+        //  radarStatus.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        //      @Override
+        //      public boolean onPreferenceChange(Preference preference, Object newValue) {
+        //          return true;
+        //      }
+        //  });
 
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
@@ -108,7 +108,7 @@ public class SettingsFragment extends PreferenceFragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

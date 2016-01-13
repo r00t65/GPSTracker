@@ -7,7 +7,7 @@ import android.content.Intent;
 /**
  * Created by Andreas Ziemer on 11.01.2016.
  */
-public class RadarServiceReceiver extends BroadcastReceiver{
+public class RadarServiceReceiver extends BroadcastReceiver {
     public static final int REQUEST_CODE = 17;
 
     @Override
