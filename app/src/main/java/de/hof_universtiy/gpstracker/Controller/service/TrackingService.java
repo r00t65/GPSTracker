@@ -73,7 +73,11 @@ public class TrackingService extends Service {
         Log.v("Service", "Service erstellt");
         //-------------------------------Controller---------------------------
         trackingController = new TrackingController(this.getBaseContext());
-        gpsController = new GPSController(this.getBaseContext(), this.trackingController);
+        try {
+            gpsController = new GPSController(this.getBaseContext(), this.trackingController);
+        } catch (GPSController.GPSException e) {
+            e.printStackTrace();
+        }
         //--------------------------------------------------------------------
         HandlerThread thread = new HandlerThread("ServiceStartArg", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
