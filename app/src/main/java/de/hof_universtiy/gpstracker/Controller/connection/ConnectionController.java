@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.facebook.Profile;
 
+import de.hof_universtiy.gpstracker.Controller.listener.RadarListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +38,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import de.hof_universtiy.gpstracker.Controller.listener.NotificationTrackListener;
-import de.hof_universtiy.gpstracker.Controller.radar.RadarController;
 import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import de.hof_universtiy.gpstracker.Model.position.FriendsPositionModel;
 import de.hof_universtiy.gpstracker.Model.position.Location;
@@ -72,12 +72,12 @@ public class ConnectionController implements NotificationTrackListener{
 
     private List<FriendsPositionModel> position;
 
-    private RadarController radarController;
+    private RadarListener radarController;
     private Context context;
     private String facebookId;
 
 
-    public ConnectionController(RadarController radarController, Context context){
+    public ConnectionController(RadarListener radarController, Context context){
         this.radarController = radarController;
         this.context = context;
         facebookId = Profile.getCurrentProfile().getId();
@@ -368,13 +368,21 @@ public class ConnectionController implements NotificationTrackListener{
         }
     }
 
-
-
     public List<FriendsPositionModel> getPosition() {
         return position;
     }
 
     public void setPosition(List<FriendsPositionModel> position) {
         this.position = position;
+    }
+
+    @Override
+    public void createTrack(@NonNull String name) {
+        //Ignore
+    }
+
+    @Override
+    public void newWayPoint(@NonNull Location location) throws Track.TrackFinishException {
+        //Ignore
     }
 }

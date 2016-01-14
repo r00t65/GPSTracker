@@ -11,10 +11,12 @@ import java.io.IOException;
  * Created by alex on 05.01.16.
  * GPSTracker
  */
-public interface GPSChangeListener extends GPSListener {
+public interface GPSChangeListener {
+    public void newPosition(@NonNull final Location location);
+
     public void createTrack(@NonNull final String name);
 
     public void newWayPoint(@NonNull final Location location) throws Track.TrackFinishException;
 
-    public void endTrack() throws IOException, ClassNotFoundException;
+    public void trackFinish(final Track track) throws IOException, ClassNotFoundException;
 }

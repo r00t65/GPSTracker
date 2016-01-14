@@ -91,7 +91,7 @@ public final class TrackingController implements TrackingControllerInterface {
     }
 
     @Override
-    public void endTrack() throws IOException, ClassNotFoundException {
+    public void trackFinish(Track track) throws IOException, ClassNotFoundException {
         this.saveTrack();
 
         if (this.gpsChangeListener != null) {

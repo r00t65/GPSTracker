@@ -182,7 +182,7 @@ public class TrackingService extends Service {
 
     public void saveTrack(final String trackName) throws IOException, ClassNotFoundException {
         this.trackingController.setNewName(trackName);
-        this.trackingController.endTrack();
+        this.trackingController.trackFinish(null);
     }
 }
 

@@ -79,7 +79,7 @@ public class GPSController implements GPSControllerInterface2 {
     @Override
     public void endTracking() throws IOException, ClassNotFoundException {
         this.isTracking = false;
-        this.listener.endTrack();
+        this.listener.trackFinish(null);
     }
 
     @Override

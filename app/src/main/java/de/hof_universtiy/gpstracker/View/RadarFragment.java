@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
 import de.hof_universtiy.gpstracker.Controller.radar.RadarController;
+import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
+import de.hof_universtiy.gpstracker.Controller.sensor.GPSControllerInterface;
 import de.hof_universtiy.gpstracker.R;
 import org.osmdroid.views.MapView;
 
@@ -32,6 +35,8 @@ public class RadarFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private RadarController mRadarController;
+    private ConnectionController mConetionController;
+    private GPSControllerInterface mGPSController;
 
 
     public RadarFragment() {
@@ -72,6 +77,12 @@ public class RadarFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_radar, container, false);
         this.mRadarController = new RadarController(this.getContext(), (MapView) rootView.findViewById(R.id.radar));
+        //this.mConetionController = new ConnectionController(this.mRadarController,this.getContext());TODO fix bug @Lothar
+        try {
+            this.mGPSController = new GPSController(this.getContext(),this.mConetionController);
+        } catch (GPSController.GPSException e) {
+            e.printStackTrace();
+        }
         return rootView;
 
 
