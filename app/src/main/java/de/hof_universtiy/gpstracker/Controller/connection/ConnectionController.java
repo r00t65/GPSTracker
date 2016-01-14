@@ -51,11 +51,7 @@ import de.hof_universtiy.gpstracker.Model.track.Track;
  */
 public class ConnectionController implements NotificationTrackListener{
 
-    //- Einzelnen Track auf Server löschen
-    //- TrackID auf Server erstellen, wenn neuer Track hochgeladen wird und dann TrackID wieder zurücksenden, um lokal mit dem Track zu matchen
-
     private static final String SERVER_URL = "https://aap.rt-dns.de/connection.php";
-
 
     final String FRIENDS_NEARBY = "getFriends";
     final String ID = "userID";
@@ -73,8 +69,6 @@ public class ConnectionController implements NotificationTrackListener{
     private Context context;
     private String facebookId;
     private Location location;
-    private String bla;
-
 
     public ConnectionController(RadarListener radarController, Context context){
         this.radarController = radarController;
