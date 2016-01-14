@@ -7,6 +7,7 @@ import de.hof_universtiy.gpstracker.Model.mapoverlays.MyPositionMapOverlay;
 import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.radar.Friend;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
@@ -66,6 +67,7 @@ public class RadarController implements RadarControllerInterface {
         this.radarView.setMinZoomLevel(7);
         this.radarView.setHovered(true);
         this.radarView.setVerticalFadingEdgeEnabled(false);
+        this.radarView.setScrollableAreaLimit(new BoundingBoxE6(84.34635,-178.80544,-84.34635,+178.80544));
         this.showMyPosition();
 
         this.mCompassOverlay = new CompassOverlay(this.context, new InternalCompassOrientationProvider(this.context), this.radarView);
