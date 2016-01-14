@@ -82,7 +82,12 @@ public class ConnectionController implements NotificationTrackListener{
         this.radarController = radarController;
         this.context = context;
         FacebookSdk.sdkInitialize(context);
-        facebookId = Profile.getCurrentProfile().getId();
+
+        try {
+            facebookId = Profile.getCurrentProfile().getId();
+        }catch (NullPointerException e){
+            Log.e("NullPointerException", "Not logged in or FacebookSdk initialization failed");
+        }
 
 
     }
