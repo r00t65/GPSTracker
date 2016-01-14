@@ -77,10 +77,15 @@ public class MainActivity extends AppCompatActivity
             Log.i("Happening", "Nofragmentavailable");
         }
 
-
-
-        //Service fuer
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        radarService();
+    }
+
+    /**
+     * Methode zum Start/Beenden des RadarService
+     */
+    public void radarService(){
         isRadarActive = sharedPref.getBoolean("radar_active",false);
         if(isRadarActive){
             scheduleRadar();
@@ -89,12 +94,13 @@ public class MainActivity extends AppCompatActivity
             cancelAlarm();
             Log.d("RadarStart", "RadarService inaktiv");
         }
-        //Ende
     }
 
+    /**
+     * Radarservice starten und nach radarInterval wiederholen lassen
+     */
     private void scheduleRadar() {
-        //radarInterval = sharedPref.getLong("radar_interval",30) * 60 * 1000;
-        radarInterval = 10*1000;
+        radarInterval = Long.parseLong(sharedPref.getString("radar_interval","20")) * 60 * 1000;
         Intent intent = new Intent(getApplicationContext(), RadarServiceReceiver.class);
         final PendingIntent pIntent = PendingIntent.getBroadcast(this, RadarServiceReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         long firstMillis = System.currentTimeMillis();
@@ -102,6 +108,9 @@ public class MainActivity extends AppCompatActivity
         radarAlarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, radarInterval, pIntent);
     }
 
+    /**
+     * Radarservice beenden
+     */
     private void cancelAlarm(){
         Intent intent = new Intent(getApplicationContext(), RadarServiceReceiver.class);
         final PendingIntent pIntent = PendingIntent.getBroadcast(this, RadarServiceReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
