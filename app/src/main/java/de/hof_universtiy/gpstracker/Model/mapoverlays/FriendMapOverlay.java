@@ -1,12 +1,20 @@
 package de.hof_universtiy.gpstracker.Model.mapoverlays;
 
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.support.annotation.NonNull;
-import de.hof_universtiy.gpstracker.Model.radar.Friend;
-import de.hof_universtiy.gpstracker.R;
+
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+
+import de.hof_universtiy.gpstracker.Model.radar.Friend;
+import de.hof_universtiy.gpstracker.Model.radar.FriendsPositionModel;
+import de.hof_universtiy.gpstracker.R;
 
 /**
  * Created by alex on 12.01.16 um 17:08

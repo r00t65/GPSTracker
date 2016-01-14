@@ -3,12 +3,9 @@ package de.hof_universtiy.gpstracker.Model.mapoverlays;
 import android.content.Context;
 import android.graphics.*;
 import de.hof_universtiy.gpstracker.Model.position.Location;
-import de.hof_universtiy.gpstracker.Model.radar.Friend;
 import de.hof_universtiy.gpstracker.R;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-
-import java.util.Date;
 
 /**
  * Created by alex on 07.01.16.

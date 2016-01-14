@@ -2,10 +2,7 @@ package de.hof_universtiy.gpstracker.Controller.radar;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import de.hof_universtiy.gpstracker.Model.mapoverlays.FriendMapOverlay;
-import de.hof_universtiy.gpstracker.Model.mapoverlays.MyPositionMapOverlay;
-import de.hof_universtiy.gpstracker.Model.position.Location;
-import de.hof_universtiy.gpstracker.Model.radar.Friend;
+
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
@@ -16,6 +13,11 @@ import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 
 import java.util.Date;
 import java.util.List;
+
+import de.hof_universtiy.gpstracker.Model.mapoverlays.FriendMapOverlay;
+import de.hof_universtiy.gpstracker.Model.mapoverlays.MyPositionMapOverlay;
+import de.hof_universtiy.gpstracker.Model.position.Location;
+import de.hof_universtiy.gpstracker.Model.radar.Friend;
 
 /**
  * Created by alex on 12.01.16.

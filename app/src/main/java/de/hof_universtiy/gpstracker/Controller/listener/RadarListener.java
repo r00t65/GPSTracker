@@ -1,10 +1,11 @@
 package de.hof_universtiy.gpstracker.Controller.listener;
 
 import android.support.annotation.NonNull;
-import de.hof_universtiy.gpstracker.Model.position.Location;
-import de.hof_universtiy.gpstracker.Model.radar.Friend;
 
 import java.util.List;
+
+import de.hof_universtiy.gpstracker.Model.position.Location;
+import de.hof_universtiy.gpstracker.Model.radar.Friend;
 
 /**
  * Created by alex on 12.01.16.
