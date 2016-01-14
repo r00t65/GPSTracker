@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.widget.Toast;
 import com.facebook.appevents.AppEventsLogger;
 
 import de.hof_universtiy.gpstracker.Controller.service.RadarServiceReceiver;
@@ -133,12 +134,11 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             fragmentClass = SettingsFragment.class;
             try {
-                fragment = (Fragment) fragmentClass.newInstance();
+                fragment = this.getFragmentFromStack(fragmentClass);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -157,6 +157,18 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private Fragment getFragmentFromStack(Class fragmentClass) throws IllegalAccessException, InstantiationException {
+        Fragment fragment1 = null;
+        for(Fragment fragment:this.getSupportFragmentManager().getFragments()){
+            if(fragment.getClass() == fragmentClass){
+                fragment1 = fragment;
+            }
+        }
+        if(fragment1 == null)
+            fragment1 = (Fragment) fragmentClass.newInstance();
+        return fragment1;
     }
 
     @Override
@@ -213,7 +225,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            fragment = this.getFragmentFromStack(fragmentClass);
         } catch (Exception e) {
             e.printStackTrace();
         }

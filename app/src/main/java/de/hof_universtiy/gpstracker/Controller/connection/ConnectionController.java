@@ -92,13 +92,13 @@ public class ConnectionController implements NotificationTrackListener{
 
     }
 
-    public void getWaypointsOfFriends(String id)
+    public void getWaypointsOfFriends(Location location)
     {
-        String jsonToSend = "json={\"func\":\"getFriends\",\"userID\":\"" + id + "\"}";
+        String jsonToSend = "json={\"func\":\"getFriends\",\"userID\":\"" + this.facebookId + "\"}";
         JSONObject object = new JSONObject();
         try {
             object.put("func", "getFriends");
-            object.put("userID", id);
+            object.put("userID",  this.facebookId);
         } catch (JSONException e) {
             e.printStackTrace();
         }

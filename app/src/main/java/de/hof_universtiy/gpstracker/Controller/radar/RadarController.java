@@ -7,11 +7,13 @@ import de.hof_universtiy.gpstracker.Model.mapoverlays.MyPositionMapOverlay;
 import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.radar.Friend;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,12 +53,20 @@ public class RadarController implements RadarControllerInterface {
         radarIsInvalidate();
     }
 
+    private void showMyPosition() throws SecurityException {
+        this.radarView.getController().setZoom(10);
+        this.radarView.getController().setCenter(new GeoPoint(new Location(50.324759,11.940344,new Date()).getLocation()));
+    }
+
     private void configRadarView() {
         this.radarView.setTileSource(TileSourceFactory.BASE_OVERLAY_NL);
 
         this.radarView.setBuiltInZoomControls(true);
         this.radarView.setMultiTouchControls(true);
-        this.radarView.getController().setZoom(5);
+        this.radarView.setMinZoomLevel(7);
+        this.radarView.setHovered(true);
+        this.radarView.setVerticalFadingEdgeEnabled(false);
+        this.showMyPosition();
 
         this.mCompassOverlay = new CompassOverlay(this.context, new InternalCompassOrientationProvider(this.context), this.radarView);
         this.radarView.getOverlayManager().add(this.mCompassOverlay);
