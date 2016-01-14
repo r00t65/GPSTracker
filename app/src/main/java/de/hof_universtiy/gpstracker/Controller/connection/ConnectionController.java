@@ -73,6 +73,7 @@ public class ConnectionController implements NotificationTrackListener{
     private Context context;
     private String facebookId;
     private Location location;
+    private String bla;
 
 
     public ConnectionController(RadarListener radarController, Context context){
