@@ -9,10 +9,10 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
 
+import de.hof_universtiy.gpstracker.Model.radar.FriendsPositionModel;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
-import de.hof_universtiy.gpstracker.Model.radar.Friend;
 import de.hof_universtiy.gpstracker.R;
 
 /**
@@ -21,10 +21,10 @@ import de.hof_universtiy.gpstracker.R;
  */
 public class FriendMapOverlay extends org.osmdroid.views.overlay.Overlay {
 
-    private final Friend friend;
+    private final FriendsPositionModel friend;
     private final Context context;
 
-    public FriendMapOverlay(@NonNull final Context context, @NonNull final Friend friend) {
+    public FriendMapOverlay(@NonNull final Context context, @NonNull final FriendsPositionModel friend) {
         super(context);
         this.context = context;
         this.friend = friend;

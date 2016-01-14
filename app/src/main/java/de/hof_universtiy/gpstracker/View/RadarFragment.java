@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.FacebookAuthorizationException;
 import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
 import de.hof_universtiy.gpstracker.Controller.radar.RadarController;
 import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
@@ -77,9 +78,13 @@ public class RadarFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_radar, container, false);
         this.mRadarController = new RadarController(this.getContext(), (MapView) rootView.findViewById(R.id.radar));
-        this.mConetionController = new ConnectionController(this.mRadarController,this.getContext());
         try {
-            this.mGPSController = new GPSController(this.getContext(),this.mConetionController);
+            this.mConetionController = new ConnectionController(this.getContext(),this.mRadarController);
+        } catch (FacebookAuthorizationException x) {
+
+        }
+        try {
+            this.mGPSController = new GPSController(this.getContext(), this.mConetionController);
         } catch (GPSController.GPSException e) {
             e.printStackTrace();
         }
@@ -117,7 +122,7 @@ public class RadarFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

@@ -42,7 +42,7 @@ import javax.net.ssl.X509TrustManager;
 import de.hof_universtiy.gpstracker.Controller.listener.NotificationTrackListener;
 import de.hof_universtiy.gpstracker.Controller.listener.RadarListener;
 import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
-import de.hof_universtiy.gpstracker.Model.position.FriendsPositionModel;
+import de.hof_universtiy.gpstracker.Model.radar.FriendsPositionModel;
 import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 
@@ -51,26 +51,22 @@ import de.hof_universtiy.gpstracker.Model.track.Track;
  */
 public class ConnectionController implements NotificationTrackListener{
 
-    private static final String SERVER_URL = "https://aap.rt-dns.de/connection.php";
+    private final String SERVER_URL = "https://aap.rt-dns.de/connection.php";
+    private final String FRIENDS_NEARBY = "getFriends";
+    private final String ID = "userID";
+    private final String LONGITUDE = "lon";
+    private final String LATITUDE = "lat";
+    private final String LOG_TAG = ConnectionController.class.getSimpleName();
 
-    final String FRIENDS_NEARBY = "getFriends";
-    final String ID = "userID";
-    final String LONGITUDE = "lon";
-    final String LATITUDE = "lat";
+    private final RadarListener radarController;
+    private final Context context;
+    private final String facebookId;
 
-
-    private String LOG_TAG = ConnectionController.class.getSimpleName();
-
+    private Location location;
     private String receivedJson;
-
     private List<FriendsPositionModel> position;
 
-    private RadarListener radarController;
-    private Context context;
-    private String facebookId;
-    private Location location;
-
-    public ConnectionController(RadarListener radarController, Context context){
+    public ConnectionController(@NonNull final Context context , final RadarListener radarController){
         this.radarController = radarController;
         this.context = context;
 
@@ -81,6 +77,7 @@ public class ConnectionController implements NotificationTrackListener{
                 facebookId = Profile.getCurrentProfile().getId();
             } catch (NullPointerException e) {
                 Log.e("NullPointerException", "Not logged in or FacebookSdk initialization failed");
+                throw new FacebookAuthorizationException();
             }
         }else {
             throw new FacebookAuthorizationException();
