@@ -13,7 +13,6 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 import de.hof_universtiy.gpstracker.Model.radar.Friend;
-import de.hof_universtiy.gpstracker.Model.radar.FriendsPositionModel;
 import de.hof_universtiy.gpstracker.R;
 
 /**
