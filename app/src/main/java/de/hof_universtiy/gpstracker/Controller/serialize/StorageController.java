@@ -1,6 +1,7 @@
 package de.hof_universtiy.gpstracker.Controller.serialize;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -140,4 +141,16 @@ public class StorageController implements StorageControllerInterface {
         fileWriter.append("End of Track\n");
         fileWriter.close();
     }
+
+    public static Track loadTrackFromUri(Uri uri) throws IOException, ClassNotFoundException {
+        final File file = new File(uri.getPath());
+        final FileInputStream fis = new FileInputStream(file);
+
+        final ObjectInputStream ois = new ObjectInputStream(fis);
+        final Track track = (Track) ois.readObject();
+        ois.close();
+        fis.close();
+        return  track;
+    }
+
 }

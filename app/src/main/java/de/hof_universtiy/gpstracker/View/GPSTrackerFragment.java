@@ -2,14 +2,11 @@ package de.hof_universtiy.gpstracker.View;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
@@ -19,20 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import de.hof_universtiy.gpstracker.MainActivity;
-import de.hof_universtiy.gpstracker.Model.position.Location;
-import de.hof_universtiy.gpstracker.Model.track.Track;
-import org.osmdroid.views.MapView;
-
 import de.hof_universtiy.gpstracker.Controller.map.MapController;
-import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
-import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import de.hof_universtiy.gpstracker.Controller.service.TrackingService;
-import de.hof_universtiy.gpstracker.Controller.tracking.TrackingController;
+import de.hof_universtiy.gpstracker.Model.track.Track;
 import de.hof_universtiy.gpstracker.R;
-
-import java.io.IOException;
+import org.osmdroid.views.MapView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,7 +30,7 @@ import java.io.IOException;
  * Use the {@link GPSTrackerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GPSTrackerFragment extends Fragment {
+public class GPSTrackerFragment extends Fragment implements LoadTrack {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -51,7 +39,9 @@ public class GPSTrackerFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private  String trackName;
+    private String trackName;
+
+    public static final int FILE_SELECT_CODE = 0;
 
     private OnFragmentInteractionListener mListener;
     private MapController mapController;
@@ -104,11 +94,31 @@ public class GPSTrackerFragment extends Fragment {
 
         trackingServiceIntent = new Intent(this.getActivity(), TrackingService.class);
 
+        FloatingActionButton fab2 = (FloatingActionButton) rootView.findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+                try {
+                    startActivityForResult(
+                            Intent.createChooser(intent, "Select a File to Upload"),
+                            FILE_SELECT_CODE);
+                } catch (android.content.ActivityNotFoundException ex) {
+                    // Potentially direct the user to the Market with a Dialog
+                    Toast.makeText(getContext(), "Please install a File Manager.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isMyServiceRunning(TrackingService.class)) {
+                if (!isMyServiceRunning(TrackingService.class)) {//TODO https://github.com/iPaulPro/aFileChooser
                     getActivity().startService(trackingServiceIntent);
                     isBound = getActivity().bindService(trackingServiceIntent, trackingConnection, Context.BIND_AUTO_CREATE);
                     Context context = getContext();
@@ -117,8 +127,6 @@ public class GPSTrackerFragment extends Fragment {
 
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
-
-
 //                    String test = mService.getServiceInfo();
 //                    Log.v("BoundService", test);
 
@@ -224,12 +232,18 @@ public class GPSTrackerFragment extends Fragment {
         super.onDestroy();
     }
 
+    @Override
+    public void load(@NonNull Track track) {
+        Toast.makeText(getContext(),track.getName(),Toast.LENGTH_LONG).show();
+        this.mapController.getListener().updateTrack(track);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

@@ -23,12 +23,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.facebook.appevents.AppEventsLogger;
 
+import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import de.hof_universtiy.gpstracker.Controller.service.RadarServiceReceiver;
-import de.hof_universtiy.gpstracker.View.GPSTrackerFragment;
-import de.hof_universtiy.gpstracker.View.LoginLogoutFragment;
-import de.hof_universtiy.gpstracker.View.MessengerFragment;
-import de.hof_universtiy.gpstracker.View.RadarFragment;
-import de.hof_universtiy.gpstracker.View.SettingsFragment;
+import de.hof_universtiy.gpstracker.View.*;
+import org.jivesoftware.smack.util.FileUtils;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GPSTrackerFragment.OnFragmentInteractionListener,
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
     private boolean isRadarActive;
     private long radarInterval;
 
-    public void onFragmentInteraction(Uri uri){
+    public void onFragmentInteraction(Uri uri) {
         //you can leave it empty bro
     }
 
@@ -72,8 +72,7 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
-        }
-        else {
+        } else {
             Log.i("Happening", "Nofragmentavailable");
         }
 
@@ -85,12 +84,13 @@ public class MainActivity extends AppCompatActivity
     /**
      * Methode zum Start/Beenden des RadarService
      */
-    public void radarService(){
-        isRadarActive = sharedPref.getBoolean("radar_active",false);
-        if(isRadarActive){
+    public void radarService() {
+        isRadarActive = sharedPref.getBoolean("radar_active", false);
+        if (isRadarActive) {
             scheduleRadar();
-            Log.d("RadarStart","RadarService aktiv");
-        }if(!isRadarActive){
+            Log.d("RadarStart", "RadarService aktiv");
+        }
+        if (!isRadarActive) {
             cancelAlarm();
             Log.d("RadarStart", "RadarService inaktiv");
         }
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
      * Radarservice starten und nach radarInterval wiederholen lassen
      */
     private void scheduleRadar() {
-        radarInterval = Long.parseLong(sharedPref.getString("radar_interval","20")) * 60 * 1000;
+        radarInterval = Long.parseLong(sharedPref.getString("radar_interval", "20")) * 60 * 1000;
         Intent intent = new Intent(getApplicationContext(), RadarServiceReceiver.class);
         final PendingIntent pIntent = PendingIntent.getBroadcast(this, RadarServiceReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         long firstMillis = System.currentTimeMillis();
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * Radarservice beenden
      */
-    private void cancelAlarm(){
+    private void cancelAlarm() {
         Intent intent = new Intent(getApplicationContext(), RadarServiceReceiver.class);
         final PendingIntent pIntent = PendingIntent.getBroadcast(this, RadarServiceReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager radarAlarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
@@ -157,9 +157,8 @@ public class MainActivity extends AppCompatActivity
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.content_frame, fragment);
                 ft.commit();
-            }
-            else {
-                Log.i("Happening","Nofragmentavailable");
+            } else {
+                Log.i("Happening", "Nofragmentavailable");
             }
             return true;
         }
@@ -178,7 +177,7 @@ public class MainActivity extends AppCompatActivity
             }
         }*/
         this.getSupportFragmentManager().popBackStack();
-        if(fragment1 == null)
+        if (fragment1 == null)
             fragment1 = (Fragment) fragmentClass.newInstance();
         return fragment1;
     }
@@ -201,9 +200,9 @@ public class MainActivity extends AppCompatActivity
             selectDrawerItem(item);
 
         }
-       // else if (id == R.id.nav_settings) {
-         //   selectDrawerItem(item);
-       // }
+        // else if (id == R.id.nav_settings) {
+        //   selectDrawerItem(item);
+        // }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -230,8 +229,8 @@ public class MainActivity extends AppCompatActivity
                 fragmentClass = LoginLogoutFragment.class;
                 break;
             //case R.id.nav_settings:
-             //   fragmentClass = SettingsFragment.class;
-              //  break;
+            //   fragmentClass = SettingsFragment.class;
+            //  break;
             default:
                 fragmentClass = GPSTrackerFragment.class;
         }
@@ -247,9 +246,8 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
-        }
-        else {
-            Log.i("Happening","Nofragmentavailable");
+        } else {
+            Log.i("Happening", "Nofragmentavailable");
         }
 
         // Highlight the selected item, update the title, and close the drawer
@@ -272,5 +270,29 @@ public class MainActivity extends AppCompatActivity
         AppEventsLogger.deactivateApp(this);
 
         this.onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == GPSTrackerFragment.FILE_SELECT_CODE && resultCode == RESULT_OK) {
+            // Get the Uri of the selected file
+            Uri uri = data.getData();
+            Log.d(this.getClass().toString(), "File Uri: " + uri.toString());
+            // Get the path
+            Log.d(this.getClass().toString(), "File Path: " + uri.getPath());
+            // Get the file instance
+            // File file = new File(path);
+            // Initiate the upload
+            if(this.fragment instanceof  GPSTrackerFragment){
+                try {
+                    ((LoadTrack) this.fragment).load(StorageController.loadTrackFromUri(uri));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
