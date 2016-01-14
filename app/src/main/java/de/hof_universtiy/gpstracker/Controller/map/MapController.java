@@ -83,14 +83,15 @@ public class MapController implements MapControllerInterface {
     }
 
     private void drawTrack(@NonNull final List<Location> track) {
-        RoadManager roadManager = new OSRMRoadManager();
+        //RoadManager roadManager = new OSRMRoadManager();
         ArrayList<GeoPoint> geoPoints = new ArrayList<>();
 
         for (Location location : track) {
             geoPoints.add(new GeoPoint(location.getLocation()));
         }
-        Road road = roadManager.getRoad(geoPoints);
-        Polyline roadOverlay = RoadManager.buildRoadOverlay(road, activityContext);
+        //Road road = roadManager.getRoad(geoPoints);
+        Polyline roadOverlay = new Polyline(this.activityContext);
+        roadOverlay.setPoints(geoPoints);
         roadOverlay.setVisible(true);
         roadOverlay.setWidth(4);
         mapView.getOverlays().add(roadOverlay);
@@ -106,7 +107,7 @@ public class MapController implements MapControllerInterface {
 
         @Override
         public void newPosition(@NonNull Location location) {
-            //clearMap();
+            clearMap();
             mPosition = location;
             drawPosition(location);
             if (mTrack != null)
@@ -115,7 +116,7 @@ public class MapController implements MapControllerInterface {
 
         @Override
         public void updateTrack(@NonNull Track track) {
-            //clearMap();
+            clearMap();
             mTrack = track;
             drawTrack(track.getTracks());
             if (mPosition != null)

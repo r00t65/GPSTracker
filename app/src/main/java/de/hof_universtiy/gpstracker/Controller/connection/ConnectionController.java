@@ -364,6 +364,7 @@ public class ConnectionController implements NotificationTrackListener{
                     break;
                 case "getWaypointsOfFriends":
                     parsePosition(s);
+                   // if(radarController != null)
                     //radarController.setListOfFriends(,position);
 
                     break;

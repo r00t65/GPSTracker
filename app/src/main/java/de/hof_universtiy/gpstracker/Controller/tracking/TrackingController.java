@@ -3,6 +3,7 @@ package de.hof_universtiy.gpstracker.Controller.tracking;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
 import de.hof_universtiy.gpstracker.Controller.listener.GPSMapChangeListener;
 import de.hof_universtiy.gpstracker.Controller.listener.NotificationTrackListener;
@@ -110,6 +111,7 @@ public final class TrackingController implements TrackingControllerInterface {
     }
 
     public void setNewName(String newName) {
+        Toast.makeText(this.context,newName,Toast.LENGTH_LONG).show();
         this.track = new Track(newName,this.track);
     }
 }

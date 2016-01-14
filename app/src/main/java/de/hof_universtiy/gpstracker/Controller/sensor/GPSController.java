@@ -37,7 +37,7 @@ public class GPSController implements GPSControllerInterface2 {
             throw new GPSException(GPSException.ERROR_1);
         }
         try {
-            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, this.context.getMainLooper());
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20, 200, this);
         } catch (SecurityException e) {
             GPSException ex = new GPSException(GPSException.ERROR_2);
             ex.setStackTrace(e.getStackTrace());

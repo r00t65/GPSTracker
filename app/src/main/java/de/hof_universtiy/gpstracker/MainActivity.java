@@ -161,11 +161,13 @@ public class MainActivity extends AppCompatActivity
 
     private Fragment getFragmentFromStack(Class fragmentClass) throws IllegalAccessException, InstantiationException {
         Fragment fragment1 = null;
-        for(Fragment fragment:this.getSupportFragmentManager().getFragments()){
-            if(fragment.getClass() == fragmentClass){
+       /* for(Fragment fragment:this.getSupportFragmentManager().getFragments()){
+            if(fragmentClass == GPSTrackerFragment.class){
                 fragment1 = fragment;
+                this.getSupportFragmentManager().popBackStack();
+                this.getSupportFragmentManager().popBackStack();
             }
-        }
+        }*/
         if(fragment1 == null)
             fragment1 = (Fragment) fragmentClass.newInstance();
         return fragment1;

@@ -170,13 +170,6 @@ public class GPSTrackerFragment extends Fragment {
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-            try {
-                mService.saveTrack(trackName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
             mService.unregisterListener();
         }
     };
