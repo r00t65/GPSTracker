@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 
 import org.json.JSONArray;
@@ -80,6 +81,7 @@ public class ConnectionController implements NotificationTrackListener{
     public ConnectionController(RadarController radarController, Context context){
         this.radarController = radarController;
         this.context = context;
+        FacebookSdk.sdkInitialize(context);
         facebookId = Profile.getCurrentProfile().getId();
 
 
