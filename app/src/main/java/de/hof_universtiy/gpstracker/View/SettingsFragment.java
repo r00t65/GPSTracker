@@ -4,11 +4,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.github.machinarius.preferencefragment.PreferenceFragment;
+
+import java.util.List;
+
 import de.hof_universtiy.gpstracker.R;
 
 public class SettingsFragment extends PreferenceFragment {
@@ -66,17 +70,36 @@ public class SettingsFragment extends PreferenceFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        radarSettings();
+        return inflater.inflate(R.layout.fragment_settings, container, false);
+
+    }
+
+    /**
+     * Einstellungen für den RadarService
+     */
+    private void radarSettings() {
         radarStatus = (SwitchPreference) getPreferenceManager().findPreference("radar_active");
         radarInt = (ListPreference) getPreferenceManager().findPreference("radar_interval");
 
-        //  radarStatus.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-        //      @Override
-        //      public boolean onPreferenceChange(Preference preference, Object newValue) {
-        //          return true;
-        //      }
-        //  });
+         radarStatus.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+              @Override
+              public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+                  //TODO: Start/Beenden von Service bei änderung
+                  return true;
+              }
+          });
+
+        radarInt.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener(){
+
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                //TODO: Service mit neuem Wert neustarten bei aenderung
+                return true;
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

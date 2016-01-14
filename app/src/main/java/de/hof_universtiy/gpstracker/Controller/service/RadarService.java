@@ -23,10 +23,13 @@ public class RadarService extends IntentService {
         this.mGPSController = new GPSController(this.getBaseContext(),this.mConnectionController);
     }
 
+    /**
+     * @param intent
+     * Funktion die je nach Einstellung des Nutzers wiederholt die Postion ausgefuehrt wird
+     */
     @Override
     protected void onHandleIntent(Intent intent) {
-        // Do the task here
-        //TODO sleep
+        //kein sleep, da über AlarmManager in Standby geht
         Log.i("RadarService", "Service running");
     }
 }
