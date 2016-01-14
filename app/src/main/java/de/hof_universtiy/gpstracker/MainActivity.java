@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
         }
     }
 
@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity
                 this.getSupportFragmentManager().popBackStack();
             }
         }*/
+        this.getSupportFragmentManager().popBackStack();
         if(fragment1 == null)
             fragment1 = (Fragment) fragmentClass.newInstance();
         return fragment1;
@@ -269,5 +270,7 @@ public class MainActivity extends AppCompatActivity
 
         // Logs 'app deactivate' App Event.
         AppEventsLogger.deactivateApp(this);
+
+        this.onBackPressed();
     }
 }

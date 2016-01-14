@@ -38,6 +38,7 @@ public class MapController implements MapControllerInterface {
 
     private Location mPosition;
     private Track mTrack;
+    private MyPositionMapOverlay myPositionOverlay;
 
     public MapController(final Context context, final MapView mapView) {
         activityContext = context;
@@ -49,6 +50,7 @@ public class MapController implements MapControllerInterface {
     @Override
     public void showMyPosition() throws SecurityException {
         this.mapView.getController().setZoom(10);
+        this.myPositionOverlay = new MyPositionMapOverlay(this.activityContext,new Location(50.324759,11.940344,new Date()));
         this.mapView.getController().setCenter(new GeoPoint(new Location(50.324759,11.940344,new Date()).getLocation()));
     }
 
@@ -92,6 +94,7 @@ public class MapController implements MapControllerInterface {
         }
         //Road road = roadManager.getRoad(geoPoints);
         Polyline roadOverlay = new Polyline(this.activityContext);
+
         roadOverlay.setPoints(geoPoints);
         roadOverlay.setVisible(true);
         roadOverlay.setWidth(4);
@@ -108,7 +111,7 @@ public class MapController implements MapControllerInterface {
 
         @Override
         public void newPosition(@NonNull Location location) {
-            clearMap();
+            //clearMap();
             mPosition = location;
             drawPosition(location);
             if (mTrack != null)
@@ -117,7 +120,7 @@ public class MapController implements MapControllerInterface {
 
         @Override
         public void updateTrack(@NonNull Track track) {
-            clearMap();
+            //clearMap();
             mTrack = track;
             drawTrack(track.getTracks());
             if (mPosition != null)
