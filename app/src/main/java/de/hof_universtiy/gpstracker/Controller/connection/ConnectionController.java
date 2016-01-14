@@ -12,6 +12,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 
 import de.hof_universtiy.gpstracker.Controller.listener.RadarListener;
+import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +87,7 @@ public class ConnectionController implements NotificationTrackListener{
         try {
             facebookId = Profile.getCurrentProfile().getId();
         }catch (NullPointerException e){
-            Log.e("NullPointerException", "Not logged in or FacebookSdk initialization failed");
+            throw e;
         }
 
 
