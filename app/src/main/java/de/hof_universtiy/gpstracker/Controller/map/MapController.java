@@ -64,6 +64,7 @@ public class MapController implements MapControllerInterface {
         this.mapView.setMinZoomLevel(7);
         this.mapView.setHovered(true);
         this.mapView.setVerticalFadingEdgeEnabled(false);
+        this.mapView.setScrollableAreaLimit(new BoundingBoxE6(84.34635,-178.80544,-84.34635,+178.80544));
         this.showMyPosition();
 
         this.mCompassOverlay = new CompassOverlay(this.activityContext, new InternalCompassOrientationProvider(this.activityContext), this.mapView);
