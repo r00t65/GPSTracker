@@ -20,27 +20,28 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import android.widget.Toast;
-
-import com.facebook.AccessToken;
 import com.facebook.appevents.AppEventsLogger;
 
+import java.io.IOException;
+
+import de.hof_universtiy.gpstracker.Controller.facebook.FbConnector;
 import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import de.hof_universtiy.gpstracker.Controller.service.RadarServiceReceiver;
-import de.hof_universtiy.gpstracker.View.*;
-import org.jivesoftware.smack.util.FileUtils;
-
-import java.io.IOException;
+import de.hof_universtiy.gpstracker.View.GPSTrackerFragment;
+import de.hof_universtiy.gpstracker.View.LoadTrack;
+import de.hof_universtiy.gpstracker.View.LoginLogoutFragment;
+import de.hof_universtiy.gpstracker.View.MessengerFragment;
+import de.hof_universtiy.gpstracker.View.RadarFragment;
+import de.hof_universtiy.gpstracker.View.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GPSTrackerFragment.OnFragmentInteractionListener,
         LoginLogoutFragment.OnFragmentInteractionListener, MessengerFragment.OnFragmentInteractionListener,
         RadarFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
 
-    private Fragment fragment = null;
     Class fragmentClass;
-
     SharedPreferences sharedPref;
+    private Fragment fragment = null;
     private boolean isRadarActive;
     private long radarInterval;
 
@@ -85,16 +86,17 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Methode zum Start/Beenden des RadarService
+     * Service startet nur wenn in Einstellungen aktiviert und mit Facebook verbunden
      */
     public void radarService() {
+        FbConnector facebookConnector = new FbConnector();
         isRadarActive = sharedPref.getBoolean("radar_active", false);
-        // && AccessToken.getCurrentAccessToken() != null
-        if (isRadarActive) {
-            //scheduleRadar();
+        if (isRadarActive && facebookConnector.isLoggedIn()) {
+            scheduleRadar();
             Log.d("RadarStart", "RadarService aktiv");
         }
         if (!isRadarActive) {
-           // cancelAlarm();
+            cancelAlarm();
             Log.d("RadarStart", "RadarService inaktiv");
         }
     }

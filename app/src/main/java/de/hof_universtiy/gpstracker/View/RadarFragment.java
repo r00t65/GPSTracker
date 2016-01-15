@@ -8,21 +8,19 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.facebook.FacebookAuthorizationException;
+
+import org.osmdroid.views.MapView;
+
 import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
 import de.hof_universtiy.gpstracker.Controller.facebook.FbConnector;
 import de.hof_universtiy.gpstracker.Controller.radar.RadarController;
-import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
-import de.hof_universtiy.gpstracker.Controller.sensor.GPSControllerInterface;
 import de.hof_universtiy.gpstracker.R;
-import org.osmdroid.views.MapView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,18 +35,15 @@ public class RadarFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    Class fragmentClass;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private OnFragmentInteractionListener mListener;
     private RadarController mRadarController;
     private ConnectionController mConetionController;
     private FbConnector facebookConnector;
-
     private Fragment fragment = null;
-    Class fragmentClass;
 
 
     public RadarFragment() {
@@ -83,7 +78,7 @@ public class RadarFragment extends Fragment {
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
         alertDialog.setTitle("Bitte Anmelden");
         alertDialog.setMessage("Um das Radar zu verwenden bitte anmelden.");
-
+                  alertDialog.setCancelable(false);
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Anmelden",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

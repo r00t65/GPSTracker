@@ -1,7 +1,7 @@
 package de.hof_universtiy.gpstracker.View;
 
-import android.app.AlertDialog;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -29,31 +29,39 @@ import de.hof_universtiy.gpstracker.R;
 
 public class MessengerFragment extends Fragment implements MessengerInterface, View.OnClickListener {
 
+    Class fragmentClass;
     private OnFragmentInteractionListener mListener;
-
     private EditText messageField;
     private ListView messageList;
     private Button sendButton;
     private ImageButton reloadButton;
-
     private MessengerController ctrl;
     private ArrayAdapter<String> messageAdapter;
     private ArrayList<String> messageArrayList;
-
     private FbConnector facebookConnector;
-
     private Fragment fragment = null;
-    Class fragmentClass;
 
+    public static void hideKeyboard(Context ctx) {
+        InputMethodManager inputManager = (InputMethodManager) ctx
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+
+        View v = ((Activity) ctx).getCurrentFocus();
+        if (v == null)
+            return;
+
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         //checkt ob Nutzer eingeloggt ist falls nicht wird er zum login geleitet
         facebookConnector = new FbConnector();
-        if(!facebookConnector.isLoggedIn()){
+        if (!facebookConnector.isLoggedIn()) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
             alertDialog.setTitle("Bitte Anmelden");
             alertDialog.setMessage("Um den Messenger zu verwenden bitte anmelden.");
+            alertDialog.setCancelable(false);
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Anmelden",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -128,7 +136,6 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
         }
     }
 
-
     @Override
     public void enableSendButton() {
         sendButton.setEnabled(true);
@@ -170,6 +177,9 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
         Toast.makeText(getContext(), "Successfully connected to chat", Toast.LENGTH_SHORT).show();
     }
 
+
+//--------------------------------------------------------------------------------------------------------------------------
+
     @Override
     public void addMessageToList(final String message, final String sender) {
 
@@ -190,10 +200,6 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
         });
 
     }
-
-
-//--------------------------------------------------------------------------------------------------------------------------
-
 
     @Override
     public void onAttach(Context context) {
@@ -217,18 +223,6 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
         catch (Exception e){}
         mListener = null;
 
-    }
-
-    public static void hideKeyboard(Context ctx) {
-        InputMethodManager inputManager = (InputMethodManager) ctx
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-
-
-        View v = ((Activity) ctx).getCurrentFocus();
-        if (v == null)
-            return;
-
-        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     public void onButtonPressed(Uri uri) {
