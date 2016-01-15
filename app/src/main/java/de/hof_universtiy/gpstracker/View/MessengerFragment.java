@@ -175,11 +175,15 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
     public void onDetach() {
         super.onDetach();
         hideKeyboard(getContext());
+        try {
+            ctrl.cancel(true);
+        }
+        catch (Exception e){}
         mListener = null;
 
     }
 
-    private void hideKeyboard(Context ctx) {
+    public static void hideKeyboard(Context ctx) {
         InputMethodManager inputManager = (InputMethodManager) ctx
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
 
