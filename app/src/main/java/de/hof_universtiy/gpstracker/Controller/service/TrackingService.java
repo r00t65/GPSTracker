@@ -112,7 +112,7 @@ public class TrackingService extends Service {
         trackerNotification = new Notification.Builder(this)
                 .setContentTitle("GPSTracker")
                 .setContentText(getString(R.string.tracking))
-                .setSmallIcon(R.drawable.person)
+                .setSmallIcon(R.drawable.app_logo1)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)
                 .build();

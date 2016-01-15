@@ -13,6 +13,7 @@ import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import java.util.List;
 
+import de.hof_universtiy.gpstracker.MainActivity;
 import de.hof_universtiy.gpstracker.R;
 
 public class SettingsFragment extends PreferenceFragment {
@@ -86,7 +87,8 @@ public class SettingsFragment extends PreferenceFragment {
               @Override
               public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-                  //TODO: Start/Beenden von Service bei änderung
+                  MainActivity main = (MainActivity)getActivity();
+                  main.radarService();
                   return true;
               }
           });
@@ -96,7 +98,8 @@ public class SettingsFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-                //TODO: Service mit neuem Wert neustarten bei aenderung
+                MainActivity main = (MainActivity)getActivity();
+                main.radarService();
                 return true;
             }
         });

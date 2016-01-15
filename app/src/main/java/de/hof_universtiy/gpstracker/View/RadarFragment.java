@@ -45,7 +45,6 @@ public class RadarFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private RadarController mRadarController;
     private ConnectionController mConetionController;
-    private GPSControllerInterface mGPSController;
     private FbConnector facebookConnector;
 
     private Fragment fragment = null;
@@ -127,17 +126,13 @@ public class RadarFragment extends Fragment {
         } catch (FacebookAuthorizationException x) {
 
         }
-        try {
-            this.mGPSController = new GPSController(this.getContext(), this.mConetionController);
-        } catch (GPSController.GPSException e) {
-            e.printStackTrace();
-        }
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Log.d("Clicked", "Floating");
+                Log.d(getClass().toString(), "Floating RadarFragment");
+                mConetionController.getWaypointsOfFriends();
             }
         });
         return rootView;

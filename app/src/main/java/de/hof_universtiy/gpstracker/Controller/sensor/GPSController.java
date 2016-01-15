@@ -84,13 +84,15 @@ public class GPSController implements GPSControllerInterface2 {
 
     @Override
     public void onLocationChanged(Location location) {
-        this.listener.newPosition(new de.hof_universtiy.gpstracker.Model.position.Location(location));
-        if (this.isTracking)
+        final de.hof_universtiy.gpstracker.Model.position.Location location1 = new de.hof_universtiy.gpstracker.Model.position.Location(location);
+        if (this.isTracking) {
             try {
-                this.listener.newWayPoint(new de.hof_universtiy.gpstracker.Model.position.Location(location));
+                this.listener.newWayPoint(location1);
             } catch (Track.TrackFinishException e) {
                 e.printStackTrace();
             }
+        }
+        this.listener.newPosition(location1);
     }
 
     @Override

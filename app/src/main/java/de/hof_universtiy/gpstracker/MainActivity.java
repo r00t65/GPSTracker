@@ -21,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.widget.Toast;
+
+import com.facebook.AccessToken;
 import com.facebook.appevents.AppEventsLogger;
 
 import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
@@ -86,12 +88,13 @@ public class MainActivity extends AppCompatActivity
      */
     public void radarService() {
         isRadarActive = sharedPref.getBoolean("radar_active", false);
+        // && AccessToken.getCurrentAccessToken() != null
         if (isRadarActive) {
-            scheduleRadar();
+            //scheduleRadar();
             Log.d("RadarStart", "RadarService aktiv");
         }
         if (!isRadarActive) {
-            cancelAlarm();
+           // cancelAlarm();
             Log.d("RadarStart", "RadarService inaktiv");
         }
     }
