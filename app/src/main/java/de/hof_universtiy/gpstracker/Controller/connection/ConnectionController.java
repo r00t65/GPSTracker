@@ -96,7 +96,7 @@ public class ConnectionController implements NotificationTrackListener{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-            new HttpsAsyncTaskPosition().execute(SERVER_URL, jsonToSend);
+            new HttpsAsyncTaskPosition().execute(SERVER_URL, jsonToSend, "getWaypointsOfFriends");
 
     }
 
