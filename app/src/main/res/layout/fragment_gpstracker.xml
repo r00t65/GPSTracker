@@ -18,24 +18,27 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/reload" />
+        android:src="@android:drawable/ic_dialog_map" />
 
-    <Button
+    <!--<Button
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:text="Letzter Track"
+        android:text="Last Track"
         android:id="@+id/lastTrack"
         android:layout_gravity="left|bottom"
         android:background="@color/colorAccent"
         android:layout_margin="@dimen/fab_margin"
-        android:onClick="doLastTrack"/>
+        android:onClick="doLastTrack"/>-->
+
 
     <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab2"
+        android:id="@+id/lastTrack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|bottom"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@android:drawable/ic_menu_more" />
+        android:src="@android:drawable/ic_menu_sort_by_size"
+
+       />
 
 </FrameLayout>

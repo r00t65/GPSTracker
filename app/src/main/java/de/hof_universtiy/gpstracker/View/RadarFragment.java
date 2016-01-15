@@ -76,8 +76,8 @@ public class RadarFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        //liefert true fals opb eingeloggt
-
+        //checkt ob Nutzer eingeloggt ist falls nicht wird er zum login geleitet
+    facebookConnector = new FbConnector();
               if(!facebookConnector.isLoggedIn()){
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
         alertDialog.setTitle("Bitte Anmelden");
@@ -86,7 +86,7 @@ public class RadarFragment extends Fragment {
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Anmelden",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        fragmentClass = GPSTrackerFragment.class;
+                        fragmentClass = LoginLogoutFragment.class;
                         try {
                             fragment = (Fragment) fragmentClass.newInstance();
                         } catch (Exception e) {

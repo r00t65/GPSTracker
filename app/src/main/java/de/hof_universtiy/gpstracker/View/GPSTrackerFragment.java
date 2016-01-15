@@ -51,7 +51,7 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
     TrackingService mService;
     private Boolean isBound = false;
 
-    private Button lastTrackButton;
+    // private Button lastTrackButton;
 
     public GPSTrackerFragment() {
         // Required empty public constructor
@@ -97,9 +97,9 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
 
         trackingServiceIntent = new Intent(this.getActivity(), TrackingService.class);
 
-        lastTrackButton = (Button) rootView.findViewById(R.id.lastTrack);
+       // lastTrackButton = (Button) rootView.findViewById(R.id.lastTrack);
 
-        FloatingActionButton fab2 = (FloatingActionButton) rootView.findViewById(R.id.fab2);
+        FloatingActionButton fab2 = (FloatingActionButton) rootView.findViewById(R.id.lastTrack);
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

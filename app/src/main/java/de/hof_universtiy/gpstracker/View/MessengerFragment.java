@@ -1,9 +1,12 @@
 package de.hof_universtiy.gpstracker.View;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import de.hof_universtiy.gpstracker.Controller.facebook.FbConnector;
 import de.hof_universtiy.gpstracker.Controller.messenger.MessengerController;
 import de.hof_universtiy.gpstracker.Controller.messenger.MessengerInterface;
 import de.hof_universtiy.gpstracker.R;
@@ -34,9 +38,41 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
     private ArrayAdapter<String> messageAdapter;
     private ArrayList<String> messageArrayList;
 
+    private FbConnector facebookConnector;
+
+    private Fragment fragment = null;
+    Class fragmentClass;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        //checkt ob Nutzer eingeloggt ist falls nicht wird er zum login geleitet
+        facebookConnector = new FbConnector();
+        if(!facebookConnector.isLoggedIn()){
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("Bitte Anmelden");
+            alertDialog.setMessage("Um den Messenger zu verwenden bitte anmelden.");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Anmelden",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            fragmentClass = LoginLogoutFragment.class;
+                            try {
+                                fragment = (Fragment) fragmentClass.newInstance();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.content_frame, fragment);
+                            ft.commit();
+
+                            dialog.dismiss();
+
+
+                        }
+                    });
+            alertDialog.show();
+        }
+
         getActivity().setTitle("Messenger");
         super.onCreate(savedInstanceState);
 
