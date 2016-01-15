@@ -1,10 +1,12 @@
 package de.hof_universtiy.gpstracker.Controller.radar;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 
 import android.widget.Toast;
 import de.hof_universtiy.gpstracker.Model.radar.FriendsPositionModel;
+import de.hof_universtiy.gpstracker.R;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
@@ -19,6 +21,8 @@ import java.util.List;
 import de.hof_universtiy.gpstracker.Model.mapoverlays.FriendMapOverlay;
 import de.hof_universtiy.gpstracker.Model.mapoverlays.MyPositionMapOverlay;
 import de.hof_universtiy.gpstracker.Model.position.Location;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 /**
  * Created by alex on 12.01.16.
@@ -30,6 +34,7 @@ public class RadarController implements RadarControllerInterface {
     private final Context context;
     private CompassOverlay mCompassOverlay;
     private RotationGestureOverlay mRotationGestureOverlay;
+    private MyLocationNewOverlay mLocationOverlay;
 
     public RadarController(@NonNull Context context, @NonNull MapView lRadarView) {
         this.context = context;
@@ -69,11 +74,18 @@ public class RadarController implements RadarControllerInterface {
 
         this.radarView.setBuiltInZoomControls(true);
         this.radarView.setMultiTouchControls(true);
-        this.radarView.setMinZoomLevel(7);
+        this.radarView.setMinZoomLevel(10);
+        this.radarView.setMaxZoomLevel(15);
         this.radarView.setHovered(true);
         this.radarView.setVerticalFadingEdgeEnabled(false);
         this.radarView.setScrollableAreaLimit(new BoundingBoxE6(84.34635,-178.80544,-84.34635,+178.80544));
         this.showMyPosition();
+
+        this.mLocationOverlay = new MyLocationNewOverlay(context, new GpsMyLocationProvider(context),this.radarView);
+        this.radarView.getOverlays().add(this.mLocationOverlay);
+        this.mLocationOverlay.enableFollowLocation();
+        this.mLocationOverlay.enableMyLocation();
+        this.mLocationOverlay.setPersonIcon(BitmapFactory.decodeResource(this.context.getResources(), R.drawable.radar96));
 
         this.mCompassOverlay = new CompassOverlay(this.context, new InternalCompassOrientationProvider(this.context), this.radarView);
         this.radarView.getOverlayManager().add(this.mCompassOverlay);

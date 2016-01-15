@@ -22,7 +22,6 @@ public class StorageController implements StorageControllerInterface {
     private final static String TRACKS = "track.txt";
     private final static String TRACKSBIN = "tracklist.bin";
     private final static String DIR_TRACKS = "tracks";
-    public final static String KEY_SHAREDPREF_TRACK = "aktTrack";
 
     private final Context context;
     private final List<String> listOfTracks = new ArrayList<>();
@@ -33,17 +32,6 @@ public class StorageController implements StorageControllerInterface {
 
     public List<String> getListOfTrackNames() {
         return this.listOfTracks;
-    }
-
-    public Track getTrack(@NonNull final String key) throws IOException, ClassNotFoundException {
-        Track track = null;
-        final File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + key + ".track");
-        final FileInputStream fis = new FileInputStream(file);
-        final ObjectInputStream ois = new ObjectInputStream(fis);
-        track = (Track) ois.readObject();
-        ois.close();
-        fis.close();
-        return track;
     }
 
     @Override
@@ -61,19 +49,25 @@ public class StorageController implements StorageControllerInterface {
     }
 
     @Override
-    public void saveTrack(Track track) throws IOException {
+    public void saveTrack(@NonNull final Track track) throws IOException {
         this.updateFiles(track);
         this.saveTrackInFile(track);
+        this.updateFiles(track);
     }
 
     @Override
-    public void renameFile(@NonNull String newName, @NonNull String oldName) {
-
+    public void renameFile(@NonNull final String newName, @NonNull final String oldName) throws IOException, ClassNotFoundException {
+        final Track track = this.loadTrack(oldName);
+        this.saveTrack(track);
     }
 
     @Override
-    public Track loadTrack(@NonNull String nameOfTrack) {
-        return null;
+    public Track loadTrack(@NonNull String nameOfTrack) throws IOException, ClassNotFoundException {
+        final File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + nameOfTrack + ".track");
+
+        final FileInputStream fis = new FileInputStream(file);
+        final ObjectInputStream ois = new ObjectInputStream(fis);
+        return (Track) ois.readObject();
     }
 
     @Override
