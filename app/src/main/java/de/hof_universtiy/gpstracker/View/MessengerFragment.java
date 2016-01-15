@@ -1,5 +1,6 @@
 package de.hof_universtiy.gpstracker.View;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -160,6 +162,7 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -171,7 +174,21 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
     @Override
     public void onDetach() {
         super.onDetach();
+        hideKeyboard(getContext());
         mListener = null;
+
+    }
+
+    private void hideKeyboard(Context ctx) {
+        InputMethodManager inputManager = (InputMethodManager) ctx
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+
+        View v = ((Activity) ctx).getCurrentFocus();
+        if (v == null)
+            return;
+
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     public void onButtonPressed(Uri uri) {
