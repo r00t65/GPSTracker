@@ -1,14 +1,22 @@
 package de.hof_universtiy.gpstracker.View;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
+import de.hof_universtiy.gpstracker.Controller.facebook.FbConnector;
 import de.hof_universtiy.gpstracker.Controller.radar.RadarController;
 import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
 import de.hof_universtiy.gpstracker.Controller.sensor.GPSControllerInterface;
@@ -37,6 +45,10 @@ public class RadarFragment extends Fragment {
     private RadarController mRadarController;
     private ConnectionController mConetionController;
     private GPSControllerInterface mGPSController;
+    private FbConnector facebookConnector;
+
+    private Fragment fragment = null;
+    Class fragmentClass;
 
 
     public RadarFragment() {
@@ -63,12 +75,44 @@ public class RadarFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        //liefert true fals opb eingeloggt
+
+              if(!facebookConnector.isLoggedIn()){
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle("Bitte Anmelden");
+        alertDialog.setMessage("Um das Radar zu verwenden bitte anmelden.");
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Anmelden",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        fragmentClass = GPSTrackerFragment.class;
+                        try {
+                            fragment = (Fragment) fragmentClass.newInstance();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment);
+                        ft.commit();
+
+                            dialog.dismiss();
+
+
+                    }
+                });
+        alertDialog.show();
+
+
         getActivity().setTitle("Radar");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+    }
+
+
+
     }
 
     @Override
@@ -83,6 +127,14 @@ public class RadarFragment extends Fragment {
         } catch (GPSController.GPSException e) {
             e.printStackTrace();
         }
+
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d("Clicked", "Floating");
+            }
+        });
         return rootView;
 
 
@@ -126,4 +178,6 @@ public class RadarFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

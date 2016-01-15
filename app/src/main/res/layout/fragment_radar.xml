@@ -10,4 +10,16 @@
     <org.osmdroid.views.MapView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/radar" android:layout_gravity="center"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@android:drawable/ic_dialog_map"
+        android:layout_marginRight="29dp"
+        android:layout_marginBottom="31dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="29dp" />
 </RelativeLayout>

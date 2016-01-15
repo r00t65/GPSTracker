@@ -18,7 +18,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_map" />
+        android:src="@drawable/reload" />
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="Letzter Track"
+        android:id="@+id/lastTrack"
+        android:layout_gravity="left|bottom"
+        android:background="@color/colorAccent"
+        android:layout_margin="@dimen/fab_margin"
+        android:onClick="doLastTrack"/>
 
 
 </FrameLayout>

@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -59,6 +60,8 @@ public class GPSTrackerFragment extends Fragment {
     private Intent trackingServiceIntent;
     TrackingService mService;
     private Boolean isBound = false;
+
+    private Button lastTrackButton;
 
     public GPSTrackerFragment() {
         // Required empty public constructor
@@ -103,6 +106,8 @@ public class GPSTrackerFragment extends Fragment {
         //Tracking Service Button
 
         trackingServiceIntent = new Intent(this.getActivity(), TrackingService.class);
+
+        lastTrackButton = (Button) rootView.findViewById(R.id.lastTrack);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -237,5 +242,9 @@ public class GPSTrackerFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void doLastTrack(View view){
+
     }
 }
