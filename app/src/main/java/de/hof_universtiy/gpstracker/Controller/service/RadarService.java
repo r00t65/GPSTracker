@@ -5,7 +5,13 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import com.facebook.FacebookAuthorizationException;
+
+import java.io.IOException;
+
+import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
 import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
+import de.hof_universtiy.gpstracker.Controller.sensor.GPSControllerInterface;
 
 /**
  * Created by Andreas Ziemer on 16.12.15.
@@ -13,13 +19,17 @@ import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
  */
 public class RadarService extends IntentService {
 
-    //   private final ConnectionController mConnectionController;
-    //   private final GPSControllerInterface mGPSController;
+       private final ConnectionController mConnectionController;
+       private final GPSControllerInterface mGPSController;
 
-    public RadarService() throws GPSController.GPSException {
+    public RadarService() throws GPSController.GPSException, FacebookAuthorizationException {
         super("MyRadarService");
-        //    this.mConnectionController = new ConnectionController(null,this.getBaseContext());
-        //    this.mGPSController = new GPSController(this.getBaseContext(),this.mConnectionController);
+        try {
+            this.mConnectionController = new ConnectionController(this.getBaseContext(), null);
+        }catch(FacebookAuthorizationException fbE){
+            throw fbE;
+        }
+        this.mGPSController = new GPSController(this.getBaseContext(),this.mConnectionController);
     }
 
     /**
@@ -30,5 +40,18 @@ public class RadarService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         //kein sleep, da über AlarmManager in Standby geht
         Log.i("RadarService", "Service running");
+    }
+
+
+    public void onDestroy(){
+        try {
+            mGPSController.onDestroyService();
+        } catch (GPSController.GPSException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
