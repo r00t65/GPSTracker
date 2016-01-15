@@ -86,10 +86,8 @@ public class ConnectionController implements NotificationTrackListener{
 
     }
 
-    public void getWaypointsOfFriends(Location location)
+    public void getWaypointsOfFriends()
     {
-        this.location = location;
-
         String jsonToSend = "json={\"func\":\"getFriends\",\"userID\":\"" + this.facebookId + "\"}";
         JSONObject object = new JSONObject();
         try {
@@ -275,6 +273,8 @@ public class ConnectionController implements NotificationTrackListener{
 
     @Override
     public void newPosition(@NonNull Location location) {
+
+        this.location = location;
         String json = "json={\"func\":\"setPosition\", \"userID\"" + facebookId + ",\"lat\":\"" + location.getLocation().getLatitude() + "\",\"lon\":\"" + location.getLocation().getLongitude() + "\"}";
 
         JSONObject jsonObject = new JSONObject();
