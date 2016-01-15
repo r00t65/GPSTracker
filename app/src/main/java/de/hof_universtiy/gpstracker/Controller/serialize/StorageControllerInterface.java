@@ -1,5 +1,6 @@
 package de.hof_universtiy.gpstracker.Controller.serialize;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 

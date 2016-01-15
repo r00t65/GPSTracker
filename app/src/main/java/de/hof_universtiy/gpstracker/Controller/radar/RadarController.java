@@ -2,10 +2,8 @@ package de.hof_universtiy.gpstracker.Controller.radar;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import de.hof_universtiy.gpstracker.Model.mapoverlays.FriendMapOverlay;
-import de.hof_universtiy.gpstracker.Model.mapoverlays.MyPositionMapOverlay;
-import de.hof_universtiy.gpstracker.Model.position.Location;
-import de.hof_universtiy.gpstracker.Model.radar.Friend;
+
+import de.hof_universtiy.gpstracker.Model.radar.FriendsPositionModel;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
@@ -16,6 +14,10 @@ import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 
 import java.util.Date;
 import java.util.List;
+
+import de.hof_universtiy.gpstracker.Model.mapoverlays.FriendMapOverlay;
+import de.hof_universtiy.gpstracker.Model.mapoverlays.MyPositionMapOverlay;
+import de.hof_universtiy.gpstracker.Model.position.Location;
 
 /**
  * Created by alex on 12.01.16.
@@ -36,18 +38,18 @@ public class RadarController implements RadarControllerInterface {
     }
 
     @Override
-    public void setListOfFriends(@NonNull final Location myPosition, @NonNull final List<Friend> friendList) {
+    public void setListOfFriends(@NonNull final Location myPosition, @NonNull final List<FriendsPositionModel> friendList) {
         this.clearRadar();
         this.drawMyPosition(myPosition);
         this.drawFriends(friendList);
     }
 
-    private void drawFriends(@NonNull final List<Friend> friendList) {
-        for (final Friend friend : friendList)
+    private void drawFriends(@NonNull final List<FriendsPositionModel> friendList) {
+        for (final FriendsPositionModel friend : friendList)
             drawFriend(friend);
     }
 
-    private void drawFriend(@NonNull final Friend friend) {
+    private void drawFriend(@NonNull final FriendsPositionModel friend) {
         final FriendMapOverlay mapPoint = new FriendMapOverlay(this.context, friend);
         this.radarView.getOverlayManager().add(mapPoint);
         radarIsInvalidate();

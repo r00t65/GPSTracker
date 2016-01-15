@@ -8,10 +8,11 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 
-import de.hof_universtiy.gpstracker.Controller.listener.RadarListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,8 +40,9 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import de.hof_universtiy.gpstracker.Controller.listener.NotificationTrackListener;
+import de.hof_universtiy.gpstracker.Controller.listener.RadarListener;
 import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
-import de.hof_universtiy.gpstracker.Model.position.FriendsPositionModel;
+import de.hof_universtiy.gpstracker.Model.radar.FriendsPositionModel;
 import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 
@@ -49,44 +51,36 @@ import de.hof_universtiy.gpstracker.Model.track.Track;
  */
 public class ConnectionController implements NotificationTrackListener{
 
-    //- Einzelnen Track auf Server löschen
-    //- TrackID auf Server erstellen, wenn neuer Track hochgeladen wird und dann TrackID wieder zurücksenden, um lokal mit dem Track zu matchen
+    private final String SERVER_URL = "https://aap.rt-dns.de/connection.php";
+    private final String FRIENDS_NEARBY = "getFriends";
+    private final String ID = "userID";
+    private final String LONGITUDE = "lon";
+    private final String LATITUDE = "lat";
+    private final String LOG_TAG = ConnectionController.class.getSimpleName();
 
-    private static final String URL_SEND_LAST_WAYPOINT = "";
-    private static final String URL_GET_WAYPOINTS_OF_FRIENDS = "https://aap.rt-dns.de/connection.php";
-//    private static final String URL_GET_WAYPOINTS_OF_FRIENDS = "https://posttestserver.com/post.php";
-    private static final String URL_GET_MESSAGES = "https://aap.rt-dns.de/getMessage.php";
+    private final RadarListener radarController;
+    private final Context context;
+    private final String facebookId;
 
-    final String FRIENDS_NEARBY = "getFriends";
-    final String ID = "userID";
-    final String LONGITUDE = "lon";
-    final String LATITUDE = "lat";
-
-    final String MESSAGE = "Message";
-    final String TIMESTAMP = "timestamp";
-    final String SENDER = "from";
-    final String INFO = "message";
-
-    private String LOG_TAG = ConnectionController.class.getSimpleName();
-
+    private Location location;
     private String receivedJson;
-
     private List<FriendsPositionModel> position;
 
-    private RadarListener radarController;
-    private Context context;
-    private String facebookId;
-
-
-    public ConnectionController(RadarListener radarController, Context context){
+    public ConnectionController(@NonNull final Context context , final RadarListener radarController){
         this.radarController = radarController;
         this.context = context;
-        FacebookSdk.sdkInitialize(context);
 
-        try {
-            facebookId = Profile.getCurrentProfile().getId();
-        }catch (NullPointerException e){
-            Log.e("NullPointerException", "Not logged in or FacebookSdk initialization failed");
+        if(AccessToken.getCurrentAccessToken() != null) {
+            FacebookSdk.sdkInitialize(context);
+
+            try {
+                facebookId = Profile.getCurrentProfile().getId();
+            } catch (NullPointerException e) {
+                Log.e("NullPointerException", "Not logged in or FacebookSdk initialization failed");
+                throw new FacebookAuthorizationException();
+            }
+        }else {
+            throw new FacebookAuthorizationException();
         }
 
 
@@ -94,6 +88,8 @@ public class ConnectionController implements NotificationTrackListener{
 
     public void getWaypointsOfFriends(Location location)
     {
+        this.location = location;
+
         String jsonToSend = "json={\"func\":\"getFriends\",\"userID\":\"" + this.facebookId + "\"}";
         JSONObject object = new JSONObject();
         try {
@@ -102,8 +98,8 @@ public class ConnectionController implements NotificationTrackListener{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+            new HttpsAsyncTaskPosition().execute(SERVER_URL, jsonToSend);
 
-        new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, jsonToSend);
     }
 
 
@@ -111,20 +107,24 @@ public class ConnectionController implements NotificationTrackListener{
     public void getTracks(String id){
         String json = "json={\"func\":\"getTrack\",\"userID\"" + id + "\"}";
 
-        new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, json);
+            new HttpsAsyncTaskPosition().execute(SERVER_URL, json);
+
 
     }
 
     public void shareTrack(String userID, String friendID, String trackID){
         String json = "json={\"func\":\"addShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
 
-        new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, json);
+            new HttpsAsyncTaskPosition().execute(SERVER_URL, json);
+
     }
 
     public void deleteShareTrack(String userID, String friendID, String trackID){
         String json = "json={\"func\":\"delShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
 
-        new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, json);
+
+            new HttpsAsyncTaskPosition().execute(SERVER_URL, json);
+
     }
 
 
@@ -190,27 +190,11 @@ public class ConnectionController implements NotificationTrackListener{
                 urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 //urlConnection.setRequestProperty("Accept", "application/json");
 
-
-
-
-                //OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
-
-                //BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os, "utf8"));
-
-
-
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8");
 
             outputStreamWriter.write(json);
             outputStreamWriter.flush();
             outputStreamWriter.close();
-                //out.write(json);
-                //out.flush();
-                //os.close();
-                //out.close();
-            urlConnection.connect();
-
-           // }
 
             InputStream is = new BufferedInputStream(urlConnection.getInputStream());
             //if(!url.getHost().equals(urlConnection.getURL().getHost())){
@@ -304,7 +288,8 @@ public class ConnectionController implements NotificationTrackListener{
         }
 
         //json = jsonObject.toString();
-        new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, json, "sendLastPosition");
+
+        new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "sendLastPosition");
     }
 
     @Override
@@ -332,7 +317,7 @@ public class ConnectionController implements NotificationTrackListener{
             e.printStackTrace();
         }
 
-        new HttpsAsyncTaskPosition().execute(URL_GET_WAYPOINTS_OF_FRIENDS, "json=" + object.toString(), "sendTrack");
+        new HttpsAsyncTaskPosition().execute(SERVER_URL, "json=" + object.toString(), "sendTrack");
     }
 
 
@@ -365,7 +350,7 @@ public class ConnectionController implements NotificationTrackListener{
                 case "getWaypointsOfFriends":
                     parsePosition(s);
                    // if(radarController != null)
-                    //radarController.setListOfFriends(,position);
+                    //radarController.setListOfFriends(location,position);
 
                     break;
             }

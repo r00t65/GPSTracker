@@ -1,12 +1,19 @@
 package de.hof_universtiy.gpstracker.Model.mapoverlays;
 
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.support.annotation.NonNull;
-import de.hof_universtiy.gpstracker.Model.radar.Friend;
-import de.hof_universtiy.gpstracker.R;
+
+import de.hof_universtiy.gpstracker.Model.radar.FriendsPositionModel;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+
+import de.hof_universtiy.gpstracker.R;
 
 /**
  * Created by alex on 12.01.16 um 17:08
@@ -14,10 +21,10 @@ import org.osmdroid.views.MapView;
  */
 public class FriendMapOverlay extends org.osmdroid.views.overlay.Overlay {
 
-    private final Friend friend;
+    private final FriendsPositionModel friend;
     private final Context context;
 
-    public FriendMapOverlay(@NonNull final Context context, @NonNull final Friend friend) {
+    public FriendMapOverlay(@NonNull final Context context, @NonNull final FriendsPositionModel friend) {
         super(context);
         this.context = context;
         this.friend = friend;
