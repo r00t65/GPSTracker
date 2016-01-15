@@ -75,6 +75,8 @@ public class RadarFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         //checkt ob Nutzer eingeloggt ist falls nicht wird er zum login geleitet
     facebookConnector = new FbConnector();
               if(!facebookConnector.isLoggedIn()){
@@ -104,7 +106,6 @@ public class RadarFragment extends Fragment {
 
 
         getActivity().setTitle("Radar");
-        super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);

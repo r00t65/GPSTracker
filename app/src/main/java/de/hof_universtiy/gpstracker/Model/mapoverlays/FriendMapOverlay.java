@@ -40,7 +40,7 @@ public class FriendMapOverlay extends org.osmdroid.views.overlay.Overlay {
         Paint paint = new Paint();
         paint.setStrokeWidth(20);
         paint.setColor(Color.RED);
-        Bitmap b = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.com_facebook_profile_picture_blank_portrait);
+        Bitmap b = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.person);
         canvas.drawBitmap(b, out.x - b.getWidth() / 2, out.y - b.getHeight() / 2, paint);
         Paint textPaint = new Paint();
         textPaint.setColor(Color.RED);

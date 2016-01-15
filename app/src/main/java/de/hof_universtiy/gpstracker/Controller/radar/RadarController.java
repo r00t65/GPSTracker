@@ -3,6 +3,7 @@ package de.hof_universtiy.gpstracker.Controller.radar;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import android.widget.Toast;
 import de.hof_universtiy.gpstracker.Model.radar.FriendsPositionModel;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
@@ -38,9 +39,9 @@ public class RadarController implements RadarControllerInterface {
     }
 
     @Override
-    public void setListOfFriends(@NonNull final Location myPosition, @NonNull final List<FriendsPositionModel> friendList) {
+    public void setListOfFriends(final Location myPosition, @NonNull final List<FriendsPositionModel> friendList) {
         this.clearRadar();
-        this.drawMyPosition(myPosition);
+        // this.drawMyPosition(myPosition);
         this.drawFriends(friendList);
     }
 
@@ -50,6 +51,8 @@ public class RadarController implements RadarControllerInterface {
     }
 
     private void drawFriend(@NonNull final FriendsPositionModel friend) {
+        Toast.makeText(this.context,friend.getLocation().getLocation().toString(),Toast.LENGTH_LONG).show();
+
         final FriendMapOverlay mapPoint = new FriendMapOverlay(this.context, friend);
         this.radarView.getOverlayManager().add(mapPoint);
         radarIsInvalidate();

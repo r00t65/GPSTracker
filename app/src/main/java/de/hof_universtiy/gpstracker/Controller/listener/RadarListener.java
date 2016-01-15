@@ -12,5 +12,5 @@ import de.hof_universtiy.gpstracker.Model.radar.FriendsPositionModel;
  * GPSTracker
  */
 public interface RadarListener {
-    public void setListOfFriends(@NonNull final Location myPosition, @NonNull final List<FriendsPositionModel> friendList);
+    public void setListOfFriends(final Location myPosition, @NonNull final List<FriendsPositionModel> friendList);
 }

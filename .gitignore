@@ -5,3 +5,10 @@
 .DS_Store
 /build
 /captures
+/gen
+/gradle
+/.idea/libraries/recyclerview_v7_23_1_1.xml
+/.idea/misc.xml
+/.idea/libraries/support_annotations_23_1_1.xml
+/.idea/libraries/appcompat_v7_23_1_1.xml
+/.idea/gradle.xml
