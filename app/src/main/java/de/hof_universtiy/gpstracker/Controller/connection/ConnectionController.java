@@ -29,6 +29,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -123,6 +124,60 @@ public class ConnectionController implements NotificationTrackListener{
 
             new HttpsAsyncTaskPosition().execute(SERVER_URL, json);
 
+    }
+
+
+    @Override
+    public void newPosition(@NonNull Location location) {
+
+        this.location = location;
+        String json = "json={\"func\":\"setPosition\", \"userID\"" + facebookId + ",\"lat\":\"" + location.getLocation().getLatitude() + "\",\"lon\":\"" + location.getLocation().getLongitude() + "\"}";
+
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.accumulate("id", facebookId);
+            jsonObject.accumulate("latitude", location.getLocation().getLatitude());
+            jsonObject.accumulate("longitude", location.getLocation().getLongitude());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //json = jsonObject.toString();
+
+        new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "sendLastPosition");
+    }
+
+    @Override
+    public void trackFinish(@NonNull Track track) {
+
+        List<Location> trackList = track.getTracks();
+
+        JSONObject object = new JSONObject();
+
+        try {
+            object.put("userID", facebookId);
+            object.put("func", "addTrack");
+            object.put("date", Calendar.getInstance().getTimeInMillis() + "");
+            JSONArray array = new JSONArray();
+
+            for(Location g : trackList){
+                JSONObject o = new JSONObject();
+                o.put("lat", "" + g.getLocation().getLatitude());
+                o.put("lon", "" + g.getLocation().getLongitude());
+                o.put("date", g.getDate().toString());
+                //o.put("alt", g.getAltitude() + "");
+                //o.put("speed", g.getSpeed() + "");
+                //o.put("slant", g.getSlant() + "");
+                array.put(o);
+            }
+
+            object.put("track", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new HttpsAsyncTaskPosition().execute(SERVER_URL, "json=" + object.toString(), "sendTrack");
     }
 
 
@@ -271,54 +326,6 @@ public class ConnectionController implements NotificationTrackListener{
 
     }
 
-    @Override
-    public void newPosition(@NonNull Location location) {
-
-        this.location = location;
-        String json = "json={\"func\":\"setPosition\", \"userID\"" + facebookId + ",\"lat\":\"" + location.getLocation().getLatitude() + "\",\"lon\":\"" + location.getLocation().getLongitude() + "\"}";
-
-        JSONObject jsonObject = new JSONObject();
-
-        try {
-            jsonObject.accumulate("id", facebookId);
-            jsonObject.accumulate("latitude", location.getLocation().getLatitude());
-            jsonObject.accumulate("longitude", location.getLocation().getLongitude());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        //json = jsonObject.toString();
-
-        new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "sendLastPosition");
-    }
-
-    @Override
-    public void trackFinish(@NonNull Track track) {
-
-        List<Location> trackList = track.getTracks();
-
-        JSONObject object = new JSONObject();
-
-        try {
-            object.put("userID", facebookId);
-            object.put("func", "addTrack");
-            JSONArray array = new JSONArray();
-
-            for(Location g : trackList){
-                JSONObject o = new JSONObject();
-                o.put("lat", "" + g.getLocation().getLatitude());
-                o.put("lon", "" + g.getLocation().getLongitude());
-                o.put("date", g.getDate().toString());
-                array.put(o);
-            }
-
-            object.put("track", array);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        new HttpsAsyncTaskPosition().execute(SERVER_URL, "json=" + object.toString(), "sendTrack");
-    }
 
 
     private class HttpsAsyncTaskPosition extends AsyncTask<String, Void, String>{
