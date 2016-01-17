@@ -77,15 +77,15 @@ public class StorageController implements StorageControllerInterface {
 
     private void updateFiles(@NonNull final Track track) throws IOException {
         if (track != null) {
-            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKS);
+            final File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKS);
             file.createNewFile();
 
             final FileWriter fileWriter = new FileWriter(file, true);
             fileWriter.write(track.getName() + "\n");
             fileWriter.close();
 
-            file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKSBIN);
-            file.createNewFile();
+            final File file2 = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKSBIN);
+            file2.createNewFile();
             final FileOutputStream fos = new FileOutputStream(file);
 
             final ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -129,7 +129,7 @@ public class StorageController implements StorageControllerInterface {
         final FileWriter fileWriter = new FileWriter(file, true);
         fileWriter.append("Das ist der Track " + track.getName() + " || Aufgenommen am " + new Date().toString() + "\n");
         fileWriter.append("---------------------------------------------------------------\n");
-        for (Location location : track.getTracks())
+        for (final Location location : track.getTracks())
             fileWriter.append(location.getLocation() + " | " + location.getDate() + "\n");
         fileWriter.append("---------------------------------------------------------------\n");
         fileWriter.append("End of Track\n");
@@ -146,5 +146,4 @@ public class StorageController implements StorageControllerInterface {
         fis.close();
         return  track;
     }
-
 }

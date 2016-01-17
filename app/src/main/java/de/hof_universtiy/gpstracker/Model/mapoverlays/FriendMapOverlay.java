@@ -35,14 +35,14 @@ public class FriendMapOverlay extends org.osmdroid.views.overlay.Overlay {
         if (shadow) {
             return;
         }
-        Point out = new Point();
+        final Point out = new Point();
         mapView.getProjection().toPixels(new GeoPoint(this.friend.getLocation().getLocation()), out);
-        Paint paint = new Paint();
+        final Paint paint = new Paint();
         paint.setStrokeWidth(20);
         paint.setColor(Color.RED);
-        Bitmap b = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.person);
+        final Bitmap b = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.person);
         canvas.drawBitmap(b, out.x - b.getWidth() / 2, out.y - b.getHeight() / 2, paint);
-        Paint textPaint = new Paint();
+        final Paint textPaint = new Paint();
         textPaint.setColor(Color.RED);
         textPaint.setStrokeWidth(5);
         canvas.drawText(this.friend.getLocation().getDate().toString(), out.x, out.y + 22, textPaint);

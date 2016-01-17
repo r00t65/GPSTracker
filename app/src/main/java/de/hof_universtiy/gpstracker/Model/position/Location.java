@@ -13,9 +13,6 @@ import java.util.Date;
 public final class Location implements Serializable {
     private final android.location.Location location;
     private final Date date;
-    private double altitude;
-    private double speed;
-    private double slant;
 
     public Location(@NonNull final android.location.Location location) {
         this.location = location;
@@ -37,27 +34,4 @@ public final class Location implements Serializable {
         return this.location;
     }
 
-    public double getAltitude() {
-        return altitude;
-    }
-
-    public void setAltitude(double altitude) {
-        this.altitude = altitude;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    public double getSlant() {
-        return slant;
-    }
-
-    public void setSlant(double slant) {
-        this.slant = slant;
-    }
 }

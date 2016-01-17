@@ -32,7 +32,6 @@ public class RadarController implements RadarControllerInterface {
 
     private final MapView radarView;
     private final Context context;
-    private CompassOverlay mCompassOverlay;
     private RotationGestureOverlay mRotationGestureOverlay;
     private MyLocationNewOverlay mLocationOverlay;
 
@@ -86,9 +85,6 @@ public class RadarController implements RadarControllerInterface {
         this.mLocationOverlay.enableFollowLocation();
         this.mLocationOverlay.enableMyLocation();
         this.mLocationOverlay.setPersonIcon(BitmapFactory.decodeResource(this.context.getResources(), R.drawable.radar96));
-
-        this.mCompassOverlay = new CompassOverlay(this.context, new InternalCompassOrientationProvider(this.context), this.radarView);
-        this.radarView.getOverlayManager().add(this.mCompassOverlay);
 
         mRotationGestureOverlay = new RotationGestureOverlay(this.context, this.radarView);
         mRotationGestureOverlay.setEnabled(true);
