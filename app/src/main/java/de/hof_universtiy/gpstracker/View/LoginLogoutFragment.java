@@ -9,21 +9,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
+import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
-import de.hof_universtiy.gpstracker.Controller.facebook.FbConnector;
+import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
 import de.hof_universtiy.gpstracker.R;
 
 /**
@@ -106,6 +104,9 @@ public class LoginLogoutFragment extends Fragment {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d("DFGDDÖFKFJÖJDFGD", "onSuccess ");
+
+                ConnectionController connectionController = new ConnectionController(Profile.getCurrentProfile().getId());
+                connectionController.newUser();
             }
 
             @Override

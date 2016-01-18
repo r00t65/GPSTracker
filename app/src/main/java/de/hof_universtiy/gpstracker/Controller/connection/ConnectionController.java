@@ -59,9 +59,9 @@ public class ConnectionController implements NotificationTrackListener{
     private final String LATITUDE = "lat";
     private final String LOG_TAG = ConnectionController.class.getSimpleName();
 
-    private final RadarListener radarController;
-    private final Context context;
-    private final String facebookId;
+    private  RadarListener radarController = null;
+    private Context context = null;
+    private String facebookId;
 
     private Location location;
     private String receivedJson;
@@ -87,6 +87,10 @@ public class ConnectionController implements NotificationTrackListener{
 
     }
 
+    public ConnectionController(String facebookId){
+        this.facebookId = facebookId;
+    }
+
     public void getWaypointsOfFriends()
     {
         String jsonToSend = "json={\"func\":\"getFriends\",\"userID\":\"" + this.facebookId + "\"}";
@@ -102,11 +106,15 @@ public class ConnectionController implements NotificationTrackListener{
     }
 
 
+    public void newUser(){
+        String json = "json={\"func\":\"newUser\", \"userId\"" + facebookId + "\"}";
+        new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "newUser");
+    }
 
     public void getTracks(String id){
         String json = "json={\"func\":\"getTrack\",\"userID\"" + id + "\"}";
 
-            new HttpsAsyncTaskPosition().execute(SERVER_URL, json);
+            new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "getTracks");
 
 
     }
@@ -114,7 +122,7 @@ public class ConnectionController implements NotificationTrackListener{
     public void shareTrack(String userID, String friendID, String trackID){
         String json = "json={\"func\":\"addShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
 
-            new HttpsAsyncTaskPosition().execute(SERVER_URL, json);
+            new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "shareTrack");
 
     }
 
@@ -122,7 +130,7 @@ public class ConnectionController implements NotificationTrackListener{
         String json = "json={\"func\":\"delShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
 
 
-            new HttpsAsyncTaskPosition().execute(SERVER_URL, json);
+            new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "deleteSharedTrack");
 
     }
 
