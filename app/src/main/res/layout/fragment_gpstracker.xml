@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:layout_margin="@dimen/fab_margin"
+
         android:src="@android:drawable/ic_dialog_map" />
 
     <!--<Button
@@ -40,5 +41,17 @@
         android:src="@android:drawable/ic_menu_sort_by_size"
 
        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Sensordaten:"
+        android:id="@+id/textViewSensor"
+        android:layout_gravity="center_horizontal|top"
+        android:background="@color/colorPrimary"
+        android:layout_margin="10dp"
+        android:textColor="#ffffff"
+        android:padding="5dp" />
 
 </FrameLayout>

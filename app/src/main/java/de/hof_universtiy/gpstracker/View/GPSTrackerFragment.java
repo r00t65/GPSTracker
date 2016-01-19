@@ -3,12 +3,14 @@ package de.hof_universtiy.gpstracker.View;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.*;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,12 +18,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import de.hof_universtiy.gpstracker.Controller.map.MapController;
 import de.hof_universtiy.gpstracker.Controller.service.TrackingService;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 import de.hof_universtiy.gpstracker.R;
 import org.osmdroid.views.MapView;
+
+import static de.hof_universtiy.gpstracker.R.color.greenRunning;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +56,9 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
     private Intent trackingServiceIntent;
     TrackingService mService;
     private Boolean isBound = false;
+
+    private TextView textViewSens;
+
 
     // private Button lastTrackButton;
 
@@ -90,6 +99,9 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_gpstracker, container, false);
+        //textview für sensordaten
+        textViewSens = (TextView) rootView.findViewById(R.id.textViewSensor);
+
         // Inflate the layout for this fragment
         this.mapController = new MapController(this.getContext(), (MapView) rootView.findViewById(R.id.mapView));
 
@@ -103,11 +115,39 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-                try {
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Trackliste");
+
+                final ListView list = new ListView(getActivity());
+                alertDialog.setView(list);
+
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Abbrechen",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+
+                alertDialog.show();
+
+
+
+
+
+
+
+           //     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+             //   intent.setType("*/*");
+           //     intent.addCategory(Intent.CATEGORY_OPENABLE);
+            //
+            /*    try {
                     startActivityForResult(
                             Intent.createChooser(intent, "Select a File to Upload"),
                             FILE_SELECT_CODE);
@@ -116,10 +156,11 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                     Toast.makeText(getContext(), "Please install a File Manager.",
                             Toast.LENGTH_SHORT).show();
                 }
+                */
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,6 +173,9 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
 
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
+                    fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.greenRunning)));
+
+
 //                    String test = mService.getServiceInfo();
 //                    Log.v("BoundService", test);
 
@@ -144,7 +188,12 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                     final EditText input = new EditText(getActivity());
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
                     alertDialog.setView(input);
-
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Abbrechen",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                }
+                            });
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -157,8 +206,10 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                                         getActivity().unbindService(trackingConnection);
                                     }
                                     getActivity().stopService(trackingServiceIntent);
+                                    fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.colorAccent)));
                                 }
                             });
+
                     alertDialog.show();
                 }
             }
