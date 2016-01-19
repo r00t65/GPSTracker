@@ -104,7 +104,6 @@ public final class TrackingController implements TrackingControllerInterface {
 
     private void saveTrack() throws IOException, ClassNotFoundException {
         final StorageController str = new StorageController(this.context);
-        str.onStartService();
         if(str.getListOfTrackNames().contains(this.track.getName()))
             this.track = new Track(this.track.getName()+"|"+new Date(),this.track);
         str.saveTrack(this.track);
