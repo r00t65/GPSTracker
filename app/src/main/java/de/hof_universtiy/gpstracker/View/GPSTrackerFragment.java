@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
 import android.util.Log;
@@ -58,6 +59,8 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
     private Boolean isBound = false;
 
     private TextView textViewSens;
+    private Fragment fragment = null;
+    Class fragmentClass;
 
 
     // private Button lastTrackButton;
@@ -108,6 +111,65 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
         //Tracking Service Button
 
         trackingServiceIntent = new Intent(this.getActivity(), TrackingService.class);
+
+        //gps
+        if(false){
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("Bitte GPS aktivieren");
+
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            fragmentClass = LoginLogoutFragment.class;
+                            try {
+                                fragment = (Fragment) fragmentClass.newInstance();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.content_frame, fragment);
+                            ft.commit();
+
+                            dialog.dismiss();
+
+
+                        }
+                    });
+
+            alertDialog.show();
+        }
+
+        //internet
+        if(false){
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("Bitte Internet aktivieren");
+
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            fragmentClass = LoginLogoutFragment.class;
+                            try {
+                                fragment = (Fragment) fragmentClass.newInstance();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.content_frame, fragment);
+                            ft.commit();
+
+                            dialog.dismiss();
+
+
+                        }
+                    });
+
+            alertDialog.show();
+        }
+
+
+
 
        // lastTrackButton = (Button) rootView.findViewById(R.id.lastTrack);
 

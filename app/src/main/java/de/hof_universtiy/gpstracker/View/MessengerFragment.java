@@ -55,12 +55,42 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
+
+
+
+        //internet
+        if(false){
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("Bitte Internet aktivieren");
+
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            fragmentClass = LoginLogoutFragment.class;
+                            try {
+                                fragment = (Fragment) fragmentClass.newInstance();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.content_frame, fragment);
+                            ft.commit();
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        }
+
+
         //checkt ob Nutzer eingeloggt ist falls nicht wird er zum login geleitet
         facebookConnector = new FbConnector();
         if (!facebookConnector.isLoggedIn()) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
             alertDialog.setTitle("Bitte Anmelden");
-            alertDialog.setMessage("Um den Messenger zu verwenden bitte anmelden.");
+            alertDialog.setMessage("Um den Messenger nutzen zu können, müssen Sie sich bitte anmelden");
             alertDialog.setCancelable(false);
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Anmelden",
                     new DialogInterface.OnClickListener() {
@@ -80,7 +110,23 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
 
                         }
                     });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Abbrechen",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            fragmentClass = GPSTrackerFragment.class;
+                            try {
+                                fragment = (Fragment) fragmentClass.newInstance();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.content_frame, fragment);
+                            ft.commit();
+                        }
+                    });
             alertDialog.show();
+
         }
 
         getActivity().setTitle("Messenger");
