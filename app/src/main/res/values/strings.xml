@@ -23,4 +23,5 @@
 
     <string name="messenger_emptyText">Es ist nicht möglich leere Nachrichten zu schicken</string>
     <string name="messenger_showCouldNotSendMessage"></string>
+    <string name="NotificationTitle">SpeedHammer</string>
 </resources>
