@@ -205,7 +205,7 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
 
     @Override
     public void showEmptyMessageToast() {
-        Toast.makeText(getContext(), "Not possible to send empty message!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getResources().getText(R.string.messenger_emptyText), Toast.LENGTH_SHORT).show();
     }
 
     @Override

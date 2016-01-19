@@ -20,4 +20,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tracking">Trackaufzeichnung läuft</string>
+
+    <string name="messenger_emptyText">Es ist nicht möglich leere Nachrichten zu schicken</string>
+    <string name="messenger_showCouldNotSendMessage"></string>
 </resources>
