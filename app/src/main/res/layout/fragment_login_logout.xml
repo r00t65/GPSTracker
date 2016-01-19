@@ -2,18 +2,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:background="#FFFFFF"
     tools:context="de.hof_universtiy.gpstracker.View.LoginLogout">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- TODO: Update blank fragment layout-->
 
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="76dp"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal|bottom"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp" />
+
+    <com.facebook.login.widget.ProfilePictureView
+        android:id="@+id/profilePic"
+        android:layout_width="230dp"
+        android:layout_height="343dp"
+        android:layout_gravity="center"
+
+         />
 
 </FrameLayout>

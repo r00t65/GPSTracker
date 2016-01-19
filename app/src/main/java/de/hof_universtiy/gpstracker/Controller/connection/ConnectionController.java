@@ -52,7 +52,7 @@ import de.hof_universtiy.gpstracker.Model.track.Track;
  */
 public class ConnectionController implements NotificationTrackListener{
 
-    private final String SERVER_URL = "https://aap.rt-dns.de/connection.php";
+    private final String SERVER_URL = "https://aap.rt-dns.de/connection_db.php";
     private final String FRIENDS_NEARBY = "getFriends";
     private final String ID = "userID";
     private final String LONGITUDE = "lon";

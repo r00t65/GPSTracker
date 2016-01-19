@@ -20,11 +20,13 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.facebook.login.widget.ProfilePictureView;
 
 import java.util.Arrays;
 import java.util.List;
 
 import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
+import de.hof_universtiy.gpstracker.Controller.facebook.FbConnector;
 import de.hof_universtiy.gpstracker.R;
 
 /**
@@ -52,6 +54,11 @@ public class LoginLogoutFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     Class fragmentClass;
     private Fragment fragment = null;
+
+    private FbConnector facebookConnector;
+    ProfilePictureView  profilePictureView = null;
+
+
 
     public LoginLogoutFragment() {
         // Required empty public constructor
@@ -92,7 +99,17 @@ public class LoginLogoutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         View view = inflater.inflate(R.layout.fragment_login_logout, container, false);
+        facebookConnector = new FbConnector();
+        if(facebookConnector.isLoggedIn()){
+            profilePictureView = (ProfilePictureView) view.findViewById(R.id.profilePic);
+
+
+            profilePictureView.setProfileId(facebookConnector.getUserId());
+
+        }
 
         // Create Userpermissions
         List<String> facebookPermissions = Arrays.asList("email", "public_profile", "user_friends");
@@ -137,6 +154,11 @@ public class LoginLogoutFragment extends Fragment {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d("DFGDDÖFKFJÖJDFGD", "onSuccess ");
+
+                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profilePic);
+
+
+                profilePictureView.setProfileId(facebookConnector.getUserId());
 
                 //ConnectionController connectionController = new ConnectionController(Profile.getCurrentProfile().getId());
                 //connectionController.newUser();

@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
@@ -14,16 +13,14 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.util.Log;
-import android.widget.Toast;
 
-import de.hof_universtiy.gpstracker.Controller.listener.GPSChangeListener;
+import java.io.IOException;
+
 import de.hof_universtiy.gpstracker.Controller.listener.GPSMapChangeListener;
 import de.hof_universtiy.gpstracker.Controller.sensor.GPSController;
 import de.hof_universtiy.gpstracker.Controller.tracking.TrackingController;
 import de.hof_universtiy.gpstracker.MainActivity;
 import de.hof_universtiy.gpstracker.R;
-
-import java.io.IOException;
 
 /**
  * Created by Andreas Ziemer on 16.12.15.
@@ -31,42 +28,15 @@ import java.io.IOException;
  */
 public class TrackingService extends Service {
 
+    private final IBinder mBinder = new LocalBinder();
+    NotificationManager notificationManager;
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
     private Notification trackerNotification;
-    NotificationManager notificationManager;
-    private final IBinder mBinder = new LocalBinder();
-
     //-------------------------------Controller---------------------------
     private GPSController gpsController;
     private TrackingController trackingController;
     //--------------------------------------------------------------------
-
-    private final class ServiceHandler extends Handler {
-
-        public ServiceHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            //work
-            /**
-             long endTime = System.currentTimeMillis() + 30*1000;
-             while(System.currentTimeMillis() < endTime){
-             synchronized (this){
-             try{
-             wait(endTime - System.currentTimeMillis());
-             }catch (Exception e){
-             }
-             }
-             }
-
-             //ende
-             (msg.arg1);
-             */
-        }
-    }
 
     @Override
     public void onCreate() {
@@ -108,11 +78,12 @@ public class TrackingService extends Service {
 
         //Notification
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        //PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent pIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
         trackerNotification = new Notification.Builder(this)
-                .setContentTitle("GPSTracker")
+                .setContentTitle(getString(R.string.NotificationTitle))
                 .setContentText(getString(R.string.tracking))
-                .setSmallIcon(R.drawable.app_logo1)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)
                 .build();
@@ -149,14 +120,6 @@ public class TrackingService extends Service {
         notificationManager.cancel(1);
     }
 
-
-    public class LocalBinder extends Binder {
-        public TrackingService getService() {
-            // Return this instance of LocalService so clients can call public methods
-            return TrackingService.this;
-        }
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -183,6 +146,39 @@ public class TrackingService extends Service {
     public void saveTrack(final String trackName) throws IOException, ClassNotFoundException {
         this.trackingController.setNewName(trackName);
         this.trackingController.trackFinish(null);
+    }
+
+    private final class ServiceHandler extends Handler {
+
+        public ServiceHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            //work
+            /**
+             long endTime = System.currentTimeMillis() + 30*1000;
+             while(System.currentTimeMillis() < endTime){
+             synchronized (this){
+             try{
+             wait(endTime - System.currentTimeMillis());
+             }catch (Exception e){
+             }
+             }
+             }
+
+             //ende
+             (msg.arg1);
+             */
+        }
+    }
+
+    public class LocalBinder extends Binder {
+        public TrackingService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return TrackingService.this;
+        }
     }
 }
 
