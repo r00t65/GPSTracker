@@ -10,7 +10,6 @@ import de.hof_universtiy.gpstracker.Model.position.Location;
  * Created by alex on 17.12.15.
  */
 public final class Track implements Serializable {
-
     private final String NAME;
     private final List<Location> trackList = new ArrayList<>();
 

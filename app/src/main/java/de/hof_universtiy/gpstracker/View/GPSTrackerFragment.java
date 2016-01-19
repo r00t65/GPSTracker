@@ -16,16 +16,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import de.hof_universtiy.gpstracker.Controller.map.MapController;
+import de.hof_universtiy.gpstracker.Controller.serialize.StorageController;
 import de.hof_universtiy.gpstracker.Controller.service.TrackingService;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 import de.hof_universtiy.gpstracker.R;
 import org.osmdroid.views.MapView;
+
+import java.io.IOException;
 
 import static de.hof_universtiy.gpstracker.R.color.greenRunning;
 
@@ -113,13 +112,30 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
 
         FloatingActionButton fab2 = (FloatingActionButton) rootView.findViewById(R.id.lastTrack);
         fab2.setOnClickListener(new View.OnClickListener() {
+            public StorageController storageController;
+
             @Override
             public void onClick(View v) {
 
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                alertDialog.setTitle("Trackliste");
+                storageController = new StorageController(getContext());
+               /* try {
+                    storageController.onStartService();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }*/
+                alertDialog.setTitle("Trackliste"+storageController.getListOfTracks().size());
 
                 final ListView list = new ListView(getActivity());
+                list.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,storageController.getListOfTracks()));
+                list.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return false;//TODO: Brian
+                    }
+                });
                 alertDialog.setView(list);
 
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Abbrechen",

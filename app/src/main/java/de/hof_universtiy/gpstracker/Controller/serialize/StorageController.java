@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 
@@ -40,7 +41,11 @@ public class StorageController implements StorageControllerInterface {
         Log.d("ParentFile", parent.getAbsolutePath());
         if (!parent.exists())
             parent.mkdir();
-        this.loadFiles();
+        try {
+            this.loadFiles();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -76,6 +81,7 @@ public class StorageController implements StorageControllerInterface {
     }
 
     private void updateFiles(@NonNull final Track track) throws IOException {
+        this.listOfTracks.add(track.getName());
         if (track != null) {
             final File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKS);
             file.createNewFile();
@@ -105,10 +111,11 @@ public class StorageController implements StorageControllerInterface {
         final ObjectInputStream ois = new ObjectInputStream(fis);
         final List<String> list = (List<String>) ois.readObject();
         ois.close();
-        fis.close();
 
         this.listOfTracks.clear();
         this.listOfTracks.addAll(list);
+        Log.e("Test",""+listOfTracks.size());
+
     }
 
     private void saveTrackInFile(@NonNull final Track track) throws IOException {
@@ -119,6 +126,8 @@ public class StorageController implements StorageControllerInterface {
         final FileOutputStream fos = new FileOutputStream(file);
         final ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(track);
+        oos.flush();
+        fos.flush();
         oos.close();
         fos.close();
     }
