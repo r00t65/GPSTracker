@@ -1,10 +1,13 @@
 package de.hof_universtiy.gpstracker.View;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +50,8 @@ public class LoginLogoutFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    Class fragmentClass;
+    private Fragment fragment = null;
 
     public LoginLogoutFragment() {
         // Required empty public constructor
@@ -99,14 +104,42 @@ public class LoginLogoutFragment extends Fragment {
         // If using in a fragment
         loginButton.setFragment(this);
 
+        //internet
+        if(false){
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("Bitte Internet aktivieren");
+
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            fragmentClass = LoginLogoutFragment.class;
+                            try {
+                                fragment = (Fragment) fragmentClass.newInstance();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.content_frame, fragment);
+                            ft.commit();
+
+                            dialog.dismiss();
+
+
+                        }
+                    });
+
+            alertDialog.show();
+        }
+
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d("DFGDDÖFKFJÖJDFGD", "onSuccess ");
 
-                ConnectionController connectionController = new ConnectionController(Profile.getCurrentProfile().getId());
-                connectionController.newUser();
+                //ConnectionController connectionController = new ConnectionController(Profile.getCurrentProfile().getId());
+                //connectionController.newUser();
             }
 
             @Override
