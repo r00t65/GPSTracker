@@ -22,5 +22,4 @@ public interface StorageControllerInterface {
     public void renameFile(@NonNull final String newName,@NonNull final String oldName) throws IOException, ClassNotFoundException;
 
     public Track loadTrack(@NonNull final String nameOfTrack) throws IOException, ClassNotFoundException;
-    public List<String> getListOfTracks();
 }

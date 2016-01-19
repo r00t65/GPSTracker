@@ -26,6 +26,7 @@ import de.hof_universtiy.gpstracker.R;
 import org.osmdroid.views.MapView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static de.hof_universtiy.gpstracker.R.color.greenRunning;
 
@@ -174,6 +175,7 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
 
         FloatingActionButton fab2 = (FloatingActionButton) rootView.findViewById(R.id.lastTrack);
         fab2.setOnClickListener(new View.OnClickListener() {
+            public Track track;
             public StorageController storageController;
 
             @Override
@@ -181,21 +183,35 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
 
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 storageController = new StorageController(getContext());
-               /* try {
+                try {
                     storageController.onStartService();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
-                }*/
-                alertDialog.setTitle("Trackliste"+storageController.getListOfTracks().size());
+                }
+                alertDialog.setTitle("Trackliste"+storageController.getListOfTrackNames().size());
 
                 final ListView list = new ListView(getActivity());
-                list.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,storageController.getListOfTracks()));
+
+                list.setAdapter(new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,new ArrayList<>(storageController.getListOfTrackNames())));
                 list.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
                         return false;//TODO: Brian
+                    }
+                });
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        try {
+                            track = storageController.loadTrack((String) parent.getItemAtPosition(position));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        list.setSelection(position);
                     }
                 });
                 alertDialog.setView(list);
@@ -209,7 +225,8 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-
+                                if(track != null)
+                                    mapController.getListener().updateTrack(track);
                             }
                         });
 

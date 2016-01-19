@@ -29,7 +29,7 @@ public class RadarService extends IntentService {
         }catch(FacebookAuthorizationException fbE){
             throw fbE;
         }
-        this.mGPSController = new GPSController(this.getBaseContext(),this.mConnectionController);
+        this.mGPSController = new GPSController(this.getApplicationContext(),this.mConnectionController);
     }
 
     /**

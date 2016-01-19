@@ -3,16 +3,16 @@ package de.hof_universtiy.gpstracker.Controller.serialize;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
+import de.hof_universtiy.gpstracker.Controller.connection.ConnectionController;
 import de.hof_universtiy.gpstracker.Model.position.Location;
 import de.hof_universtiy.gpstracker.Model.track.Track;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by alex on 17.12.15.
@@ -24,14 +24,16 @@ public class StorageController implements StorageControllerInterface {
     private final static String TRACKSBIN = "tracklist.bin";
     private final static String DIR_TRACKS = "tracks";
 
+    public final static String SharedTracks = "TRACK";
+
     private final Context context;
-    private final List<String> listOfTracks = new ArrayList<>();
+    private final HashSet<String> listOfTracks = new HashSet<String>();
 
     public StorageController(@NonNull final Context context) {
         this.context = context;
     }
 
-    public List<String> getListOfTrackNames() {
+    public HashSet<String> getListOfTrackNames() {
         return this.listOfTracks;
     }
 
@@ -72,12 +74,9 @@ public class StorageController implements StorageControllerInterface {
 
         final FileInputStream fis = new FileInputStream(file);
         final ObjectInputStream ois = new ObjectInputStream(fis);
-        return (Track) ois.readObject();
-    }
-
-    @Override
-    public List<String> getListOfTracks() {
-        return this.listOfTracks;
+        Track track = (Track) ois.readObject();
+        ois.close();
+        return track;
     }
 
     private void updateFiles(@NonNull final Track track) throws IOException {
@@ -90,31 +89,33 @@ public class StorageController implements StorageControllerInterface {
             fileWriter.write(track.getName() + "\n");
             fileWriter.close();
 
-            final File file2 = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKSBIN);
-            file2.createNewFile();
-            final FileOutputStream fos = new FileOutputStream(file);
+            PreferenceManager.getDefaultSharedPreferences(this.context).edit().putStringSet(SharedTracks,this.listOfTracks).commit();
+            //final File file2 = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKSBIN);
+            //file2.createNewFile();
+            //final FileOutputStream fos = new FileOutputStream(file);
 
-            final ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(this.listOfTracks);
-            oos.close();
-            fos.close();
+            //final ObjectOutputStream oos = new ObjectOutputStream(fos);
+           // oos.writeObject(this.listOfTracks);
+            //oos.close();
+           // fos.close();
         }
     }
 
     private void loadFiles() throws IOException, ClassNotFoundException {
-        final File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKSBIN);
-        if (file.createNewFile()) {
-            this.updateFiles(new Track("Liste aller Tracks:\n"));
-        }
-        final FileInputStream fis = new FileInputStream(file);
+        //final File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKSBIN);
+        //if (file.createNewFile()) {
+        //    this.updateFiles(new Track("Liste aller Tracks:\n"));
+        //}
+        //final FileInputStream fis = new FileInputStream(file);
 
-        final ObjectInputStream ois = new ObjectInputStream(fis);
-        final List<String> list = (List<String>) ois.readObject();
-        ois.close();
+        //final ObjectInputStream ois = new ObjectInputStream(fis);
+        //final List<String> list = (ArrayList<String>) ois.readObject();
+        //ois.close();
 
-        this.listOfTracks.clear();
-        this.listOfTracks.addAll(list);
+        //this.listOfTracks.clear();
+        //this.listOfTracks.addAll(list);
         Log.e("Test",""+listOfTracks.size());
+        this.listOfTracks.addAll(PreferenceManager.getDefaultSharedPreferences(this.context).getStringSet(SharedTracks,this.listOfTracks));
 
     }
 
