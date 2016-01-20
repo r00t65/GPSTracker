@@ -1,4 +1,4 @@
-package de.hof_university.gpstracker.View;
+package de.hof_university.gpstracker.View.fragment;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
 
-import de.hof_university.gpstracker.MainActivity;
+import de.hof_university.gpstracker.View.activity.MainActivity;
 import de.hof_university.gpstracker.R;
 
 public class SettingsFragment extends PreferenceFragment {

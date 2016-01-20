@@ -1,4 +1,4 @@
-package de.hof_university.gpstracker.View;
+package de.hof_university.gpstracker.View.fragment;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -11,6 +11,8 @@ import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -28,6 +30,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import de.hof_university.gpstracker.Controller.sensor.GPSController;
+import de.hof_university.gpstracker.Controller.tracking.TrackingController;
+import de.hof_university.gpstracker.View.LoadTrack;
+import de.hof_university.gpstracker.View.activity.MainActivity;
 import org.osmdroid.views.MapView;
 
 import java.io.IOException;
@@ -58,7 +64,7 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private String trackName;
+    private String trackName = "G";
     private OnFragmentInteractionListener mListener;
     private MapController mapController;
     private Intent trackingServiceIntent;
@@ -82,6 +88,13 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
+            try {
+                mService.saveTrack(trackName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             mService.unregisterListener();
         }
     };
@@ -116,6 +129,9 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        //Tracking Service Button
+
+        trackingServiceIntent = new Intent(this.getActivity(), TrackingService.class);
 
     }
 
@@ -129,67 +145,15 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
         // Inflate the layout for this fragment
         this.mapController = new MapController(this.getContext(), (MapView) rootView.findViewById(R.id.mapView));
 
-        //Tracking Service Button
-
-        trackingServiceIntent = new Intent(this.getActivity(), TrackingService.class);
-
         //gps
-        if (false) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle("Bitte GPS aktivieren");
-
-            alertDialog.setCancelable(false);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            fragmentClass = LoginLogoutFragment.class;
-                            try {
-                                fragment = (Fragment) fragmentClass.newInstance();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            ft.replace(R.id.content_frame, fragment);
-                            ft.commit();
-
-                            dialog.dismiss();
-
-
-                        }
-                    });
-
-            alertDialog.show();
+        if (!GPSController.isGPSEnable(getContext())) {//TODO:Falsche Position für dich Kontroller!
+            MainActivity.startGPSEnableDialog(getActivity());
         }
 
         //internet
-        if (false) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle("Bitte Internet aktivieren");
-
-            alertDialog.setCancelable(false);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            fragmentClass = LoginLogoutFragment.class;
-                            try {
-                                fragment = (Fragment) fragmentClass.newInstance();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            ft.replace(R.id.content_frame, fragment);
-                            ft.commit();
-
-                            dialog.dismiss();
-
-
-                        }
-                    });
-
-            alertDialog.show();
+        if (false) {//TODO @Lothar
+            MainActivity.startInternetEnableDialog(getActivity());
         }
-
-
         // lastTrackButton = (Button) rootView.findViewById(R.id.lastTrack);
 
         FloatingActionButton fab2 = (FloatingActionButton) rootView.findViewById(R.id.lastTrack);
@@ -250,22 +214,6 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                         });
 
                 alertDialog.show();
-
-
-                //     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                //   intent.setType("*/*");
-                //     intent.addCategory(Intent.CATEGORY_OPENABLE);
-                //
-            /*    try {
-                    startActivityForResult(
-                            Intent.createChooser(intent, "Select a File to Upload"),
-                            FILE_SELECT_CODE);
-                } catch (android.content.ActivityNotFoundException ex) {
-                    // Potentially direct the user to the Market with a Dialog
-                    Toast.makeText(getContext(), "Please install a File Manager.",
-                            Toast.LENGTH_SHORT).show();
-                }
-                */
             }
         });
 
@@ -311,6 +259,8 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                                         trackName = "Unbenannter Track";
                                         dialog.dismiss();
                                     }
+                                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(TrackingController.SharedReNameTrack, trackName).commit();
+
                                     if (isBound) {
                                         getActivity().unbindService(trackingConnection);
                                     }

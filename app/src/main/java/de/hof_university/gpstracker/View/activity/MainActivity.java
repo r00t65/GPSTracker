@@ -1,13 +1,18 @@
-package de.hof_university.gpstracker;
+package de.hof_university.gpstracker.View.activity;
 
+import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -27,12 +32,13 @@ import java.io.IOException;
 import de.hof_university.gpstracker.Controller.facebook.FbConnector;
 import de.hof_university.gpstracker.Controller.serialize.StorageController;
 import de.hof_university.gpstracker.Controller.service.RadarServiceReceiver;
-import de.hof_university.gpstracker.View.GPSTrackerFragment;
+import de.hof_university.gpstracker.R;
+import de.hof_university.gpstracker.View.fragment.GPSTrackerFragment;
 import de.hof_university.gpstracker.View.LoadTrack;
-import de.hof_university.gpstracker.View.LoginLogoutFragment;
-import de.hof_university.gpstracker.View.MessengerFragment;
-import de.hof_university.gpstracker.View.RadarFragment;
-import de.hof_university.gpstracker.View.SettingsFragment;
+import de.hof_university.gpstracker.View.fragment.LoginLogoutFragment;
+import de.hof_university.gpstracker.View.fragment.MessengerFragment;
+import de.hof_university.gpstracker.View.fragment.RadarFragment;
+import de.hof_university.gpstracker.View.fragment.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GPSTrackerFragment.OnFragmentInteractionListener,
@@ -299,5 +305,37 @@ public class MainActivity extends AppCompatActivity
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public static void startGPSEnableDialog(@NonNull final Activity activity){
+        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+        alertDialog.setTitle("Bitte GPS aktivieren");
+
+        alertDialog.setCancelable(false);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        activity.startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),0);
+                        dialog.dismiss();
+                    }
+                });
+
+        alertDialog.show();
+    }
+
+    public static void startInternetEnableDialog(@NonNull final Activity activity){
+        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+        alertDialog.setTitle("Bitte Internet aktivieren");
+
+        alertDialog.setCancelable(false);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        activity.startActivityForResult(new Intent(Settings.ACTION_SETTINGS),0);
+                        dialog.dismiss();
+                    }
+                });
+
+        alertDialog.show();
     }
 }

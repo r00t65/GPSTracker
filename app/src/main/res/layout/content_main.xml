@@ -7,7 +7,7 @@
 
     android:background="#FFFFFF"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="de.hof_university.gpstracker.MainActivity"
+    tools:context="de.hof_university.gpstracker.View.activity.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <FrameLayout

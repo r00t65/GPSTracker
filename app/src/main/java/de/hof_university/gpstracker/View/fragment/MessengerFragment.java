@@ -1,4 +1,4 @@
-package de.hof_university.gpstracker.View;
+package de.hof_university.gpstracker.View.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;

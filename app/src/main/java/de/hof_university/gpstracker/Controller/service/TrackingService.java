@@ -19,7 +19,7 @@ import java.io.IOException;
 import de.hof_university.gpstracker.Controller.listener.GPSMapChangeListener;
 import de.hof_university.gpstracker.Controller.sensor.GPSController;
 import de.hof_university.gpstracker.Controller.tracking.TrackingController;
-import de.hof_university.gpstracker.MainActivity;
+import de.hof_university.gpstracker.View.activity.MainActivity;
 import de.hof_university.gpstracker.R;
 
 /**
@@ -144,7 +144,6 @@ public class TrackingService extends Service {
     }
 
     public void saveTrack(final String trackName) throws IOException, ClassNotFoundException {
-        this.trackingController.setNewName(trackName);
         this.trackingController.trackFinish(null);
     }
 

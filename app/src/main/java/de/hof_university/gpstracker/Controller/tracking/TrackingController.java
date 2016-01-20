@@ -1,6 +1,7 @@
 package de.hof_university.gpstracker.Controller.tracking;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import de.hof_university.gpstracker.Model.track.Track;
  * Created by alex on 17.12.15.
  */
 public final class TrackingController implements TrackingControllerInterface {
+    public final static String SharedReNameTrack = "RETRACK";
 
     private final Context context;
     public Track track;
@@ -102,6 +104,7 @@ public final class TrackingController implements TrackingControllerInterface {
     }
 
     private void saveTrack() throws IOException, ClassNotFoundException {
+        this.setNewName(PreferenceManager.getDefaultSharedPreferences(context).getString(TrackingController.SharedReNameTrack,"unnamed Track"));
         final StorageController str = new StorageController(this.context);
         str.onStartService();
         if (str.getListOfTrackNames().contains(this.track.getName()))
@@ -109,7 +112,7 @@ public final class TrackingController implements TrackingControllerInterface {
         str.saveTrack(this.track);
     }
 
-    public void setNewName(String newName) {
+    private void setNewName(String newName) {
         Toast.makeText(this.context, newName, Toast.LENGTH_LONG).show();
         this.track = new Track(newName, this.track);
     }

@@ -66,7 +66,7 @@ public class GPSController implements GPSControllerInterface2 {
             throw ex;
         }
         try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 100, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 300, this);
         } catch (SecurityException e) {
             GPSException ex = new GPSException(GPSException.ERROR_2);
             ex.setStackTrace(e.getStackTrace());
@@ -119,5 +119,9 @@ public class GPSController implements GPSControllerInterface2 {
         public GPSException(final String message) {
             super(message);
         }
+    }
+
+    public static boolean isGPSEnable(@NonNull final Context context){
+        return ((LocationManager)context.getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 }

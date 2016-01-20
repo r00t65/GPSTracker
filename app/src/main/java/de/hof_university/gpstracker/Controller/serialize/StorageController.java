@@ -25,10 +25,8 @@ import de.hof_university.gpstracker.Model.track.Track;
  * GPSTracker
  */
 public class StorageController implements StorageControllerInterface {
-
     public final static String SharedTracks = "TRACK";
     private final static String TRACKS = "track.txt";
-    private final static String TRACKSBIN = "tracklist.bin";
     private final static String DIR_TRACKS = "tracks";
     private final Context context;
     private final HashSet<String> listOfTracks = new HashSet<String>();
