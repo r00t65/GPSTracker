@@ -1,4 +1,4 @@
-package de.hof_universtiy.gpstracker;
+package de.hof_university.gpstracker;
 
 import org.junit.Test;
 

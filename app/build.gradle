@@ -10,7 +10,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "de.hof_universtiy.gpstracker"
+        applicationId "de.hof_university.gpstracker"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1

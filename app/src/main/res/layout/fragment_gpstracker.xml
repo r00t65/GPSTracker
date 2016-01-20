@@ -1,16 +1,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.hof_universtiy.gpstracker.View.GPSTracker">
+    tools:context="de.hof_university.gpstracker.View.GPSTracker">
 
     <!-- TODO: Update blank fragment layout -->
 
 
     <org.osmdroid.views.MapView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/mapView" android:layout_gravity="center"/>
+        android:id="@+id/mapView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -43,15 +44,15 @@
        />
 
     <TextView
+        android:id="@+id/textViewSensor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Sensordaten:"
-        android:id="@+id/textViewSensor"
         android:layout_gravity="center_horizontal|top"
-        android:background="@color/colorPrimary"
         android:layout_margin="10dp"
-        android:textColor="#ffffff"
-        android:padding="5dp" />
+        android:background="@color/colorPrimary"
+        android:padding="5dp"
+        android:text="Sensordaten:"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff" />
 
 </FrameLayout>

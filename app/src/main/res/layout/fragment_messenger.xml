@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context="de.hof_universtiy.gpstracker.View.Messenger">
+    tools:context="de.hof_university.gpstracker.View.Messenger">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,50 +14,50 @@
 
 
         <Button
+            android:id="@+id/sendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sendMessage"
-            android:id="@+id/sendButton"
-            android:enabled="false"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:enabled="false"
+            android:text="@string/sendMessage" />
 
         <EditText
+            android:id="@+id/messageField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/messageField"
-            android:hint="@string/messageHint"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/reloadButton"
             android:layout_toStartOf="@+id/reloadButton"
-            android:layout_toLeftOf="@+id/reloadButton" />
+            android:hint="@string/messageHint" />
 
         <ListView
+            android:id="@+id/messagesList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/messagesList"
-            android:layout_alignParentTop="true"
+            android:layout_above="@+id/sendButton"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_above="@+id/sendButton"
+            android:layout_alignParentTop="true"
+            android:choiceMode="none"
             android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:choiceMode="none" />
+            android:focusableInTouchMode="false" />
 
         <ImageButton
+            android:id="@+id/reloadButton"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:id="@+id/reloadButton"
-            android:src="@drawable/reload"
-            android:scaleType="fitCenter"
-            android:layout_gravity="center_horizontal|bottom"
+            android:layout_alignBottom="@+id/sendButton"
             android:layout_alignTop="@+id/messageField"
+            android:layout_gravity="center_horizontal|bottom"
             android:layout_toLeftOf="@+id/sendButton"
             android:layout_toStartOf="@+id/sendButton"
-            android:layout_alignBottom="@+id/sendButton"
             android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/reload"
             />
 
 
