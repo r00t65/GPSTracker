@@ -1,6 +1,7 @@
 package de.hof_university.gpstracker.Controller.map.converter;
 
 import android.support.annotation.NonNull;
+import de.hof_university.gpstracker.Model.position.Location;
 import de.hof_university.gpstracker.Model.track.Track;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -49,12 +50,12 @@ public class KMLConverter implements KMLConverterInterface {
         //--------------------------------------------------------------------------------------------------------
         //--------------------------------------------------------------------------------------------------------
 
-        Element Document = doc.createElement(tagDoc);
+        Element document = doc.createElement(tagDoc);
 
-        rootElement.appendChild(Document);
+        rootElement.appendChild(document);
 
         Element name = this.createElementWithTextElement(doc,tagName,this.track.getName());
-        Element des = this.createElementWithTextElement(doc,tagDes,this.track.getName());
+        Element des = this.createElementWithTextElement(doc,tagDes,this.tagDesValue);
 
         //--------------------------------------------------------------------------------------------------------
         final Element style = this.addAttribute(doc,this.createElement(doc,tagStyle),"id","");
@@ -73,9 +74,21 @@ public class KMLConverter implements KMLConverterInterface {
         final Element placemark = this.createElement(doc,"Placemark");
 
         final Element styleurl = this.createElementWithTextElement(doc,"styleUrl","#yellowGreenPoly");
+        final Element lineString = this.createElement(doc,"LineString");
 
         //--------------------------------------------------------------------------------------------------------
+        final Element extrude = this.createElementWithTextElement(doc,"extrude","1");
+        final Element tessellate = this.createElementWithTextElement(doc,"tessellate","1");
+        final Element altitudeMode = this.createElementWithTextElement(doc,"altitudeMode","absolute");
+        final Element coordinates = this.createElementWithTextElement(doc,"coordinates",this.getCoordinates());
+        lineString.appendChild(extrude);lineString.appendChild(tessellate);lineString.appendChild(altitudeMode);
+        lineString.appendChild(coordinates);
         //--------------------------------------------------------------------------------------------------------
+        placemark.appendChild(name);placemark.appendChild(des);placemark.appendChild(styleurl);placemark.appendChild(lineString);
+        //--------------------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------
+        document.appendChild(name);document.appendChild(des);
+        document.appendChild(style);document.appendChild(placemark);
 
         return doc;
     }
@@ -98,5 +111,12 @@ public class KMLConverter implements KMLConverterInterface {
         Attr attr = document.createAttribute(attName);attr.setValue(attValue);
         element.setAttributeNode(attr);
         return element;
+    }
+
+    private String getCoordinates(){
+        String listOfCoordinates = " ";
+        for(Location loc:this.track.getTracks())
+            listOfCoordinates += loc.getCoordinates()+" ";
+        return listOfCoordinates;
     }
 }

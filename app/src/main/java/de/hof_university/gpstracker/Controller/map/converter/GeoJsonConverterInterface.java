@@ -1,5 +1,8 @@
 package de.hof_university.gpstracker.Controller.map.converter;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
@@ -8,5 +11,5 @@ import javax.xml.parsers.ParserConfigurationException;
  * Redesign by alex on 20.01.16
  */
 public interface GeoJsonConverterInterface {
-    public String convert() throws ParserConfigurationException;
+    public JSONObject convert() throws ParserConfigurationException, JSONException;
 }
