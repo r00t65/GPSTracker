@@ -30,10 +30,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import de.hof_university.gpstracker.Controller.map.converter.GeoJsonConverter;
 import de.hof_university.gpstracker.Controller.sensor.GPSController;
 import de.hof_university.gpstracker.Controller.tracking.TrackingController;
 import de.hof_university.gpstracker.View.LoadTrack;
 import de.hof_university.gpstracker.View.activity.MainActivity;
+import org.json.JSONException;
 import org.osmdroid.views.MapView;
 
 import java.io.IOException;
@@ -44,6 +46,8 @@ import de.hof_university.gpstracker.Controller.serialize.StorageController;
 import de.hof_university.gpstracker.Controller.service.TrackingService;
 import de.hof_university.gpstracker.Model.track.Track;
 import de.hof_university.gpstracker.R;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -178,10 +182,25 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                 final ListView list = new ListView(getActivity());
 
                 list.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>(storageController.getListOfTrackNames())));
-                list.setOnLongClickListener(new View.OnLongClickListener() {
+                list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
-                    public boolean onLongClick(View v) {
-                        return false;//TODO: Brian
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        try {
+                            track = storageController.loadTrack((String) parent.getItemAtPosition(position));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        try {//TODO: Brian
+                            new GeoJsonConverter(track).convert();
+                        } catch (ParserConfigurationException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        list.setSelection(position);
+                        return false;
                     }
                 });
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
