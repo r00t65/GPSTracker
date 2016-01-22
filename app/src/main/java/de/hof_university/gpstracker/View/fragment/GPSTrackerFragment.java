@@ -18,6 +18,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.telecom.Call;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,12 +31,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
+
 import de.hof_university.gpstracker.Controller.map.converter.GeoJsonConverter;
 import de.hof_university.gpstracker.Controller.sensor.GPSController;
 import de.hof_university.gpstracker.Controller.tracking.TrackingController;
 import de.hof_university.gpstracker.View.LoadTrack;
 import de.hof_university.gpstracker.View.activity.MainActivity;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.views.MapView;
 
 import java.io.IOException;
@@ -75,6 +82,8 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
     private Boolean isBound = false;
     private TextView textViewSens;
     private Fragment fragment = null;
+    private CallbackManager callbackManager;
+    private ShareDialog shareDialog;
 
 
     // private Button lastTrackButton;
@@ -133,6 +142,13 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        //FacebookShareButton
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+
+
         //Tracking Service Button
 
         trackingServiceIntent = new Intent(this.getActivity(), TrackingService.class);
@@ -193,7 +209,25 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                             e.printStackTrace();
                         }
                         try {//TODO: Brian
-                            new GeoJsonConverter(track).convert();
+
+                            Log.d("SHARE FACEBOOK", "onItemLongClick ");
+
+                            JSONObject myData = new GeoJsonConverter(track).convert();
+
+                            if (shareDialog.canShow(ShareLinkContent.class)){
+                                ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                                        .setContentTitle("GPS Tracker")
+                                        .setContentDescription("Beschreibung für meinen Track")
+                                        .setContentUrl(Uri.parse("http://www.google.de"))
+                                        .build();
+
+                                shareDialog.show(linkContent);
+                            }
+
+
+
+
+
                         } catch (ParserConfigurationException e) {
                             e.printStackTrace();
                         } catch (JSONException e) {
