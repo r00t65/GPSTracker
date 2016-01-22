@@ -19,17 +19,12 @@ import de.hof_university.gpstracker.Controller.sensor.GPSControllerInterface;
  */
 public class RadarService extends IntentService {
 
-    private final ConnectionController mConnectionController;
-    private final GPSControllerInterface mGPSController;
+    private ConnectionController mConnectionController;
+    private GPSControllerInterface mGPSController;
 
     public RadarService() throws GPSController.GPSException, FacebookAuthorizationException {
         super("MyRadarService");
-        try {
-            this.mConnectionController = new ConnectionController(this.getBaseContext(), null);
-        } catch (FacebookAuthorizationException fbE) {
-            throw fbE;
-        }
-        this.mGPSController = new GPSController(this.getApplicationContext(), this.mConnectionController);
+
     }
 
     /**
@@ -38,6 +33,17 @@ public class RadarService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         //kein sleep, da über AlarmManager in Standby geht
+        try {
+            Log.i("RadarService", "GPSController");
+            mConnectionController = new ConnectionController(this.getBaseContext(), null);
+        } catch (FacebookAuthorizationException fbE) {
+            throw fbE;
+        }
+        try {
+            this.mGPSController = new GPSController(this.getBaseContext(), this.mConnectionController);
+        } catch (GPSController.GPSException e) {
+            e.printStackTrace();
+        }
         Log.i("RadarService", "Service running");
     }
 
