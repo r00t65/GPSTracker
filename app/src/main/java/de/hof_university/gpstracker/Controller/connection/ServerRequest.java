@@ -2,6 +2,10 @@ package de.hof_university.gpstracker.Controller.connection;
 
 import android.os.Message;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -12,9 +16,11 @@ import java.net.URLEncoder;
 public class ServerRequest {
 
     ConnectionController main;
+    String serverUrl;
 
-    public ServerRequest( ConnectionController main ){
+    public ServerRequest( ConnectionController main , String serverUrl){
         this.main = main;
+        this.serverUrl = serverUrl;
     }
 
     public void request(String json){
@@ -23,6 +29,30 @@ public class ServerRequest {
 
         new Thread ( requestRunner ).start();
 
+    }
+
+    public void request(String func, JSONArray data) {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("func", func);
+            request.put("data", data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        request(request.toString());
+    }
+
+    public void request(String func, String userID, double latitude, double longitude ) {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("func", func);
+            request.put("userID", userID);
+            request.put("lat", latitude);
+            request.put("lon", longitude);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        request(request.toString());
     }
 
     class RequestRunnable implements Runnable{
@@ -38,40 +68,41 @@ public class ServerRequest {
         @Override
         public void run(){
 
-            String data = "";
             BufferedReader reader=null;
-
             String text = "";
 
             try
             {
-                data = URLEncoder.encode("json", "UTF-8") + "=" + URLEncoder.encode(this.json, "UTF-8");
+                String data = URLEncoder.encode("json", "UTF-8") + "=" + URLEncoder.encode(this.json, "UTF-8");
                 data += "&" + URLEncoder.encode("debug", "UTF-8") + "=" + URLEncoder.encode("true", "UTF-8");
-                URL url = new URL("http://aap.rt-dns.de/connection_db.php");
+
+                URL url = new URL(serverUrl);
                 URLConnection conn = url.openConnection();
 
                 conn.setDoOutput(true);
 
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
                 wr.write(data);
                 wr.flush();
 
                 reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder sb = new StringBuilder();
-                String line = null;
+                String line;
 
                 while((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
+                    sb.append(line).append("\n");
                 }
 
                 text = sb.toString();
-
             }
-            catch (Exception ex){}
+            catch (Exception ex){ System.out.println(ex); }
             finally
             {
-                try { reader.close(); }
-                catch (Exception ex){}
+                try {
+                    assert reader != null;
+                    reader.close(); }
+                catch (Exception ex){ System.out.println(ex); }
             }
 
             Message msg = Message.obtain();
