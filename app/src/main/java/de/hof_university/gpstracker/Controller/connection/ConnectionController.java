@@ -58,7 +58,11 @@ public class ConnectionController implements NotificationTrackListener {
     private final String SERVER_URL = "http://aap.rt-dns.de/connection_db.php";
 
     // Server Funktionen
+    private final String ADD_SHARE = "addShare";
+    private final String DEL_SHARE = "delShare";
     private final String GET_FRIENDS = "getFriends";
+    private final String GET_TRACK = "getTrack";
+    private final String NEW_USER = "newUser";
     private final String SET_POSITION = "setPosition";
 
 
@@ -79,6 +83,7 @@ public class ConnectionController implements NotificationTrackListener {
         serverRequest = new ServerRequest(this, SERVER_URL);
         this.facebookId = facebookId;
     }
+
 
     // - - - - - - - - - -
     // Server Verbindung
@@ -105,7 +110,7 @@ public class ConnectionController implements NotificationTrackListener {
 
                                         data.put(friend);
                                     }
-                                    serverRequest.request(GET_FRIENDS,data);
+                                    serverRequest.request(GET_FRIENDS, data);
 
                                 } catch (JSONException e) { e.printStackTrace(); }
                             }
@@ -172,8 +177,52 @@ public class ConnectionController implements NotificationTrackListener {
     }
 
 
+    // - - - - - - - - - -
+    // Handler zum Empfangen der Server-Daten
+    // - - - - - - - - - -
+
+    @SuppressLint("HandlerLeak")
+    public Handler _handler = new Handler() {
+        @Override public void handleMessage(Message msg) {
+
+            System.out.println("ServerResponse recieved data: "+msg.obj);
+
+            try {
+
+                JSONObject reader = new JSONObject((String)msg.obj);
+
+                switch(reader.getInt("status")){
+                    case 100:
+                        System.out.println("ServerResponse for: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
+                        switch (reader.getString("func")) {
+
+                            case "getFriends":
+                                parsePosition(reader.getJSONArray("data"));
+                                radarController.setListOfFriends(null, position);
+                                break;
+
+                        }
+                        break;
+
+                    case 210:
+
+                        System.out.println("ServerRequest DB Error in: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
+                        System.out.println("DB Error Message: "+reader.getString("debug"));
+                        break;
+
+                    default:
+
+                        System.out.println("ServerRequest Error: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
+                        break;
+                }
+
+            } catch (JSONException e) { e.printStackTrace(); }
+            super.handleMessage(msg);
+        }
+    };
+
+
     // TODO: Methoden checken
-    // FB ID an Server senden
 
     public boolean isConnected(Context context) {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Activity.CONNECTIVITY_SERVICE);
@@ -181,22 +230,15 @@ public class ConnectionController implements NotificationTrackListener {
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    public void newUser() {
-        serverRequest.request("{\"func\":\"newUser\", \"userId\"" + facebookId + "\"}");
-    }
+    public void newUser() { serverRequest.request(NEW_USER, facebookId); }
 
+    public void getTracks(String id) { serverRequest.request(GET_TRACK, facebookId); }
 
-    public void getTracks(String id) {
-        serverRequest.request("{\"func\":\"getTrack\",\"userID\"" + id + "\"}");
-    }
+    // TODO: Warum UserID ? UserID = facebookID
+    public void shareTrack(String userID, String friendID, String trackID) { serverRequest.request(ADD_SHARE, facebookId, friendID, trackID ); }
 
-    public void shareTrack(String userID, String friendID, String trackID) {
-        serverRequest.request("{\"func\":\"addShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}");
-    }
-
-    public void deleteShareTrack(String userID, String friendID, String trackID) {
-        serverRequest.request("{\"func\":\"delShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}");
-    }
+    // TODO: Warum UserID ? UserID = facebookID
+    public void deleteShareTrack(String userID, String friendID, String trackID) { serverRequest.request(DEL_SHARE, facebookId, friendID, trackID ); }
 
     @Override
     public void trackFinish(@NonNull Track track) {
@@ -239,52 +281,6 @@ public class ConnectionController implements NotificationTrackListener {
     public void newWayPoint(@NonNull Location location) throws Track.TrackFinishException {
         //Ignore
     }
-
-
-    // - - - - - - - - - -
-    // Handler zum Empfangen der Server-Daten
-    // - - - - - - - - - -
-
-    @SuppressLint("HandlerLeak")
-    public Handler _handler = new Handler() {
-        @Override public void handleMessage(Message msg) {
-
-            System.out.println("ServerResponse recieved data: "+msg.obj);
-
-            try {
-
-                JSONObject reader = new JSONObject((String)msg.obj);
-
-                switch(reader.getInt("status")){
-                    case 100:
-                        System.out.println("ServerResponse for: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
-                        switch (reader.getString("func")) {
-
-                            case "getFriends":
-                                parsePosition(reader.getJSONArray("data"));
-//                              if(radarController != null)
-                                radarController.setListOfFriends(null, position);
-                                break;
-
-                        }
-                        break;
-
-                    case 210:
-
-                        System.out.println("ServerRequest DB Error in: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
-                        System.out.println("DB Error Message: "+reader.getString("debug"));
-                        break;
-
-                    default:
-
-                        System.out.println("ServerRequest Error: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
-                        break;
-                }
-
-            } catch (JSONException e) { e.printStackTrace(); }
-            super.handleMessage(msg);
-        }
-    };
 
 
     // - - - - - - - - - -

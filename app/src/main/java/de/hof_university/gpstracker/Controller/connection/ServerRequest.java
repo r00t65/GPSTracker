@@ -42,6 +42,17 @@ public class ServerRequest {
         request(request.toString());
     }
 
+    public void request(String func, String userID ) {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("func", func);
+            request.put("userID", userID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        request(request.toString());
+    }
+
     public void request(String func, String userID, double latitude, double longitude ) {
         JSONObject request = new JSONObject();
         try {
@@ -49,6 +60,19 @@ public class ServerRequest {
             request.put("userID", userID);
             request.put("lat", latitude);
             request.put("lon", longitude);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        request(request.toString());
+    }
+
+    public void request(String func, String userID, String friendID, String trackID ) {
+        JSONObject request = new JSONObject();
+        try {
+            request.put("func", func);
+            request.put("userID", userID);
+            request.put("friendID", friendID);
+            request.put("trackID", trackID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
