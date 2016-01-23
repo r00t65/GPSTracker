@@ -8,6 +8,7 @@ public class SensorController implements SensorControllerInterface {
     private boolean isWorking = false;
 
 //TODO:Sensoren integrieren
+
     @Override
     public void onStartService() {
 
