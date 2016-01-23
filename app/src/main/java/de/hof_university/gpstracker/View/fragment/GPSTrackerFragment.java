@@ -12,13 +12,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.telecom.Call;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,11 +33,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 
-import de.hof_university.gpstracker.Controller.map.converter.GeoJsonConverter;
-import de.hof_university.gpstracker.Controller.sensor.GPSController;
-import de.hof_university.gpstracker.Controller.tracking.TrackingController;
-import de.hof_university.gpstracker.View.LoadTrack;
-import de.hof_university.gpstracker.View.activity.MainActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.views.MapView;
@@ -48,13 +40,18 @@ import org.osmdroid.views.MapView;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import de.hof_university.gpstracker.Controller.map.MapController;
+import de.hof_university.gpstracker.Controller.map.converter.GeoJsonConverter;
+import de.hof_university.gpstracker.Controller.sensor.GPSController;
 import de.hof_university.gpstracker.Controller.serialize.StorageController;
 import de.hof_university.gpstracker.Controller.service.TrackingService;
+import de.hof_university.gpstracker.Controller.tracking.TrackingController;
 import de.hof_university.gpstracker.Model.track.Track;
 import de.hof_university.gpstracker.R;
-
-import javax.xml.parsers.ParserConfigurationException;
+import de.hof_university.gpstracker.View.LoadTrack;
+import de.hof_university.gpstracker.View.activity.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -214,7 +211,7 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
 
                             JSONObject myData = new GeoJsonConverter(track).convert();
 
-                            if (shareDialog.canShow(ShareLinkContent.class)){
+                            if (shareDialog.canShow(ShareLinkContent.class)) {
                                 ShareLinkContent linkContent = new ShareLinkContent.Builder()
                                         .setContentTitle("GPS Tracker")
                                         .setContentDescription("Beschreibung für meinen Track")
@@ -223,9 +220,6 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
 
                                 shareDialog.show(linkContent);
                             }
-
-
-
 
 
                         } catch (ParserConfigurationException e) {

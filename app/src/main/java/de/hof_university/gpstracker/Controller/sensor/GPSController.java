@@ -30,6 +30,10 @@ public class GPSController implements GPSControllerInterface2 {
         this.onStartService();
     }
 
+    public static boolean isGPSEnable(@NonNull final Context context) {
+        return ((LocationManager) context.getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
     @Override
     public void onStartService() throws GPSException {
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -119,9 +123,5 @@ public class GPSController implements GPSControllerInterface2 {
         public GPSException(final String message) {
             super(message);
         }
-    }
-
-    public static boolean isGPSEnable(@NonNull final Context context){
-        return ((LocationManager)context.getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 }

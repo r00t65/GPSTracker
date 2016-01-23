@@ -35,6 +35,6 @@ public final class Location implements Serializable {
     }
 
     public String getCoordinates() {
-        return ""+this.location.getLongitude()+","+this.location.getLatitude()+","+this.location.getAltitude();
+        return "" + this.location.getLongitude() + "," + this.location.getLatitude() + "," + this.location.getAltitude();
     }
 }

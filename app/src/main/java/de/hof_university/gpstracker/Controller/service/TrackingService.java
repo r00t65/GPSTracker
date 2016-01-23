@@ -19,12 +19,12 @@ import java.io.IOException;
 import de.hof_university.gpstracker.Controller.listener.GPSMapChangeListener;
 import de.hof_university.gpstracker.Controller.sensor.GPSController;
 import de.hof_university.gpstracker.Controller.tracking.TrackingController;
-import de.hof_university.gpstracker.View.activity.MainActivity;
 import de.hof_university.gpstracker.R;
+import de.hof_university.gpstracker.View.activity.MainActivity;
 
 /**
  * Created by Andreas Ziemer on 16.12.15.
- * Track aufzeichnen und an Server senden
+ * Service zum aufzeichnen und senden des Tracks an den Server
  */
 public class TrackingService extends Service {
 

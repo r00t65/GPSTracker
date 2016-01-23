@@ -15,7 +15,7 @@ import de.hof_university.gpstracker.Controller.sensor.GPSControllerInterface;
 
 /**
  * Created by Andreas Ziemer on 16.12.15.
- * Position an Server
+ * Service der die aktuelle Position für den Radar an den Server sendet
  */
 public class RadarService extends IntentService {
 
@@ -28,7 +28,7 @@ public class RadarService extends IntentService {
     }
 
     /**
-     * @param intent Funktion die je nach Einstellung des Nutzers wiederholt die Postion ausgefuehrt wird
+     * @param intent Methode die je nach Einstellung des Nutzers wiederholt die Postion ausgefuehrt wird
      */
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -47,7 +47,7 @@ public class RadarService extends IntentService {
         Log.i("RadarService", "Service running");
     }
 
-
+    @Override
     public void onDestroy() {
         try {
             mGPSController.onDestroyService();

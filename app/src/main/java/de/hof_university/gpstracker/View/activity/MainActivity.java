@@ -33,8 +33,8 @@ import de.hof_university.gpstracker.Controller.facebook.FbConnector;
 import de.hof_university.gpstracker.Controller.serialize.StorageController;
 import de.hof_university.gpstracker.Controller.service.RadarServiceReceiver;
 import de.hof_university.gpstracker.R;
-import de.hof_university.gpstracker.View.fragment.GPSTrackerFragment;
 import de.hof_university.gpstracker.View.LoadTrack;
+import de.hof_university.gpstracker.View.fragment.GPSTrackerFragment;
 import de.hof_university.gpstracker.View.fragment.LoginLogoutFragment;
 import de.hof_university.gpstracker.View.fragment.MessengerFragment;
 import de.hof_university.gpstracker.View.fragment.RadarFragment;
@@ -50,6 +50,38 @@ public class MainActivity extends AppCompatActivity
     private Fragment fragment = null;
     private boolean isRadarActive;
     private long radarInterval;
+
+    public static void startGPSEnableDialog(@NonNull final Activity activity) {
+        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+        alertDialog.setTitle("Bitte GPS aktivieren");
+
+        alertDialog.setCancelable(false);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        activity.startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
+                        dialog.dismiss();
+                    }
+                });
+
+        alertDialog.show();
+    }
+
+    public static void startInternetEnableDialog(@NonNull final Activity activity) {
+        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+        alertDialog.setTitle("Bitte Internet aktivieren");
+
+        alertDialog.setCancelable(false);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        activity.startActivityForResult(new Intent(Settings.ACTION_SETTINGS), 0);
+                        dialog.dismiss();
+                    }
+                });
+
+        alertDialog.show();
+    }
 
     public void onFragmentInteraction(Uri uri) {
         //you can leave it empty bro
@@ -305,37 +337,5 @@ public class MainActivity extends AppCompatActivity
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public static void startGPSEnableDialog(@NonNull final Activity activity){
-        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
-        alertDialog.setTitle("Bitte GPS aktivieren");
-
-        alertDialog.setCancelable(false);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        activity.startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),0);
-                        dialog.dismiss();
-                    }
-                });
-
-        alertDialog.show();
-    }
-
-    public static void startInternetEnableDialog(@NonNull final Activity activity){
-        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
-        alertDialog.setTitle("Bitte Internet aktivieren");
-
-        alertDialog.setCancelable(false);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        activity.startActivityForResult(new Intent(Settings.ACTION_SETTINGS),0);
-                        dialog.dismiss();
-                    }
-                });
-
-        alertDialog.show();
     }
 }

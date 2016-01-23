@@ -18,16 +18,16 @@ public class ServerRequest {
     ConnectionController main;
     String serverUrl;
 
-    public ServerRequest( ConnectionController main , String serverUrl){
+    public ServerRequest(ConnectionController main, String serverUrl) {
         this.main = main;
         this.serverUrl = serverUrl;
     }
 
-    public void request(String json){
+    public void request(String json) {
 
-        RequestRunnable requestRunner = new RequestRunnable( json );
+        RequestRunnable requestRunner = new RequestRunnable(json);
 
-        new Thread ( requestRunner ).start();
+        new Thread(requestRunner).start();
 
     }
 
@@ -42,7 +42,7 @@ public class ServerRequest {
         request(request.toString());
     }
 
-    public void request(String func, String userID ) {
+    public void request(String func, String userID) {
         JSONObject request = new JSONObject();
         try {
             request.put("func", func);
@@ -53,7 +53,7 @@ public class ServerRequest {
         request(request.toString());
     }
 
-    public void request(String func, String userID, double latitude, double longitude ) {
+    public void request(String func, String userID, double latitude, double longitude) {
         JSONObject request = new JSONObject();
         try {
             request.put("func", func);
@@ -66,7 +66,7 @@ public class ServerRequest {
         request(request.toString());
     }
 
-    public void request(String func, String userID, String friendID, String trackID ) {
+    public void request(String func, String userID, String friendID, String trackID) {
         JSONObject request = new JSONObject();
         try {
             request.put("func", func);
@@ -79,24 +79,22 @@ public class ServerRequest {
         request(request.toString());
     }
 
-    class RequestRunnable implements Runnable{
+    class RequestRunnable implements Runnable {
 
         String json = "";
 
-        public RequestRunnable( String json ){
+        public RequestRunnable(String json) {
             this.json = json;
         }
 
 
-
         @Override
-        public void run(){
+        public void run() {
 
-            BufferedReader reader=null;
+            BufferedReader reader = null;
             String text = "";
 
-            try
-            {
+            try {
                 String data = URLEncoder.encode("json", "UTF-8") + "=" + URLEncoder.encode(this.json, "UTF-8");
                 data += "&" + URLEncoder.encode("debug", "UTF-8") + "=" + URLEncoder.encode("true", "UTF-8");
 
@@ -114,19 +112,20 @@ public class ServerRequest {
                 StringBuilder sb = new StringBuilder();
                 String line;
 
-                while((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null) {
                     sb.append(line).append("\n");
                 }
 
                 text = sb.toString();
-            }
-            catch (Exception ex){ System.out.println(ex); }
-            finally
-            {
+            } catch (Exception ex) {
+                System.out.println(ex);
+            } finally {
                 try {
                     assert reader != null;
-                    reader.close(); }
-                catch (Exception ex){ System.out.println(ex); }
+                    reader.close();
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
             }
 
             Message msg = Message.obtain();

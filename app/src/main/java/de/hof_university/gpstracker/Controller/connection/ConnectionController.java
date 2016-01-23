@@ -41,30 +41,66 @@ public class ConnectionController implements NotificationTrackListener {
     private final String LONGITUDE = "lon";
     private final String LATITUDE = "lat";
     private final String LOG_TAG = ConnectionController.class.getSimpleName();
-    private RadarListener radarController = null;
-
-    private Context context = null;
-    private String facebookId = "000000";
-
-    private List<FriendsPositionModel> position;
-    ServerRequest serverRequest;
-
-    FbConnector fbConnector;
-
-    // - - - - - - - - - -
-    // Konstanten
-    // - - - - - - - - - -
-
     private final String SERVER_URL = "http://aap.rt-dns.de/connection_db.php";
-
     // Server Funktionen
     private final String ADD_SHARE = "addShare";
     private final String DEL_SHARE = "delShare";
     private final String GET_FRIENDS = "getFriends";
     private final String GET_TRACK = "getTrack";
     private final String NEW_USER = "newUser";
-    private final String SET_POSITION = "setPosition";
 
+    // - - - - - - - - - -
+    // Konstanten
+    // - - - - - - - - - -
+    private final String SET_POSITION = "setPosition";
+    ServerRequest serverRequest;
+    FbConnector fbConnector;
+    private RadarListener radarController = null;
+    private Context context = null;
+    private String facebookId = "000000";
+    private List<FriendsPositionModel> position;
+    @SuppressLint("HandlerLeak")
+    public Handler _handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            System.out.println("ServerResponse recieved data: " + msg.obj);
+
+            try {
+
+                JSONObject reader = new JSONObject((String) msg.obj);
+
+                switch (reader.getInt("status")) {
+                    case 100:
+                        System.out.println("ServerResponse for: " + reader.getString("func") + " - Status: " + reader.getInt("status"));
+                        switch (reader.getString("func")) {
+
+                            case "getFriends":
+                                parsePosition(reader.getJSONArray("data"));
+                                radarController.setListOfFriends(null, position);
+                                break;
+
+                        }
+                        break;
+
+                    case 210:
+
+                        System.out.println("ServerRequest DB Error in: " + reader.getString("func") + " - Status: " + reader.getInt("status"));
+                        System.out.println("DB Error Message: " + reader.getString("debug"));
+                        break;
+
+                    default:
+
+                        System.out.println("ServerRequest Error: " + reader.getString("func") + " - Status: " + reader.getInt("status"));
+                        break;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public ConnectionController(@NonNull final Context context, final RadarListener radarController) {
         this.radarController = radarController;
@@ -78,18 +114,20 @@ public class ConnectionController implements NotificationTrackListener {
         }
     }
 
-    public ConnectionController(String facebookId) {
-
-        serverRequest = new ServerRequest(this, SERVER_URL);
-        this.facebookId = facebookId;
-    }
-
 
     // - - - - - - - - - -
     // Server Verbindung
     // - - - - - - - - - -
 
     // Freundeposition von Server holen
+
+    public ConnectionController(String facebookId) {
+
+        serverRequest = new ServerRequest(this, SERVER_URL);
+        this.facebookId = facebookId;
+    }
+
+    // Position an Server senden
 
     public void getWaypointsOfFriends() {
 //        newPosition(new Location(50.298941, 11.968903,new Date())); // -- for debuging purpose
@@ -99,12 +137,12 @@ public class ConnectionController implements NotificationTrackListener {
                     AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
                     new GraphRequest.Callback() {
                         public void onCompleted(GraphResponse response) {
-                            if(response.getJSONObject() != null) {
+                            if (response.getJSONObject() != null) {
                                 try {
                                     JSONArray friends = response.getJSONObject().getJSONArray("data");
                                     JSONArray data = new JSONArray();
 
-                                    for (int i = 0; i < friends.length(); i++){
+                                    for (int i = 0; i < friends.length(); i++) {
                                         JSONObject friend = new JSONObject();
                                         friend.put("id", friends.getJSONObject(i).getString("id"));
 
@@ -112,7 +150,9 @@ public class ConnectionController implements NotificationTrackListener {
                                     }
                                     serverRequest.request(GET_FRIENDS, data);
 
-                                } catch (JSONException e) { e.printStackTrace(); }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
@@ -122,7 +162,12 @@ public class ConnectionController implements NotificationTrackListener {
         }
     }
 
-    // Position an Server senden
+
+    // - - - - - - - - - -
+    // Lokale Methoden
+    // - - - - - - - - - -
+
+    // Freunde Position parsen
 
     @Override
     public void newPosition(@NonNull Location location) {
@@ -132,10 +177,10 @@ public class ConnectionController implements NotificationTrackListener {
 
 
     // - - - - - - - - - -
-    // Lokale Methoden
+    // Getter und Setter
     // - - - - - - - - - -
 
-    // Freunde Position parsen
+    // Freunde Positions Liste
 
     private void parsePosition(JSONArray jFriends) {
         position = new ArrayList<>();
@@ -161,19 +206,8 @@ public class ConnectionController implements NotificationTrackListener {
 
     }
 
-
-    // - - - - - - - - - -
-    // Getter und Setter
-    // - - - - - - - - - -
-
-    // Freunde Positions Liste
-
     public List<FriendsPositionModel> getPosition() {
         return position;
-    }
-
-    public void setPosition(List<FriendsPositionModel> position) {
-        this.position = position;
     }
 
 
@@ -181,45 +215,9 @@ public class ConnectionController implements NotificationTrackListener {
     // Handler zum Empfangen der Server-Daten
     // - - - - - - - - - -
 
-    @SuppressLint("HandlerLeak")
-    public Handler _handler = new Handler() {
-        @Override public void handleMessage(Message msg) {
-
-            System.out.println("ServerResponse recieved data: "+msg.obj);
-
-            try {
-
-                JSONObject reader = new JSONObject((String)msg.obj);
-
-                switch(reader.getInt("status")){
-                    case 100:
-                        System.out.println("ServerResponse for: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
-                        switch (reader.getString("func")) {
-
-                            case "getFriends":
-                                parsePosition(reader.getJSONArray("data"));
-                                radarController.setListOfFriends(null, position);
-                                break;
-
-                        }
-                        break;
-
-                    case 210:
-
-                        System.out.println("ServerRequest DB Error in: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
-                        System.out.println("DB Error Message: "+reader.getString("debug"));
-                        break;
-
-                    default:
-
-                        System.out.println("ServerRequest Error: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
-                        break;
-                }
-
-            } catch (JSONException e) { e.printStackTrace(); }
-            super.handleMessage(msg);
-        }
-    };
+    public void setPosition(List<FriendsPositionModel> position) {
+        this.position = position;
+    }
 
 
     // TODO: Methoden checken
@@ -230,15 +228,23 @@ public class ConnectionController implements NotificationTrackListener {
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    public void newUser() { serverRequest.request(NEW_USER, facebookId); }
+    public void newUser() {
+        serverRequest.request(NEW_USER, facebookId);
+    }
 
-    public void getTracks(String id) { serverRequest.request(GET_TRACK, facebookId); }
+    public void getTracks(String id) {
+        serverRequest.request(GET_TRACK, facebookId);
+    }
 
     // TODO: Warum UserID ? UserID = facebookID
-    public void shareTrack(String userID, String friendID, String trackID) { serverRequest.request(ADD_SHARE, facebookId, friendID, trackID ); }
+    public void shareTrack(String userID, String friendID, String trackID) {
+        serverRequest.request(ADD_SHARE, facebookId, friendID, trackID);
+    }
 
     // TODO: Warum UserID ? UserID = facebookID
-    public void deleteShareTrack(String userID, String friendID, String trackID) { serverRequest.request(DEL_SHARE, facebookId, friendID, trackID ); }
+    public void deleteShareTrack(String userID, String friendID, String trackID) {
+        serverRequest.request(DEL_SHARE, facebookId, friendID, trackID);
+    }
 
     @Override
     public void trackFinish(@NonNull Track track) {
