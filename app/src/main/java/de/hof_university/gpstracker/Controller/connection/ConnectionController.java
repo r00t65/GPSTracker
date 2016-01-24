@@ -138,22 +138,22 @@ public class ConnectionController implements NotificationTrackListener{
     }
 
     public void getTracks(String id){
-        String json = "json={\"func\":\"getTrack\",\"userID\"" + id + "\"}";
+        String json = "json={\"func\":\"getTrack\",\"userID\"" + facebookId + "\"}";
 
         new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "getTracks");
 
 
     }
 
-    public void shareTrack(String userID, String friendID, String trackID){
-        String json = "json={\"func\":\"addShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
+    public void shareTrack(String friendID, String trackID){
+        String json = "json={\"func\":\"addShare\",\"userID\":\"" + facebookId + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
 
         new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "shareTrack");
 
     }
 
-    public void deleteShareTrack(String userID, String friendID, String trackID){
-        String json = "json={\"func\":\"delShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
+    public void deleteShareTrack(String friendID, String trackID){
+        String json = "json={\"func\":\"delShare\",\"userID\":\"" + facebookId + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
 
 
         new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "deleteSharedTrack");
