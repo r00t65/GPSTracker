@@ -163,7 +163,7 @@ public class LoginLogoutFragment extends Fragment {
 
             @Override
             public void onError(FacebookException exception) {
-                Log.d("DFGDDÖFKFJÖJDFGD", "onError ");
+                Log.d("FACEBOOK ERROR", exception.toString());
             }
         });
 

@@ -6,7 +6,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Created by alex on 20.01.16.
- * <p>
+ * <p/>
  * Redesign by alex on 20.01.16
  */
 public interface KMLConverterInterface {

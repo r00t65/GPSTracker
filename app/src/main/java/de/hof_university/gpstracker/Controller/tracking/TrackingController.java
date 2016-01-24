@@ -104,7 +104,7 @@ public final class TrackingController implements TrackingControllerInterface {
     }
 
     private void saveTrack() throws IOException, ClassNotFoundException {
-        this.setNewName(PreferenceManager.getDefaultSharedPreferences(context).getString(TrackingController.SharedReNameTrack,"unnamed Track"));
+        this.setNewName(PreferenceManager.getDefaultSharedPreferences(context).getString(TrackingController.SharedReNameTrack, "unnamed Track"));
         final StorageController str = new StorageController(this.context);
         str.onStartService();
         if (str.getListOfTrackNames().contains(this.track.getName()))

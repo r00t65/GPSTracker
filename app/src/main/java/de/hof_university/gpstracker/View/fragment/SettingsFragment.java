@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
 
-import de.hof_university.gpstracker.View.activity.MainActivity;
 import de.hof_university.gpstracker.R;
+import de.hof_university.gpstracker.View.activity.MainActivity;
 
 public class SettingsFragment extends PreferenceFragment {
     // TODO: Rename parameter arguments, choose names that match

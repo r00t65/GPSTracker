@@ -6,6 +6,7 @@ import android.content.Intent;
 
 /**
  * Created by Andreas Ziemer on 11.01.2016.
+ * BroadcastReveceiver für den AlarmManager zum starten des RadarService
  */
 public class RadarServiceReceiver extends BroadcastReceiver {
     public static final int REQUEST_CODE = 17;
