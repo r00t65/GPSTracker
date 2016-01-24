@@ -271,7 +271,6 @@ public class ConnectionController implements NotificationTrackListener{
                 e.printStackTrace();
             }
 
-
             HttpsURLConnection urlConnection = null;
 
             try {
