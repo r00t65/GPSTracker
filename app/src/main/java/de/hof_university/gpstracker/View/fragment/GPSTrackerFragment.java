@@ -48,6 +48,7 @@ import de.hof_university.gpstracker.Controller.sensor.GPSController;
 import de.hof_university.gpstracker.Controller.serialize.StorageController;
 import de.hof_university.gpstracker.Controller.service.TrackingService;
 import de.hof_university.gpstracker.Controller.tracking.TrackingController;
+import de.hof_university.gpstracker.Model.position.Location;
 import de.hof_university.gpstracker.Model.track.Track;
 import de.hof_university.gpstracker.R;
 import de.hof_university.gpstracker.View.LoadTrack;
@@ -205,17 +206,17 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }
-                        try {//TODO: Brian
+                        try {
 
-                            Log.d("SHARE FACEBOOK", "onItemLongClick ");
 
                             JSONObject myData = new GeoJsonConverter(track).convert();
+                            Log.d("READMENOW", myData.toString());
 
                             if (shareDialog.canShow(ShareLinkContent.class)) {
                                 ShareLinkContent linkContent = new ShareLinkContent.Builder()
                                         .setContentTitle("GPS Tracker")
-                                        .setContentDescription("Beschreibung für meinen Track")
-                                        .setContentUrl(Uri.parse("http://www.google.de"))
+                                        .setContentDescription("Mein awsome Track, yeah!")
+                                        .setContentUrl(Uri.parse("https://maps.google.de/"))
                                         .build();
 
                                 shareDialog.show(linkContent);
