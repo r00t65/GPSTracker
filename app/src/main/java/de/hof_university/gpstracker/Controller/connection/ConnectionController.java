@@ -45,7 +45,6 @@ import javax.net.ssl.X509TrustManager;
 
 import de.hof_university.gpstracker.Controller.listener.NotificationTrackListener;
 import de.hof_university.gpstracker.Controller.listener.RadarListener;
-import de.hof_university.gpstracker.Controller.serialize.StorageController;
 import de.hof_university.gpstracker.Model.position.Location;
 import de.hof_university.gpstracker.Model.radar.FriendsPositionModel;
 import de.hof_university.gpstracker.Model.track.Track;
@@ -57,18 +56,16 @@ import de.hof_university.gpstracker.Model.track.Track;
 public class ConnectionController implements NotificationTrackListener{
 
     private final String SERVER_URL = "https://aap.rt-dns.de/connection_db.php";
-    private final String FRIENDS_NEARBY = "getFriends";
     private final String ID = "userID";
     private final String LONGITUDE = "lon";
     private final String LATITUDE = "lat";
     private final String LOG_TAG = ConnectionController.class.getSimpleName();
 
-    private  RadarListener radarController = null;
+    private RadarListener radarController = null;
     private Context context = null;
     private String facebookId;
 
     private Location location;
-    private String receivedJson;
     private List<FriendsPositionModel> position;
 
     public ConnectionController(@NonNull final Context context , final RadarListener radarController){
@@ -87,7 +84,6 @@ public class ConnectionController implements NotificationTrackListener{
         }else {
             throw new FacebookAuthorizationException();
         }
-
 
     }
 
@@ -142,7 +138,6 @@ public class ConnectionController implements NotificationTrackListener{
 
         new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "getTracks");
 
-
     }
 
     public void shareTrack(String friendID, String trackID){
@@ -155,29 +150,15 @@ public class ConnectionController implements NotificationTrackListener{
     public void deleteShareTrack(String friendID, String trackID){
         String json = "json={\"func\":\"delShare\",\"userID\":\"" + facebookId + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
 
-
         new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "deleteSharedTrack");
 
     }
-
 
     @Override
     public void newPosition(@NonNull Location location) {
 
         this.location = location;
         String json = "json={\"func\":\"setPosition\", \"userID\"" + facebookId + ",\"lat\":\"" + location.getLocation().getLatitude() + "\",\"lon\":\"" + location.getLocation().getLongitude() + "\"}";
-
-        JSONObject jsonObject = new JSONObject();
-
-        try {
-            jsonObject.accumulate("id", facebookId);
-            jsonObject.accumulate("latitude", location.getLocation().getLatitude());
-            jsonObject.accumulate("longitude", location.getLocation().getLongitude());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        //json = jsonObject.toString();
 
         new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "sendLastPosition");
     }
@@ -214,157 +195,12 @@ public class ConnectionController implements NotificationTrackListener{
         new HttpsAsyncTaskPosition().execute(SERVER_URL, "json=" + object.toString(), "sendTrack");
     }
 
-
-
-
-    private String receiveJsonData(String urlString, String json) {
-        String result = "";
-
-        HostnameVerifier hostnameVerifier = new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-
-                HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
-                return  hv.verify("aap.rt-dns.de", session);
-            }
-        };
-
-
-        try {
-            SSLContext ctx = SSLContext.getInstance("TLS");
-            ctx.init(null, new TrustManager[]{
-                    new X509TrustManager() {
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] chain, String authType) {
-
-                        }
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] chain, String authType) {
-
-                        }
-
-                        @Override
-                        public X509Certificate[] getAcceptedIssuers() {
-                            return new X509Certificate[]{};
-                        }
-                    }
-            }, null);
-            HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        }
-
-
-        HttpsURLConnection urlConnection = null;
-
-        try {
-            URL url = new URL(urlString);
-
-            urlConnection = (HttpsURLConnection) url.openConnection();
-            urlConnection.setHostnameVerifier(hostnameVerifier);
-            // if(json != null) {
-
-            Log.d("json to send", json);
-
-            urlConnection.setDoOutput(true);
-            urlConnection.setDoInput(true);
-            //urlConnection.setChunkedStreamingMode(0);
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setUseCaches(false);
-            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            //urlConnection.setRequestProperty("Accept", "application/json");
-
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8");
-
-            String debugJson = json + "&debug=true";
-
-            outputStreamWriter.write(debugJson);
-            outputStreamWriter.flush();
-            outputStreamWriter.close();
-
-            InputStream is = new BufferedInputStream(urlConnection.getInputStream());
-            //if(!url.getHost().equals(urlConnection.getURL().getHost())){
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(is, "utf8"));
-
-            String line = "";
-
-            while ((line = in.readLine()) != null){
-                result += line;
-            }
-
-            in.close();
-            // }
-
-            is.close();
-
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-        }
-
-        return result;
-    }
-
-
     public boolean isConnected(Context context){
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
 
     }
-
-
-
-    private void parsePosition(String json){
-        position = new ArrayList<FriendsPositionModel>();
-
-        Log.d("json", json);
-
-        try
-        {
-
-            JSONObject jObj = new JSONObject(json);
-            int status = jObj.getInt("status");
-
-            Log.d("status Code", "" + status);
-
-            JSONArray jFriends = jObj.getJSONArray("data");
-
-            for(int i=0;i<jFriends.length();i++)
-            {
-                JSONObject jFriend = jFriends.getJSONObject(i);
-
-                String id =  jFriend.getString(ID);
-                Double latitude = jFriend.getDouble(LATITUDE);
-                Double longitude = jFriend.getDouble(LONGITUDE);
-
-                FriendsPositionModel positionModel = new FriendsPositionModel(id,latitude, longitude,new Date());
-
-                position.add(positionModel);
-            }
-
-            Log.d("LASTPOSITION", position.get(0).toString());
-        }
-
-        catch(Exception e)
-        {
-            Log.e(LOG_TAG, "Fehler beim Parsen der Position: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-    }
-
-
 
     private class HttpsAsyncTaskPosition extends AsyncTask<String, Void, String>{
 
@@ -381,29 +217,145 @@ public class ConnectionController implements NotificationTrackListener{
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            receivedJson = s;
 
             switch (action) {
                 case "sendLastPosition":
 
                     break;
-                case "sendTrack":
-                    StorageController storageController = new StorageController(context);
-
-
-                    break;
                 case "getWaypointsOfFriends":
                     parsePosition(s);
-                    // if(radarController != null)
                     radarController.setListOfFriends(null, position);
 
                     break;
             }
 
+        }
+
+        private String receiveJsonData(String urlString, String json) {
+            String result = "";
+
+            HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+
+                    HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+                    return  hv.verify("aap.rt-dns.de", session);
+                }
+            };
 
 
+            try {
+                SSLContext ctx = SSLContext.getInstance("TLS");
+                ctx.init(null, new TrustManager[]{
+                        new X509TrustManager() {
+                            @Override
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {
+
+                            }
+
+                            @Override
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {
+
+                            }
+
+                            @Override
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return new X509Certificate[]{};
+                            }
+                        }
+                }, null);
+                HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            }
+
+
+            HttpsURLConnection urlConnection = null;
+
+            try {
+                URL url = new URL(urlString);
+
+                urlConnection = (HttpsURLConnection) url.openConnection();
+                urlConnection.setHostnameVerifier(hostnameVerifier);
+
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setUseCaches(false);
+                urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8");
+
+                String debugJson = json + "&debug=true";
+
+                outputStreamWriter.write(debugJson);
+                outputStreamWriter.flush();
+                outputStreamWriter.close();
+
+                InputStream is = new BufferedInputStream(urlConnection.getInputStream());
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(is, "utf8"));
+
+                String line = "";
+
+                while ((line = in.readLine()) != null){
+                    result += line;
+                }
+
+                in.close();
+                is.close();
+
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+
+            return result;
+        }
+
+
+        private void parsePosition(String json){
+            position = new ArrayList<FriendsPositionModel>();
+
+            try
+            {
+
+                JSONObject jObj = new JSONObject(json);
+                int status = jObj.getInt("status");
+
+                JSONArray jFriends = jObj.getJSONArray("data");
+
+                for(int i=0;i<jFriends.length();i++)
+                {
+                    JSONObject jFriend = jFriends.getJSONObject(i);
+
+                    String id =  jFriend.getString(ID);
+                    Double latitude = jFriend.getDouble(LATITUDE);
+                    Double longitude = jFriend.getDouble(LONGITUDE);
+
+                    FriendsPositionModel positionModel = new FriendsPositionModel(id,latitude, longitude,new Date());
+
+                    position.add(positionModel);
+                }
+
+            }
+
+            catch(Exception e)
+            {
+                Log.e(LOG_TAG, "Fehler beim Parsen der Position: " + e.getMessage());
+                e.printStackTrace();
+            }
 
         }
+
     }
 
     public List<FriendsPositionModel> getPosition() {
