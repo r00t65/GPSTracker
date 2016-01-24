@@ -6,7 +6,6 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
-import com.facebook.Profile;
 
 /**
  * Created by bmairhoermann on 06.01.16.
@@ -30,17 +29,9 @@ public class FbConnector {
         // Returns userID if user is logged in.
         // Returns empty string if user is NOT logged in.
 
-        if (isLoggedIn()) {
+        if (isLoggedIn() == true) {
             return AccessToken.getCurrentAccessToken().getUserId();
         } else {
-            return "";
-        }
-    }
-
-    public String getUserName(){
-        if (isLoggedIn()){
-            return Profile.getCurrentProfile().getName();
-        }else{
             return "";
         }
     }
