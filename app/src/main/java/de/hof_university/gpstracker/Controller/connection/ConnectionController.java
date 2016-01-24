@@ -1,158 +1,126 @@
 package de.hof_university.gpstracker.Controller.connection;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Handler;
-import android.os.Message;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.facebook.AccessToken;
+import com.facebook.FacebookAuthorizationException;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.Profile;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import de.hof_university.gpstracker.Controller.facebook.FbConnector;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import de.hof_university.gpstracker.Controller.listener.NotificationTrackListener;
 import de.hof_university.gpstracker.Controller.listener.RadarListener;
+import de.hof_university.gpstracker.Controller.serialize.StorageController;
 import de.hof_university.gpstracker.Model.position.Location;
 import de.hof_university.gpstracker.Model.radar.FriendsPositionModel;
 import de.hof_university.gpstracker.Model.track.Track;
 
+
 /**
  * Created by Lothar Mödl on 19.11.15.
- * Updated by Patrick Rüpplein on 21.01.16
  */
-public class ConnectionController implements NotificationTrackListener {
+public class ConnectionController implements NotificationTrackListener{
 
+    private final String SERVER_URL = "https://aap.rt-dns.de/connection.php";
+    private final String FRIENDS_NEARBY = "getFriends";
     private final String ID = "userID";
     private final String LONGITUDE = "lon";
     private final String LATITUDE = "lat";
     private final String LOG_TAG = ConnectionController.class.getSimpleName();
-    private final String SERVER_URL = "http://aap.rt-dns.de/connection_db.php";
-    // Server Funktionen
-    private final String ADD_SHARE = "addShare";
-    private final String DEL_SHARE = "delShare";
-    private final String GET_FRIENDS = "getFriends";
-    private final String GET_TRACK = "getTrack";
-    private final String NEW_USER = "newUser";
 
-    // - - - - - - - - - -
-    // Konstanten
-    // - - - - - - - - - -
-    private final String SET_POSITION = "setPosition";
-    ServerRequest serverRequest;
-    FbConnector fbConnector;
-    private RadarListener radarController = null;
+    private  RadarListener radarController = null;
     private Context context = null;
-    private String facebookId = "000000";
+    private String facebookId;
+
+    private Location location;
+    private String receivedJson;
     private List<FriendsPositionModel> position;
-    @SuppressLint("HandlerLeak")
-    public Handler _handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
 
-            System.out.println("ServerResponse recieved data: " + msg.obj);
-
-            try {
-
-                JSONObject reader = new JSONObject((String) msg.obj);
-
-                switch (reader.getInt("status")) {
-                    case 100:
-                        System.out.println("ServerResponse for: " + reader.getString("func") + " - Status: " + reader.getInt("status"));
-                        switch (reader.getString("func")) {
-
-                            case "getFriends":
-                                parsePosition(reader.getJSONArray("data"));
-                                radarController.setListOfFriends(null, position);
-                                break;
-
-                        }
-                        break;
-
-                    case 210:
-
-                        System.out.println("ServerRequest DB Error in: " + reader.getString("func") + " - Status: " + reader.getInt("status"));
-                        System.out.println("DB Error Message: " + reader.getString("debug"));
-                        break;
-
-                    default:
-
-                        System.out.println("ServerRequest Error: " + reader.getString("func") + " - Status: " + reader.getInt("status"));
-                        break;
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            super.handleMessage(msg);
-        }
-    };
-
-    public ConnectionController(@NonNull final Context context, final RadarListener radarController) {
+    public ConnectionController(@NonNull final Context context , final RadarListener radarController){
         this.radarController = radarController;
         this.context = context;
 
-        this.serverRequest = new ServerRequest(this, SERVER_URL);
-        this.fbConnector = new FbConnector();
+        if(AccessToken.getCurrentAccessToken() != null) {
+            FacebookSdk.sdkInitialize(context);
 
-        if (fbConnector.isLoggedIn()) {
-            facebookId = fbConnector.getUserId();
+            try {
+                facebookId = Profile.getCurrentProfile().getId();
+            } catch (NullPointerException e) {
+                Log.e("NullPointerException", "Not logged in or FacebookSdk initialization failed");
+                throw new FacebookAuthorizationException();
+            }
+        }else {
+            throw new FacebookAuthorizationException();
         }
+
+
     }
 
-
-    // - - - - - - - - - -
-    // Server Verbindung
-    // - - - - - - - - - -
-
-    // Freundeposition von Server holen
-
-    public ConnectionController(String facebookId) {
-
-        serverRequest = new ServerRequest(this, SERVER_URL);
+    public ConnectionController(String facebookId){
         this.facebookId = facebookId;
     }
 
-    // Position an Server senden
-
-    public void getWaypointsOfFriends() {
-//        newPosition(new Location(50.298941, 11.968903,new Date())); // -- for debuging purpose
-
+    public void getWaypointsOfFriends()
+    {
         try {
             new GraphRequest(
                     AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
                     new GraphRequest.Callback() {
                         public void onCompleted(GraphResponse response) {
-                            if (response.getJSONObject() != null) {
+                            if(response.getJSONObject() != null) {
                                 try {
                                     JSONArray friends = response.getJSONObject().getJSONArray("data");
                                     JSONArray data = new JSONArray();
 
-                                    for (int i = 0; i < friends.length(); i++) {
+                                    for (int i = 0; i < friends.length(); i++){
                                         JSONObject friend = new JSONObject();
                                         friend.put("id", friends.getJSONObject(i).getString("id"));
 
                                         data.put(friend);
                                     }
-                                    serverRequest.request(GET_FRIENDS, data);
 
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                                    JSONObject object1 = new JSONObject();
+                                    object1.put("func", "getFriends");
+                                    //object1.put("userID",facebookId);
+                                    object1.put("data", data);
+                                    new HttpsAsyncTaskPosition().execute(SERVER_URL, "json=" + object1.toString(), "getWaypointsOfFriends");
+
+                                } catch (JSONException e) { e.printStackTrace(); }
                             }
                         }
                     }
@@ -160,90 +128,58 @@ public class ConnectionController implements NotificationTrackListener {
         } catch (Exception e) {
             Log.d("Facebook_ERROR: ", "getUserFriendlistJSON ");
         }
+
     }
 
 
-    // - - - - - - - - - -
-    // Lokale Methoden
-    // - - - - - - - - - -
+    public void newUser(){
+        String json = "json={\"func\":\"newUser\", \"userId\"" + facebookId + "\"}";
+        new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "newUser");
+    }
 
-    // Freunde Position parsen
+    public void getTracks(String id){
+        String json = "json={\"func\":\"getTrack\",\"userID\"" + id + "\"}";
+
+        new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "getTracks");
+
+
+    }
+
+    public void shareTrack(String userID, String friendID, String trackID){
+        String json = "json={\"func\":\"addShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
+
+        new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "shareTrack");
+
+    }
+
+    public void deleteShareTrack(String userID, String friendID, String trackID){
+        String json = "json={\"func\":\"delShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}";
+
+
+        new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "deleteSharedTrack");
+
+    }
+
 
     @Override
     public void newPosition(@NonNull Location location) {
-        android.location.Location loc = location.getLocation();
-        serverRequest.request(SET_POSITION, facebookId, loc.getLatitude(), loc.getLongitude());
-    }
 
+        this.location = location;
+        String json = "json={\"func\":\"setPosition\", \"userID\"" + facebookId + ",\"lat\":\"" + location.getLocation().getLatitude() + "\",\"lon\":\"" + location.getLocation().getLongitude() + "\"}";
 
-    // - - - - - - - - - -
-    // Getter und Setter
-    // - - - - - - - - - -
-
-    // Freunde Positions Liste
-
-    private void parsePosition(JSONArray jFriends) {
-        position = new ArrayList<>();
+        JSONObject jsonObject = new JSONObject();
 
         try {
-
-            for (int i = 0; i < jFriends.length(); i++) {
-
-                JSONObject jFriend = jFriends.getJSONObject(i);
-
-                String id = jFriend.getString(ID);
-                Double latitude = jFriend.getDouble(LATITUDE);
-                Double longitude = jFriend.getDouble(LONGITUDE);
-
-                position.add(new FriendsPositionModel(id, latitude, longitude, new Date()));
-            }
-
-            Log.d("LASTPOSITION", position.get(0).toString());
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Fehler beim Parsen der Position: " + e.getMessage());
+            jsonObject.accumulate("id", facebookId);
+            jsonObject.accumulate("latitude", location.getLocation().getLatitude());
+            jsonObject.accumulate("longitude", location.getLocation().getLongitude());
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
-    }
+        //json = jsonObject.toString();
 
-    public List<FriendsPositionModel> getPosition() {
-        return position;
-    }
-
-
-    // - - - - - - - - - -
-    // Handler zum Empfangen der Server-Daten
-    // - - - - - - - - - -
-
-    public void setPosition(List<FriendsPositionModel> position) {
-        this.position = position;
-    }
-
-
-    // TODO: Methoden checken
-
-    public boolean isConnected(Context context) {
-        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Activity.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
-
-    public void newUser() {
-        serverRequest.request(NEW_USER, facebookId);
-    }
-
-    public void getTracks(String id) {
-        serverRequest.request(GET_TRACK, facebookId);
-    }
-
-    // TODO: Warum UserID ? UserID = facebookID
-    public void shareTrack(String userID, String friendID, String trackID) {
-        serverRequest.request(ADD_SHARE, facebookId, friendID, trackID);
-    }
-
-    // TODO: Warum UserID ? UserID = facebookID
-    public void deleteShareTrack(String userID, String friendID, String trackID) {
-        serverRequest.request(DEL_SHARE, facebookId, friendID, trackID);
+        new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "sendLastPosition");
     }
 
     @Override
@@ -259,7 +195,7 @@ public class ConnectionController implements NotificationTrackListener {
             object.put("date", Calendar.getInstance().getTimeInMillis() + "");
             JSONArray array = new JSONArray();
 
-            for (Location g : trackList) {
+            for(Location g : trackList){
                 JSONObject o = new JSONObject();
                 o.put("lat", "" + g.getLocation().getLatitude());
                 o.put("lon", "" + g.getLocation().getLongitude());
@@ -274,9 +210,209 @@ public class ConnectionController implements NotificationTrackListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        serverRequest.request(object.toString());
+
+        new HttpsAsyncTaskPosition().execute(SERVER_URL, "json=" + object.toString(), "sendTrack");
     }
 
+
+
+
+    private String receiveJsonData(String urlString, String json) {
+        String result = "";
+
+        HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+
+                HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+                return  hv.verify("aap.rt-dns.de", session);
+            }
+        };
+
+
+        try {
+            SSLContext ctx = SSLContext.getInstance("TLS");
+            ctx.init(null, new TrustManager[]{
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(X509Certificate[] chain, String authType) {
+
+                        }
+
+                        @Override
+                        public void checkServerTrusted(X509Certificate[] chain, String authType) {
+
+                        }
+
+                        @Override
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return new X509Certificate[]{};
+                        }
+                    }
+            }, null);
+            HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+
+
+        HttpsURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(urlString);
+
+            urlConnection = (HttpsURLConnection) url.openConnection();
+            urlConnection.setHostnameVerifier(hostnameVerifier);
+            // if(json != null) {
+
+            Log.d("json to send", json);
+
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            //urlConnection.setChunkedStreamingMode(0);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setUseCaches(false);
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            //urlConnection.setRequestProperty("Accept", "application/json");
+
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8");
+
+            String debugJson = json + "&debug=true";
+
+            outputStreamWriter.write(debugJson);
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+
+            InputStream is = new BufferedInputStream(urlConnection.getInputStream());
+            //if(!url.getHost().equals(urlConnection.getURL().getHost())){
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(is, "utf8"));
+
+            String line = "";
+
+            while ((line = in.readLine()) != null){
+                result += line;
+            }
+
+            in.close();
+            // }
+
+            is.close();
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return result;
+    }
+
+
+    public boolean isConnected(Context context){
+        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Activity.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+
+    }
+
+
+
+    private void parsePosition(String json){
+        position = new ArrayList<FriendsPositionModel>();
+
+        Log.d("json", json);
+
+        try
+        {
+
+            JSONObject jObj = new JSONObject(json);
+            int status = jObj.getInt("status");
+
+            Log.d("status Code", "" + status);
+
+            JSONArray jFriends = jObj.getJSONArray("data");
+
+            for(int i=0;i<jFriends.length();i++)
+            {
+                JSONObject jFriend = jFriends.getJSONObject(i);
+
+                String id =  jFriend.getString(ID);
+                Double latitude = jFriend.getDouble(LATITUDE);
+                Double longitude = jFriend.getDouble(LONGITUDE);
+
+                FriendsPositionModel positionModel = new FriendsPositionModel(id,latitude, longitude,new Date());
+
+                position.add(positionModel);
+            }
+
+            Log.d("LASTPOSITION", position.get(0).toString());
+        }
+
+        catch(Exception e)
+        {
+            Log.e(LOG_TAG, "Fehler beim Parsen der Position: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    private class HttpsAsyncTaskPosition extends AsyncTask<String, Void, String>{
+
+        private String action;
+
+        @Override
+        protected String doInBackground(String... params) {
+            action = params[2];
+
+            return receiveJsonData(params[0], params[1]);
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            receivedJson = s;
+
+            switch (action) {
+                case "sendLastPosition":
+
+                    break;
+                case "sendTrack":
+                    StorageController storageController = new StorageController(context);
+
+
+                    break;
+                case "getWaypointsOfFriends":
+                    parsePosition(s);
+                    // if(radarController != null)
+                    radarController.setListOfFriends(null, position);
+
+                    break;
+            }
+
+
+
+
+        }
+    }
+
+    public List<FriendsPositionModel> getPosition() {
+        return position;
+    }
+
+    public void setPosition(List<FriendsPositionModel> position) {
+        this.position = position;
+    }
 
     @Override
     public void createTrack(@NonNull String name) {
@@ -287,27 +423,4 @@ public class ConnectionController implements NotificationTrackListener {
     public void newWayPoint(@NonNull Location location) throws Track.TrackFinishException {
         //Ignore
     }
-
-
-    // - - - - - - - - - -
-    // Obsolete
-    // - - - - - - - - - -
-
-    // TODO: probably obsolete
-
-//        protected void onPostExecute(String s) {
-//            super.onPostExecute(s);
-//            receivedJson = s;
-//
-//            switch (action) {
-//
-//                case "sendTrack":
-//                    StorageController storageController = new StorageController(context);
-//
-//                    break;
-//            }
-//
-//
-//        }
-
 }
