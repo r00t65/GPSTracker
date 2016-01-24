@@ -42,6 +42,7 @@ public class ServerRequest {
         request(request.toString());
     }
 
+<<<<<<< HEAD
     public void request(String func, String userID) {
         JSONObject request = new JSONObject();
         try {
@@ -54,6 +55,9 @@ public class ServerRequest {
     }
 
     public void request(String func, String userID, double latitude, double longitude) {
+=======
+    public void request(String func, String userID, double latitude, double longitude ) {
+>>>>>>> parent of 74a6b27... - clean up
         JSONObject request = new JSONObject();
         try {
             request.put("func", func);
@@ -66,6 +70,7 @@ public class ServerRequest {
         request(request.toString());
     }
 
+<<<<<<< HEAD
     public void request(String func, String userID, String friendID, String trackID) {
         JSONObject request = new JSONObject();
         try {
@@ -80,6 +85,9 @@ public class ServerRequest {
     }
 
     class RequestRunnable implements Runnable {
+=======
+    class RequestRunnable implements Runnable{
+>>>>>>> parent of 74a6b27... - clean up
 
         String json = "";
 

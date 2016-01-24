@@ -43,15 +43,16 @@ public class ConnectionController implements NotificationTrackListener {
     private final String LOG_TAG = ConnectionController.class.getSimpleName();
     private final String SERVER_URL = "http://aap.rt-dns.de/connection_db.php";
     // Server Funktionen
-    private final String ADD_SHARE = "addShare";
-    private final String DEL_SHARE = "delShare";
     private final String GET_FRIENDS = "getFriends";
+<<<<<<< HEAD
     private final String GET_TRACK = "getTrack";
     private final String NEW_USER = "newUser";
 
     // - - - - - - - - - -
     // Konstanten
     // - - - - - - - - - -
+=======
+>>>>>>> parent of 74a6b27... - clean up
     private final String SET_POSITION = "setPosition";
     ServerRequest serverRequest;
     FbConnector fbConnector;
@@ -114,6 +115,14 @@ public class ConnectionController implements NotificationTrackListener {
         }
     }
 
+<<<<<<< HEAD
+=======
+    public ConnectionController(String facebookId) {
+
+        serverRequest = new ServerRequest(this, SERVER_URL);
+        this.facebookId = facebookId;
+    }
+>>>>>>> parent of 74a6b27... - clean up
 
     // - - - - - - - - - -
     // Server Verbindung
@@ -148,7 +157,7 @@ public class ConnectionController implements NotificationTrackListener {
 
                                         data.put(friend);
                                     }
-                                    serverRequest.request(GET_FRIENDS, data);
+                                    serverRequest.request(GET_FRIENDS,data);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -211,6 +220,7 @@ public class ConnectionController implements NotificationTrackListener {
     }
 
 
+<<<<<<< HEAD
     // - - - - - - - - - -
     // Handler zum Empfangen der Server-Daten
     // - - - - - - - - - -
@@ -220,7 +230,10 @@ public class ConnectionController implements NotificationTrackListener {
     }
 
 
+=======
+>>>>>>> parent of 74a6b27... - clean up
     // TODO: Methoden checken
+    // FB ID an Server senden
 
     public boolean isConnected(Context context) {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Activity.CONNECTIVITY_SERVICE);
@@ -229,6 +242,7 @@ public class ConnectionController implements NotificationTrackListener {
     }
 
     public void newUser() {
+<<<<<<< HEAD
         serverRequest.request(NEW_USER, facebookId);
     }
 
@@ -244,6 +258,22 @@ public class ConnectionController implements NotificationTrackListener {
     // TODO: Warum UserID ? UserID = facebookID
     public void deleteShareTrack(String userID, String friendID, String trackID) {
         serverRequest.request(DEL_SHARE, facebookId, friendID, trackID);
+=======
+        serverRequest.request("{\"func\":\"newUser\", \"userId\"" + facebookId + "\"}");
+    }
+
+
+    public void getTracks(String id) {
+        serverRequest.request("{\"func\":\"getTrack\",\"userID\"" + id + "\"}");
+    }
+
+    public void shareTrack(String userID, String friendID, String trackID) {
+        serverRequest.request("{\"func\":\"addShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}");
+    }
+
+    public void deleteShareTrack(String userID, String friendID, String trackID) {
+        serverRequest.request("{\"func\":\"delShare\",\"userID\":\"" + userID + "\",\"friendID\":\"" + friendID + "\",\"trackID\":\"" + trackID + "\"}");
+>>>>>>> parent of 74a6b27... - clean up
     }
 
     @Override
@@ -287,6 +317,52 @@ public class ConnectionController implements NotificationTrackListener {
     public void newWayPoint(@NonNull Location location) throws Track.TrackFinishException {
         //Ignore
     }
+
+
+    // - - - - - - - - - -
+    // Handler zum Empfangen der Server-Daten
+    // - - - - - - - - - -
+
+    @SuppressLint("HandlerLeak")
+    public Handler _handler = new Handler() {
+        @Override public void handleMessage(Message msg) {
+
+            System.out.println("ServerResponse recieved data: "+msg.obj);
+
+            try {
+
+                JSONObject reader = new JSONObject((String)msg.obj);
+
+                switch(reader.getInt("status")){
+                    case 100:
+                        System.out.println("ServerResponse for: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
+                        switch (reader.getString("func")) {
+
+                            case "getFriends":
+                                parsePosition(reader.getJSONArray("data"));
+//                              if(radarController != null)
+                                radarController.setListOfFriends(null, position);
+                                break;
+
+                        }
+                        break;
+
+                    case 210:
+
+                        System.out.println("ServerRequest DB Error in: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
+                        System.out.println("DB Error Message: "+reader.getString("debug"));
+                        break;
+
+                    default:
+
+                        System.out.println("ServerRequest Error: "+reader.getString("func")+" - Status: "+reader.getInt("status"));
+                        break;
+                }
+
+            } catch (JSONException e) { e.printStackTrace(); }
+            super.handleMessage(msg);
+        }
+    };
 
 
     // - - - - - - - - - -
