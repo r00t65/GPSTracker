@@ -14,8 +14,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 import de.hof_university.gpstracker.Model.position.Location;
 import de.hof_university.gpstracker.Model.track.Track;
@@ -44,6 +46,16 @@ public class StorageController implements StorageControllerInterface {
         ois.close();
         fis.close();
         return track;
+    }
+
+    public static List<String> loadTrackList(){
+        ArrayList<String> list = new ArrayList<>();
+        final File parent = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS);
+        for(File file:parent.listFiles())
+            if(file.getName().endsWith(".track"))
+                list.add(file.getName().substring(0,file.getName().indexOf(".track")));
+        return list;
+
     }
 
     public HashSet<String> getListOfTrackNames() {

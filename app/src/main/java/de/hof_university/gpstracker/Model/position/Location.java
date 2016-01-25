@@ -11,19 +11,26 @@ import java.util.Date;
  * GPSTracker
  */
 public final class Location implements Serializable {
-    private final android.location.Location location;
     private final Date date;
+    private final double altitude;
+    private final float accuracy;
+    private final double longitude;
+    private final double latitude;
 
     public Location(@NonNull final android.location.Location location) {
-        this.location = location;
+        this.altitude = location.getAltitude();
+        this.accuracy = location.getAccuracy();
+        this.longitude = location.getLongitude();
+        this.latitude = location.getLatitude();
         this.date = new Date();
     }
 
     public Location(double latitude, double longitude, @NonNull final Date time) {
-        this.location = new android.location.Location(Context.LOCATION_SERVICE);
-        this.location.setLatitude(latitude);
-        this.location.setLongitude(longitude);
         this.date = time;
+        this.altitude = 0;
+        this.accuracy = 0;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public Date getDate() {
@@ -31,10 +38,13 @@ public final class Location implements Serializable {
     }
 
     public android.location.Location getLocation() {
-        return this.location;
+        android.location.Location location = new android.location.Location(Context.LOCATION_SERVICE);
+        location.setLongitude(longitude);
+        location.setLatitude(latitude);
+        return location;
     }
 
     public String getCoordinates() {
-        return "" + this.location.getLongitude() + "," + this.location.getLatitude() + "," + this.location.getAltitude();
+        return "" + longitude + "," + altitude ;
     }
 }

@@ -193,8 +193,8 @@ public class GPSTrackerFragment extends Fragment{
                 alertDialog.setTitle(getResources().getText(R.string.GPSTracker_alertDialogTracklist) + ": " + storageController.getListOfTrackNames().size());
 
                 final ListView list = new ListView(getActivity());
+                list.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>(StorageController.loadTrackList())));
 
-                list.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>(storageController.getListOfTrackNames())));
                 list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

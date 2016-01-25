@@ -105,7 +105,7 @@ public class MapController implements MapControllerInterface,LoadTrackListener {
 
     @Override
     public void loadOtherTrack(@NonNull Track track) {
-
+        this.getListener().updateTrack(track);
     }
 
     public class GPSChangeListenerMap implements GPSMapChangeListener {
