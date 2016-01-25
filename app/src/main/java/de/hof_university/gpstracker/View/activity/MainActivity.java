@@ -31,15 +31,12 @@ import android.view.MenuItem;
 
 import com.facebook.appevents.AppEventsLogger;
 
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import de.hof_university.gpstracker.Controller.facebook.FbConnector;
-import de.hof_university.gpstracker.Controller.serialize.StorageController;
 import de.hof_university.gpstracker.Controller.service.RadarServiceReceiver;
 import de.hof_university.gpstracker.R;
-import de.hof_university.gpstracker.View.LoadTrack;
 import de.hof_university.gpstracker.View.fragment.GPSTrackerFragment;
 import de.hof_university.gpstracker.View.fragment.LoginLogoutFragment;
 import de.hof_university.gpstracker.View.fragment.MessengerFragment;
@@ -349,13 +346,7 @@ public class MainActivity extends AppCompatActivity
             // File file = new File(path);
             // Initiate the upload
             if (this.fragment instanceof GPSTrackerFragment) {
-                try {
-                    ((LoadTrack) this.fragment).load(StorageController.loadTrackFromUri(uri));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
