@@ -51,7 +51,6 @@ import de.hof_university.gpstracker.Controller.tracking.TrackingController;
 import de.hof_university.gpstracker.Model.position.Location;
 import de.hof_university.gpstracker.Model.track.Track;
 import de.hof_university.gpstracker.R;
-import de.hof_university.gpstracker.View.LoadTrack;
 import de.hof_university.gpstracker.View.activity.MainActivity;
 
 /**
@@ -62,7 +61,7 @@ import de.hof_university.gpstracker.View.activity.MainActivity;
  * Use the {@link GPSTrackerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GPSTrackerFragment extends Fragment implements LoadTrack {
+public class GPSTrackerFragment extends Fragment{
     public static final int FILE_SELECT_CODE = 0;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -243,6 +242,7 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                             e.printStackTrace();
                         }
                         list.setSelection(position);
+                        mapController.loadOtherTrack(track);
                     }
                 });
                 alertDialog.setView(list);
@@ -374,12 +374,6 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void load(@NonNull Track track) {
-        Toast.makeText(getContext(), track.getName(), Toast.LENGTH_LONG).show();
-        this.mapController.getListener().updateTrack(track);
     }
 
     public void doLastTrack(View view) {

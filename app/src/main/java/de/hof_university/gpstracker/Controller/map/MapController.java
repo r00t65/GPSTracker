@@ -3,6 +3,7 @@ package de.hof_university.gpstracker.Controller.map;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import de.hof_university.gpstracker.Controller.listener.LoadTrackListener;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
@@ -25,7 +26,7 @@ import de.hof_university.gpstracker.Model.track.Track;
  * Created by alex on 13.11.15 um 16:09
  * GPSTracker
  */
-public class MapController implements MapControllerInterface {
+public class MapController implements MapControllerInterface,LoadTrackListener {
     private final MapView mapView;
     private final Context activityContext;
     private final GPSChangeListenerMap gpsChangeListenerMap;
@@ -100,6 +101,11 @@ public class MapController implements MapControllerInterface {
     private void clearMap() {
         this.mapView.getOverlays().clear();
         this.mapView.invalidate();
+    }
+
+    @Override
+    public void loadOtherTrack(@NonNull Track track) {
+
     }
 
     public class GPSChangeListenerMap implements GPSMapChangeListener {

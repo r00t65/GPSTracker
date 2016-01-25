@@ -1,4 +1,4 @@
-package de.hof_university.gpstracker.View;
+package de.hof_university.gpstracker.Controller.listener;
 
 import android.support.annotation.NonNull;
 
@@ -9,6 +9,6 @@ import de.hof_university.gpstracker.Model.track.Track;
  * <p/>
  * Redesign by alex on 14.01.16
  */
-public interface LoadTrack {
-    public void load(@NonNull final Track track);
+public interface LoadTrackListener {
+    public void loadOtherTrack(@NonNull final Track track);
 }
