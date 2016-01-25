@@ -213,8 +213,8 @@ public class GPSTrackerFragment extends Fragment{
 
                             if (shareDialog.canShow(ShareLinkContent.class)) {
                                 ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                                        .setContentTitle("GPS Tracker")
-                                        .setContentDescription("Mein awsome Track, yeah!")
+                                        .setContentTitle("Speed Hammer")
+                                        .setContentDescription(myData.toString())
                                         .setContentUrl(Uri.parse("https://maps.google.de/"))
                                         .build();
 
