@@ -116,10 +116,10 @@ public class LoginLogoutFragment extends Fragment {
         //internet
         if (false) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle("Bitte Internet aktivieren");
+            alertDialog.setTitle(getResources().getText(R.string.LoginLogout_alertDialogInternet));
 
             alertDialog.setCancelable(false);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getText(R.string.LoginLogout_alertDialogActivate),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             fragmentClass = LoginLogoutFragment.class;
@@ -145,7 +145,7 @@ public class LoginLogoutFragment extends Fragment {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d("DFGDDÖFKFJÖJDFGD", "onSuccess ");
+                Log.d("onSucess", "onSuccess ");
 
                 profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profilePic);
 
@@ -158,7 +158,7 @@ public class LoginLogoutFragment extends Fragment {
 
             @Override
             public void onCancel() {
-                Log.d("DFGDDÖFKFJÖJDFGD", "onCancel ");
+                Log.d("onCancel", "onCancel ");
             }
 
             @Override

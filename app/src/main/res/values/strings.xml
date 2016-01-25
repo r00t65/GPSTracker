@@ -4,16 +4,14 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Einstellungen</string>
     <string name="title_activity_gpstracker">GPSTrackerActivity</string>
     <string name="title_activity_radar">RadarActivity</string>
     <string name="title_activity_messenger">MessengerActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_login_logout">LoginLogoutActivity</string>
 
-    <string name="messageHint">Enter Message!</string>
-    <string name="sendMessage">Send</string>
-    <string name="reload">Reload</string>
+    <string name="messageHint">Nachricht eingeben</string>
 
     <string name="facebook_app_id">678272075648492</string>
 
@@ -22,6 +20,44 @@
     <string name="tracking">Trackaufzeichnung läuft</string>
 
     <string name="messenger_emptyText">Es ist nicht möglich leere Nachrichten zu schicken</string>
-    <string name="messenger_showCouldNotSendMessage"></string>
+    <string name="messenger_showCouldNotSendMessage">Es ist ein Fehler beim senden aufgetreten, bitte überprüfen sie ihre Internetverbindung und laden Sie den Chat neu.</string>
+    <string name="messenger_showCouldNotConnectToChatToast">Es ist ein Fehler beim verbinden aufgetreten, bitte überprüfen sie ihre Internetverbindung und laden Sie den Chat neu.</string>
+    <string name="messenger_showSuccessfullyConnectedToast">Erfolgreich mit dem Chat verbunden</string>
+    <string name="messenger_alertDialogInternet">Bitte Internet aktivieren</string>
+    <string name="messenger_alertDialogInternetBTN">Aktivieren</string>
+
+    <string name="messenger_alertDialog_Title">Bitte Anmelden</string>
+    <string name="messenger_alertDialog_Text">Um den Messenger nutzen zu können, müssen Sie sich bitte anmelden</string>
+    <string name="messenger_alertDialog_LoginBTN">Anmelden</string>
+    <string name="messenger_alertDialog_cancelBTN">Abbrechen</string>
+
+    <string name="GPSTracker_alertDialogTracklist">Trackliste</string>
+    <string name="GPSTracker_alertDialogTracklistCancelBTN">Abbrechen</string>
+    <string name="GPSTracker_alertDialogTracklistOKBTN">OK</string>
+    <string name="GPSTracker_ToastTrackStart">Track wurde gestartet</string>
+
+    <string name="GPSTracker_alertDialogSave">Track speichern</string>
+    <string name="GPSTracker_alertDialogSaveText">Bitte geben sie den Namen des Tracks ein: </string>
+    <string name="GPSTracker_alertDialogSaveCancelBTN">Abbrechen</string>
+    <string name="GPSTracker_alertDialogSaveOKBTN">OK</string>
+    <string name="GPSTracker_defaultTrackname">Unbenannter Track</string>
+
+    <string name="LoginLogout_alertDialogInternet">Bitte Internet aktivieren</string>
+    <string name="LoginLogout_alertDialogActivate">Aktivieren</string>
+
+    <string name="Radar_alertDialogGPS">Bitte GPS aktivieren</string>
+    <string name="Radar_alertDialogGPSActivate">Aktivieren</string>
+
+    <string name="Radar_alertDialogInternet">Bitte Internet aktivieren</string>
+    <string name="Radar_alertDialogInternetActivate">Aktivieren</string>
+
+    <string name="Radar_alertDialogLogin">Bitte Anmelden</string>
+    <string name="Radar_alertDialogLoginMessage">Um den Radar nutzen zu können, müssen Sie sich bitte anmelden</string>
+    <string name="Radar_alertDialogLoginBTN">Anmelden</string>
+    <string name="Radar_alertDialogLoginCancelBTN">Abbrechen</string>
+
+
     <string name="NotificationTitle">SpeedHammer</string>
+    <string name="sendMessage">Senden</string>
+    <string name="reload">Reload</string>
 </resources>

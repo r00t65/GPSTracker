@@ -60,10 +60,10 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
         //internet
         if (false) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle("Bitte Internet aktivieren");
+            alertDialog.setTitle(getResources().getText(R.string.messenger_alertDialogInternet));
 
             alertDialog.setCancelable(false);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getText(R.string.messenger_alertDialogInternetBTN),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             fragmentClass = LoginLogoutFragment.class;
@@ -86,10 +86,10 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
         facebookConnector = new FbConnector();
         if (!facebookConnector.isLoggedIn()) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle("Bitte Anmelden");
-            alertDialog.setMessage("Um den Messenger nutzen zu können, müssen Sie sich bitte anmelden");
+            alertDialog.setTitle(getResources().getText(R.string.messenger_alertDialog_Title));
+            alertDialog.setMessage(getResources().getText(R.string.messenger_alertDialog_Text));
             alertDialog.setCancelable(false);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Anmelden",
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getText(R.string.messenger_alertDialog_LoginBTN),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             fragmentClass = LoginLogoutFragment.class;
@@ -107,7 +107,7 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
 
                         }
                     });
-            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Abbrechen",
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getText(R.string.messenger_alertDialog_cancelBTN),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -207,17 +207,17 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
 
     @Override
     public void showCouldNotSendMessageToast() {
-        Toast.makeText(getContext(), "Error occured while sending message; check your internet connection and try to reload chat", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), getResources().getText(R.string.messenger_showCouldNotSendMessage), Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showCouldNotConnectToChatToast() {
-        Toast.makeText(getContext(), "Error occured while connecting to chat; check your internet connection and try to reload chat", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), getResources().getText(R.string.messenger_showCouldNotConnectToChatToast), Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showSuccessfullyConnectedToast() {
-        Toast.makeText(getContext(), "Successfully connected to chat", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getResources().getText(R.string.messenger_showCouldNotConnectToChatToast), Toast.LENGTH_SHORT).show();
     }
 
 

@@ -191,7 +191,7 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                alertDialog.setTitle("Trackliste" + storageController.getListOfTrackNames().size());
+                alertDialog.setTitle(getResources().getText(R.string.GPSTracker_alertDialogTracklist) + ": " + storageController.getListOfTrackNames().size());
 
                 final ListView list = new ListView(getActivity());
 
@@ -247,13 +247,13 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                 });
                 alertDialog.setView(list);
 
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Abbrechen",
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getText(R.string.GPSTracker_alertDialogTracklistCancelBTN),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         });
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getText(R.string.GPSTracker_alertDialogTracklistOKBTN),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (track != null)
@@ -273,7 +273,7 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                     getActivity().startService(trackingServiceIntent);
                     isBound = getActivity().bindService(trackingServiceIntent, trackingConnection, Context.BIND_AUTO_CREATE);
                     Context context = getContext();
-                    CharSequence text = "Track wurde gestartet";
+                    CharSequence text = getResources().getText(R.string.GPSTracker_ToastTrackStart);
                     int duration = Toast.LENGTH_SHORT;
 
                     Toast toast = Toast.makeText(context, text, duration);
@@ -287,24 +287,24 @@ public class GPSTrackerFragment extends Fragment implements LoadTrack {
                 } else {
 
                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                    alertDialog.setTitle("Track speichern");
-                    alertDialog.setMessage("Bitte geben sie den Namen des Tracks ein: ");
+                    alertDialog.setTitle(getResources().getText(R.string.GPSTracker_alertDialogSave));
+                    alertDialog.setMessage(getResources().getText(R.string.GPSTracker_alertDialogSaveText));
 
                     final EditText input = new EditText(getActivity());
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
                     alertDialog.setView(input);
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Abbrechen",
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getText(R.string.GPSTracker_alertDialogSaveCancelBTN),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
                             });
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getText(R.string.GPSTracker_alertDialogSaveOKBTN),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     trackName = input.getText().toString();
                                     if (input.getText().toString().isEmpty()) {
-                                        trackName = "Unbenannter Track";
+                                        trackName = ""+getResources().getText(R.string.GPSTracker_defaultTrackname);
                                         dialog.dismiss();
                                     }
                                     PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(TrackingController.SharedReNameTrack, trackName).commit();

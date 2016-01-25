@@ -77,10 +77,10 @@ public class RadarFragment extends Fragment {
         //gps
         if (false) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle("Bitte GPS aktivieren");
+            alertDialog.setTitle(getResources().getText(R.string.Radar_alertDialogGPS));
 
             alertDialog.setCancelable(false);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getText(R.string.Radar_alertDialogGPSActivate),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             fragmentClass = LoginLogoutFragment.class;
@@ -105,10 +105,10 @@ public class RadarFragment extends Fragment {
         //internet
         if (false) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle("Bitte Internet aktivieren");
+            alertDialog.setTitle(getResources().getText(R.string.Radar_alertDialogInternet));
 
             alertDialog.setCancelable(false);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aktivieren",
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getText(R.string.Radar_alertDialogInternetActivate),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             fragmentClass = LoginLogoutFragment.class;
@@ -135,10 +135,10 @@ public class RadarFragment extends Fragment {
         facebookConnector = new FbConnector();
         if (!facebookConnector.isLoggedIn()) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle("Bitte Anmelden");
-            alertDialog.setMessage("Um den Radar nutzen zu können, müssen Sie sich bitte anmelden");
+            alertDialog.setTitle(getResources().getText(R.string.Radar_alertDialogLogin));
+            alertDialog.setMessage(getResources().getText(R.string.Radar_alertDialogLoginMessage));
             alertDialog.setCancelable(false);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Anmelden",
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getText(R.string.Radar_alertDialogLoginBTN),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             fragmentClass = LoginLogoutFragment.class;
@@ -156,7 +156,7 @@ public class RadarFragment extends Fragment {
 
                         }
                     });
-            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Abbrechen",
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getText(R.string.Radar_alertDialogLoginCancelBTN),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
