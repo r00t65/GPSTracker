@@ -16,7 +16,7 @@ import de.hof_university.gpstracker.Model.position.SensorData;
  */
 public class SensorController implements SensorControllerInterface {
 
-    private static final int UPDATE_THRESHOLD = 2305;
+    private static final int UPDATE_THRESHOLD = 1000;
     private SensorManager mSMgr;
     private Sensor sMotion;
     private Sensor lAcc;

@@ -23,7 +23,7 @@ public final class SensorData implements Serializable {
 
     @Override
     public String toString() {
-        return "X: "+mLinX+" Y: "+mLinY+" Z: "+mLinZ;
+        return "X: "+String.format("%.03f", mLinX)+" Y: "+String.format("%.03f", mLinY)+" Z: "+String.format("%.03f", mLinZ);
     }
 
     public float getX() { return mLinX; }
