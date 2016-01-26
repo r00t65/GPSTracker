@@ -2,8 +2,11 @@ package de.hof_university.gpstracker.Controller.connection;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -26,7 +29,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -374,4 +380,60 @@ public class ConnectionController implements NotificationTrackListener{
     public void newWayPoint(@NonNull Location location) throws Track.TrackFinishException {
         //Ignore
     }
+
+
+    //Profilbild herunterladen
+
+    public void getProfileImage(){
+        if (AccessToken.getCurrentAccessToken() != null){
+            Profile profile = Profile.getCurrentProfile();
+            Uri uri = profile.getProfilePictureUri(50, 50);
+
+            new DownloadImageTask().execute(uri.toString());
+        }
+    }
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap>{
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            Bitmap menuImage = null;
+
+            try {
+                URL url = new URL(params[0]);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setDoInput(true);
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                menuImage = BitmapFactory.decodeStream(inputStream);
+
+
+                inputStream.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return menuImage;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+
+
+        }
+    }
+
 }
