@@ -17,6 +17,7 @@ import android.util.Log;
 import java.io.IOException;
 
 import de.hof_university.gpstracker.Controller.listener.GPSMapChangeListener;
+import de.hof_university.gpstracker.Controller.listener.SensorChangeListener;
 import de.hof_university.gpstracker.Controller.sensor.GPSController;
 import de.hof_university.gpstracker.Controller.tracking.TrackingController;
 import de.hof_university.gpstracker.R;
@@ -135,7 +136,7 @@ public class TrackingService extends Service {
 
     public void registerListener(GPSMapChangeListener gpsChangeListener) {
         //trackingController.registerListener(gpsChangeListener);
-        trackingController.registerGPSListener(gpsChangeListener);
+
     }
 
     public void unregisterListener() {
@@ -145,6 +146,11 @@ public class TrackingService extends Service {
 
     public void saveTrack(final String trackName) throws IOException, ClassNotFoundException {
         this.trackingController.trackFinish(null);
+    }
+
+    public void registerListeners(GPSMapChangeListener listener, SensorChangeListener sensorChangeListener) {
+        trackingController.registerGPSListener(listener);
+        trackingController.registerSensorListener(sensorChangeListener);
     }
 
     private final class ServiceHandler extends Handler {

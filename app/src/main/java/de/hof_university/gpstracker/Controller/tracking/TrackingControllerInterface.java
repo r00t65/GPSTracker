@@ -28,4 +28,6 @@ public interface TrackingControllerInterface extends GPSChangeListener, SensorCh
     public void onStartService();
 
     public void onDestroyService();
+
+    void registerSensorListener(SensorChangeListener sensorChangeListener);
 }

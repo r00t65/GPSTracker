@@ -33,6 +33,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 
+import de.hof_university.gpstracker.Controller.listener.SensorChangeListener;
+import de.hof_university.gpstracker.Model.position.SensorData;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.views.MapView;
@@ -81,6 +83,12 @@ public class GPSTrackerFragment extends Fragment{
     private Fragment fragment = null;
     private CallbackManager callbackManager;
     private ShareDialog shareDialog;
+    private SensorChangeListener sensorChangeListener = new SensorChangeListener() {
+        @Override
+        public void updateSensorData(SensorData sensorData) {
+
+        }
+    };
 
 
     // private Button lastTrackButton;
@@ -93,7 +101,7 @@ public class GPSTrackerFragment extends Fragment{
             Log.d("Binder", "binder");
             TrackingService.LocalBinder binder = (TrackingService.LocalBinder) service;
             mService = binder.getService();
-            mService.registerListener(mapController.getListener());
+            mService.registerListeners(mapController.getListener(),sensorChangeListener);
         }
 
         @Override

@@ -10,6 +10,7 @@ import java.util.Date;
 
 import de.hof_university.gpstracker.Controller.listener.GPSMapChangeListener;
 import de.hof_university.gpstracker.Controller.listener.NotificationTrackListener;
+import de.hof_university.gpstracker.Controller.listener.SensorChangeListener;
 import de.hof_university.gpstracker.Controller.serialize.StorageController;
 import de.hof_university.gpstracker.Model.position.Location;
 import de.hof_university.gpstracker.Model.position.SensorData;
@@ -26,6 +27,7 @@ public final class TrackingController implements TrackingControllerInterface {
     public Track track;
     private GPSMapChangeListener gpsChangeListener;
     private NotificationTrackListener listenerForServerConnetion;
+    private SensorChangeListener sensorChangeListenerUI;
 
     public TrackingController(@NonNull final Context context) {
         this.context = context;
@@ -64,6 +66,11 @@ public final class TrackingController implements TrackingControllerInterface {
     @Override
     public void onDestroyService() {
 
+    }
+
+    @Override
+    public void registerSensorListener(SensorChangeListener sensorChangeListener) {
+        this.sensorChangeListenerUI = sensorChangeListener;
     }
 
     @Override
@@ -121,5 +128,6 @@ public final class TrackingController implements TrackingControllerInterface {
     @Override
     public void updateSensorData(SensorData sensorData) {
         this.track.addNode(sensorData);
+        this.sensorChangeListenerUI.updateSensorData(sensorData);
     }
 }
