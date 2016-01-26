@@ -60,4 +60,7 @@
     <string name="NotificationTitle">SpeedHammer</string>
     <string name="sendMessage">Senden</string>
     <string name="reload">Reload</string>
+    <string name="activate_radar">Radar aktivieren</string>
+    <string name="reload_radar">Aktualisierung</string>
+    <string name="interval_rada">Interval für Radaraktualisierung</string>
 </resources>
