@@ -9,23 +9,25 @@ import java.util.Date;
  * Redesign by alex on 17.01.16
  */
 public final class SensorData implements Serializable {
-    private final double speed;
-    private final double slant;
+
+    private float mLinX, mLinY, mLinZ;
     private final Date date;
 
-    public SensorData(final double speed, final double slant) {
+    public SensorData(final float linX, final float linY, final float linZ) {
         this.date = new Date();
-        this.speed = speed;
-        this.slant = slant;
+        mLinX = linX;
+        mLinY = linY;
+        mLinZ = linZ;
+
     }
 
-    public double getSpeed() {
-        return speed;
+    public float getX() { return mLinX; }
+
+    public float getY() {
+        return mLinY;
     }
 
-    public double getSlant() {
-        return slant;
-    }
+    public float getZ() { return mLinZ; }
 
     public Date getDate() {
         return this.date;
