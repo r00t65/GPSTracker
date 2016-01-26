@@ -21,6 +21,11 @@ public final class SensorData implements Serializable {
 
     }
 
+    @Override
+    public String toString() {
+        return "X: "+mLinX+" Y: "+mLinY+" Z: "+mLinZ;
+    }
+
     public float getX() { return mLinX; }
 
     public float getY() {

@@ -86,7 +86,7 @@ public class GPSTrackerFragment extends Fragment{
     private SensorChangeListener sensorChangeListener = new SensorChangeListener() {
         @Override
         public void updateSensorData(SensorData sensorData) {
-
+            textViewSens.setText(sensorData.toString());
         }
     };
 
