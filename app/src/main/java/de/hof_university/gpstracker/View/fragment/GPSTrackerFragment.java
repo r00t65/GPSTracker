@@ -376,7 +376,6 @@ public class GPSTrackerFragment extends Fragment{
 
     @Override
     public void onPause() {
-        getActivity().unbindService(trackingConnection);
         super.onPause();
     }
 
