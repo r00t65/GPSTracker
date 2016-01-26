@@ -18,6 +18,7 @@ import java.io.IOException;
 
 import de.hof_university.gpstracker.Controller.listener.GPSMapChangeListener;
 import de.hof_university.gpstracker.Controller.sensor.GPSController;
+import de.hof_university.gpstracker.Controller.sensor.SensorController;
 import de.hof_university.gpstracker.Controller.tracking.TrackingController;
 import de.hof_university.gpstracker.R;
 import de.hof_university.gpstracker.View.activity.MainActivity;
@@ -36,6 +37,7 @@ public class TrackingService extends Service {
     //-------------------------------Controller---------------------------
     private GPSController gpsController;
     private TrackingController trackingController;
+    private SensorController sensorController;
     //--------------------------------------------------------------------
 
     @Override
@@ -43,6 +45,7 @@ public class TrackingService extends Service {
         Log.v("Service", "Service erstellt");
         //-------------------------------Controller---------------------------
         trackingController = new TrackingController(this.getBaseContext());
+        sensorController = new SensorController(this.getBaseContext(),trackingController);
         try {
             gpsController = new GPSController(this.getBaseContext(), this.trackingController);
         } catch (GPSController.GPSException e) {
