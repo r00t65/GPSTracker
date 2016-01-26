@@ -1,10 +1,15 @@
 package de.hof_university.gpstracker.Controller.radar;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.Profile;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
@@ -13,6 +18,13 @@ import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -82,7 +94,8 @@ public class RadarController implements RadarControllerInterface {
         this.radarView.getOverlays().add(this.mLocationOverlay);
         this.mLocationOverlay.enableFollowLocation();
         this.mLocationOverlay.enableMyLocation();
-        this.mLocationOverlay.setPersonIcon(BitmapFactory.decodeResource(this.context.getResources(), R.drawable.radar96));
+        this.mLocationOverlay.setPersonIcon(BitmapFactory.decodeResource(this.context.getResources(), R.drawable.person));
+        this.getProfileImage();
 
         mRotationGestureOverlay = new RotationGestureOverlay(this.context, this.radarView);
         mRotationGestureOverlay.setEnabled(true);
@@ -103,6 +116,64 @@ public class RadarController implements RadarControllerInterface {
 
     private void clearRadar() {
         this.radarView.getOverlays().clear();
+
+        this.mLocationOverlay = new MyLocationNewOverlay(context, new GpsMyLocationProvider(context), this.radarView);
+        this.radarView.getOverlays().add(this.mLocationOverlay);
+        this.mLocationOverlay.enableFollowLocation();
+        //this.mLocationOverlay.enableMyLocation();
+        //this.mLocationOverlay.setPersonIcon(BitmapFactory.decodeResource(this.context.getResources(), R.drawable.person));
+
         this.radarView.invalidate();
+    }
+
+    public void getProfileImage(){
+        if (AccessToken.getCurrentAccessToken() != null){
+            Profile profile = Profile.getCurrentProfile();
+            Uri uri = profile.getProfilePictureUri(50, 50);
+
+            new DownloadImageTask().execute(uri.toString());
+        }
+    }
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            Bitmap menuImage = null;
+
+            try {
+                URL url = new URL(params[0]);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setDoInput(true);
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                menuImage = BitmapFactory.decodeStream(inputStream);
+
+
+                inputStream.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return menuImage;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            mLocationOverlay.setPersonIcon(bitmap);
+        }
     }
 }
