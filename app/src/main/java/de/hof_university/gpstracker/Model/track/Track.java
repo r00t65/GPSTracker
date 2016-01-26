@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.hof_university.gpstracker.Model.position.Location;
+import de.hof_university.gpstracker.Model.position.SensorData;
 
 /**
  * Created by alex on 17.12.15.
@@ -16,6 +17,7 @@ import de.hof_university.gpstracker.Model.position.Location;
 public final class Track implements Serializable {
     private final String NAME;
     private final ArrayList<Location> trackList = new ArrayList<>();
+    private final ArrayList<SensorData> sensorList = new ArrayList<>();
 
     private boolean trackIsFinish = false;
 
@@ -54,6 +56,10 @@ public final class Track implements Serializable {
 
     public List<Location> getTracks() {
         return this.trackList;
+    }
+
+    public void addNode(SensorData sensorData) {
+        this.sensorList.add(sensorData);
     }
 
     public final class TrackFinishException extends Exception {

@@ -5,12 +5,13 @@ import android.support.annotation.NonNull;
 import de.hof_university.gpstracker.Controller.listener.GPSChangeListener;
 import de.hof_university.gpstracker.Controller.listener.GPSMapChangeListener;
 import de.hof_university.gpstracker.Controller.listener.NotificationTrackListener;
+import de.hof_university.gpstracker.Controller.listener.SensorChangeListener;
 
 /**
  * Created by alex on 05.01.16.
  * GPSTracker
  */
-public interface TrackingControllerInterface extends GPSChangeListener {
+public interface TrackingControllerInterface extends GPSChangeListener, SensorChangeListener {
     /**
      * Für den Listener im MapController
      *

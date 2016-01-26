@@ -12,6 +12,7 @@ import de.hof_university.gpstracker.Controller.listener.GPSMapChangeListener;
 import de.hof_university.gpstracker.Controller.listener.NotificationTrackListener;
 import de.hof_university.gpstracker.Controller.serialize.StorageController;
 import de.hof_university.gpstracker.Model.position.Location;
+import de.hof_university.gpstracker.Model.position.SensorData;
 import de.hof_university.gpstracker.Model.track.Track;
 
 
@@ -115,5 +116,10 @@ public final class TrackingController implements TrackingControllerInterface {
     private void setNewName(String newName) {
         Toast.makeText(this.context, newName, Toast.LENGTH_LONG).show();
         this.track = new Track(newName, this.track);
+    }
+
+    @Override
+    public void updateSensorData(SensorData sensorData) {
+        this.track.addNode(sensorData);
     }
 }

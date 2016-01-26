@@ -124,6 +124,7 @@ public class MapController implements MapControllerInterface,LoadTrackListener {
             //clearMap();
             mTrack = track;
             drawTrack(track.getTracks());
+            drawPosition(track.getTracks().get(0));
             if (mPosition != null)
                 drawPosition(mPosition);
         }
