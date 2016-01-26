@@ -104,9 +104,9 @@ public final class TrackingController implements TrackingControllerInterface {
     public void trackFinish(Track track) throws IOException, ClassNotFoundException {
         this.saveTrack();
 
-        if (this.gpsChangeListener != null) {
+        /*if (this.gpsChangeListener != null) {
             this.gpsChangeListener.updateTrack(this.track);
-        }
+        }*/
         if (this.listenerForServerConnetion != null)
             this.listenerForServerConnetion.trackFinish(this.track);
     }

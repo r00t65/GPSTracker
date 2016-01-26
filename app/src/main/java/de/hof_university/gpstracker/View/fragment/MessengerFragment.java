@@ -217,7 +217,7 @@ public class MessengerFragment extends Fragment implements MessengerInterface, V
 
     @Override
     public void showSuccessfullyConnectedToast() {
-        Toast.makeText(getContext(), getResources().getText(R.string.messenger_showCouldNotConnectToChatToast), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getResources().getText(R.string.messenger_showSuccessfullyConnectedToast), Toast.LENGTH_SHORT).show();
     }
 
 

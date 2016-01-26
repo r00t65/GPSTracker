@@ -55,7 +55,7 @@ public class TrackingService extends Service {
         //--------------------------------------------------------------------
         HandlerThread thread = new HandlerThread("ServiceStartArg", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
-
+        sensorController.onStartService();
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
     }
@@ -104,6 +104,7 @@ public class TrackingService extends Service {
         //-------------------------------Controller---------------------------
         try {
             gpsController.endTracking();
+            sensorController.onDestroyService();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
