@@ -1,6 +1,7 @@
 package de.hof_university.gpstracker.Controller.radar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -174,6 +175,8 @@ public class RadarController implements RadarControllerInterface {
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             mLocationOverlay.setPersonIcon(bitmap);
+            clearRadar();
+            radarView.invalidate();
         }
     }
 }

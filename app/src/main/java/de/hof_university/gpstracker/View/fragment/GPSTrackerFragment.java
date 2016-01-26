@@ -77,7 +77,7 @@ public class GPSTrackerFragment extends Fragment{
     private String trackName = "G";
     private OnFragmentInteractionListener mListener;
     private MapController mapController;
-    private Intent trackingServiceIntent;
+    //private Intent trackingServiceIntent;
     private Boolean isBound = false;
     private TextView textViewSens;
     private Fragment fragment = null;
@@ -152,11 +152,11 @@ public class GPSTrackerFragment extends Fragment{
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
-
-
+        if(((MainActivity)getActivity()).trackingConnection == null)
+            ((MainActivity)getActivity()).trackingConnection = trackingConnection;
         //Tracking Service Button
-
-        trackingServiceIntent = new Intent(this.getActivity(), TrackingService.class);
+        if(((MainActivity)getActivity()).trackingServiceIntent == null)
+            ((MainActivity)getActivity()).trackingServiceIntent = new Intent(this.getActivity(), TrackingService.class);
 
     }
 
@@ -278,8 +278,9 @@ public class GPSTrackerFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 if (!isMyServiceRunning(TrackingService.class)) {//TODO https://github.com/iPaulPro/aFileChooser
-                    getActivity().startService(trackingServiceIntent);
-                    isBound = getActivity().bindService(trackingServiceIntent, trackingConnection, Context.BIND_AUTO_CREATE);
+                    getActivity().startService(((MainActivity)getActivity()).trackingServiceIntent);
+                    isBound = getActivity().bindService(((MainActivity)getActivity()).trackingServiceIntent, trackingConnection, Context.BIND_AUTO_CREATE);
+                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("isBound",isBound).commit();
                     Context context = getContext();
                     CharSequence text = getResources().getText(R.string.GPSTracker_ToastTrackStart);
                     int duration = Toast.LENGTH_SHORT;
@@ -287,8 +288,6 @@ public class GPSTrackerFragment extends Fragment{
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
                     fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.greenRunning)));
-
-
 //                    String test = mService.getServiceInfo();
 //                    Log.v("BoundService", test);
 
@@ -316,11 +315,12 @@ public class GPSTrackerFragment extends Fragment{
                                         dialog.dismiss();
                                     }
                                     PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(TrackingController.SharedReNameTrack, trackName).commit();
-
-                                    if (isBound) {
-                                        getActivity().unbindService(trackingConnection);
+                                    getActivity().bindService(((MainActivity)getActivity()).trackingServiceIntent, ((MainActivity)getActivity()).trackingConnection, Context.BIND_AUTO_CREATE);
+                                    if (PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("isBound",isBound)) {
+                                        getActivity().unbindService(((MainActivity)getActivity()).trackingConnection);
+                                        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("isBound",false).commit();
                                     }
-                                    getActivity().stopService(trackingServiceIntent);
+                                    getActivity().stopService(((MainActivity)getActivity()).trackingServiceIntent);
                                     fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.colorAccent)));
                                 }
                             });
@@ -376,11 +376,14 @@ public class GPSTrackerFragment extends Fragment{
 
     @Override
     public void onPause() {
+        getActivity().unbindService(trackingConnection);
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
+        //this.trackingServiceIntent.
+        //PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("","");
         super.onDestroy();
     }
 

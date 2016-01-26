@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -53,6 +50,8 @@ public class MainActivity extends AppCompatActivity
     private Fragment fragment = null;
     private boolean isRadarActive;
     private long radarInterval;
+    public Intent trackingServiceIntent = null;
+    public ServiceConnection trackingConnection;
 
     public static void startGPSEnableDialog(@NonNull final Activity activity) {
         AlertDialog alertDialog = new AlertDialog.Builder(activity).create();

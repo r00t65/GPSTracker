@@ -128,6 +128,7 @@ public final class TrackingController implements TrackingControllerInterface {
     @Override
     public void updateSensorData(SensorData sensorData) {
         this.track.addNode(sensorData);
-        this.sensorChangeListenerUI.updateSensorData(sensorData);
+        if(this.sensorChangeListenerUI != null)
+            this.sensorChangeListenerUI.updateSensorData(sensorData);
     }
 }
