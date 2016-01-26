@@ -190,7 +190,7 @@ public class GPSTrackerFragment extends Fragment{
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                alertDialog.setTitle(getResources().getText(R.string.GPSTracker_alertDialogTracklist) + ": " + storageController.getListOfTrackNames().size());
+                alertDialog.setTitle(getResources().getText(R.string.GPSTracker_alertDialogTracklist));
 
                 final ListView list = new ListView(getActivity());
                 list.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>(StorageController.loadTrackList())));

@@ -31,7 +31,6 @@ public class StorageController implements StorageControllerInterface {
     private final static String TRACKS = "track.txt";
     private final static String DIR_TRACKS = "tracks";
     private final Context context;
-    private final HashSet<String> listOfTracks = new HashSet<String>();
 
     public StorageController(@NonNull final Context context) {
         this.context = context;
@@ -58,21 +57,12 @@ public class StorageController implements StorageControllerInterface {
 
     }
 
-    public HashSet<String> getListOfTrackNames() {
-        return this.listOfTracks;
-    }
-
     @Override
     public void onStartService() throws IOException, ClassNotFoundException {
         final File parent = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS);
         Log.d("ParentFile", parent.getAbsolutePath());
         if (!parent.exists())
             parent.mkdir();
-        try {
-            this.loadFiles();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -105,7 +95,6 @@ public class StorageController implements StorageControllerInterface {
     }
 
     private void updateFiles(@NonNull final Track track) throws IOException {
-        this.listOfTracks.add(track.getName());
         if (track != null) {
             final File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKS);
             file.createNewFile();
@@ -113,35 +102,7 @@ public class StorageController implements StorageControllerInterface {
             final FileWriter fileWriter = new FileWriter(file, true);
             fileWriter.write(track.getName() + "\n");
             fileWriter.close();
-
-            PreferenceManager.getDefaultSharedPreferences(this.context).edit().putStringSet(SharedTracks, this.listOfTracks).commit();
-            //final File file2 = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKSBIN);
-            //file2.createNewFile();
-            //final FileOutputStream fos = new FileOutputStream(file);
-
-            //final ObjectOutputStream oos = new ObjectOutputStream(fos);
-            // oos.writeObject(this.listOfTracks);
-            //oos.close();
-            // fos.close();
         }
-    }
-
-    private void loadFiles() throws IOException, ClassNotFoundException {
-        //final File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKSBIN);
-        //if (file.createNewFile()) {
-        //    this.updateFiles(new Track("Liste aller Tracks:\n"));
-        //}
-        //final FileInputStream fis = new FileInputStream(file);
-
-        //final ObjectInputStream ois = new ObjectInputStream(fis);
-        //final List<String> list = (ArrayList<String>) ois.readObject();
-        //ois.close();
-
-        //this.listOfTracks.clear();
-        //this.listOfTracks.addAll(list);
-        Log.e("Test", "" + listOfTracks.size());
-        this.listOfTracks.addAll(PreferenceManager.getDefaultSharedPreferences(this.context).getStringSet(SharedTracks, this.listOfTracks));
-
     }
 
     private void saveTrackInFile(@NonNull final Track track) throws IOException {

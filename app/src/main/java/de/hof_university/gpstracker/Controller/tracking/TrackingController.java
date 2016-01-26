@@ -107,7 +107,7 @@ public final class TrackingController implements TrackingControllerInterface {
         this.setNewName(PreferenceManager.getDefaultSharedPreferences(context).getString(TrackingController.SharedReNameTrack, "unnamed Track"));
         final StorageController str = new StorageController(this.context);
         str.onStartService();
-        if (str.getListOfTrackNames().contains(this.track.getName()))
+        if (StorageController.loadTrackList().contains(this.track.getName()))
             this.track = new Track(this.track.getName() + "|" + new Date(), this.track);
         str.saveTrack(this.track);
     }

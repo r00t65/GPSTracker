@@ -13,13 +13,11 @@ import java.util.Date;
 public final class Location implements Serializable {
     private final Date date;
     private final double altitude;
-    private final float accuracy;
     private final double longitude;
     private final double latitude;
 
     public Location(@NonNull final android.location.Location location) {
         this.altitude = location.getAltitude();
-        this.accuracy = location.getAccuracy();
         this.longitude = location.getLongitude();
         this.latitude = location.getLatitude();
         this.date = new Date();
@@ -28,7 +26,6 @@ public final class Location implements Serializable {
     public Location(double latitude, double longitude, @NonNull final Date time) {
         this.date = time;
         this.altitude = 0;
-        this.accuracy = 0;
         this.longitude = longitude;
         this.latitude = latitude;
     }
