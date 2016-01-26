@@ -66,7 +66,7 @@ public class RadarController implements RadarControllerInterface {
     }
 
     private void drawFriend(@NonNull final FriendsPositionModel friend) {
-        Toast.makeText(this.context, friend.getLocation().getLocation().toString(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this.context, friend.getLocation().getLocation().toString(), Toast.LENGTH_LONG).show();
 
         final FriendMapOverlay mapPoint = new FriendMapOverlay(this.context, friend);
         this.radarView.getOverlayManager().add(mapPoint);
