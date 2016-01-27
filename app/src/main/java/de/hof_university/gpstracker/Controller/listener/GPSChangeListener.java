@@ -8,7 +8,7 @@ import de.hof_university.gpstracker.Model.position.Location;
 import de.hof_university.gpstracker.Model.track.Track;
 
 /**
- * TODO:Wird in TrackController verwendet und an den GPSController übergeben
+ * Wird in TrackController verwendet und an den GPSController übergeben
  * Created by alex on 05.01.16.
  * GPSTracker
  */

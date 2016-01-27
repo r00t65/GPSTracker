@@ -12,6 +12,8 @@ import de.hof_university.gpstracker.Controller.listener.SensorChangeListener;
 import de.hof_university.gpstracker.Model.position.SensorData;
 
 /**
+ * Liest SensorDaten vom System und packt sie in SensorData
+ *
  * Created by alex on 09.12.15.
  */
 public class SensorController implements SensorControllerInterface {
@@ -25,14 +27,10 @@ public class SensorController implements SensorControllerInterface {
     private TriggerEventListener mTriggerEventListener;
     private SensorChangeListener mSensorChangeListener;
 
-    //private TextView sData;
     private long mLastUpdate;
     private float linX, linY, linZ, rotX, rotY, rotZ, gyrX, gyrY, gyrZ;
 
     public SensorController(Context context, SensorChangeListener sensorChangeListener) {
-
-        //Textview
-        //sData = (TextView) findViewById(R.id.sData);
 
         //Listener
         mSensorChangeListener = sensorChangeListener;
@@ -58,7 +56,20 @@ public class SensorController implements SensorControllerInterface {
         };*/
     }
 
-    //New sensor reading
+    /**
+     * Called when sensor values have changed.
+     * <p>See {@link android.hardware.SensorManager SensorManager}
+     * for details on possible sensor types.
+     * <p>See also {@link android.hardware.SensorEvent SensorEvent}.
+     *
+     * <p><b>NOTE:</b> The application doesn't own the
+     * {@link android.hardware.SensorEvent event}
+     * object passed as a parameter and therefore cannot hold on to it.
+     * The object may be part of an internal pool and may be reused by
+     * the framework.
+     *
+     * @param event the {@link android.hardware.SensorEvent SensorEvent}.
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
 
@@ -91,12 +102,25 @@ public class SensorController implements SensorControllerInterface {
         }
     }
 
+    /**
+     * Called when the accuracy of the registered sensor has changed.
+     *
+     * <p>See the SENSOR_STATUS_* constants in
+     * {@link android.hardware.SensorManager SensorManager} for details.
+     *
+     * @param accuracy The new accuracy of this sensor, one of
+     *         {@code SensorManager.SENSOR_STATUS_*}
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 
-    //Register
+    /**
+     * Ist für den Lebenszyklus von Services ausgelegt
+     *
+     * Die Listener werden Registriert
+     */
     @Override
     public void onStartService() {
         mSMgr.registerListener(this, lAcc, SensorManager.SENSOR_DELAY_UI);
@@ -107,7 +131,11 @@ public class SensorController implements SensorControllerInterface {
         mLastUpdate = System.currentTimeMillis();
     }
 
-    //Unregister
+    /**
+     * Ist für den Lebenszyklus von Services ausgelegt
+     *
+     * Die Listener werden entfernt
+     */
     @Override
     public void onDestroyService() {
         mSMgr.unregisterListener(this);

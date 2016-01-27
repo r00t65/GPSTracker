@@ -26,6 +26,9 @@ public final class TrackingController implements TrackingControllerInterface {
     private final Context context;
     public Track track;
     private GPSMapChangeListener gpsChangeListener;
+    /**
+     * Für den ConnectionController
+     */
     private NotificationTrackListener listenerForServerConnetion;
     private SensorChangeListener sensorChangeListenerUI;
 

@@ -23,6 +23,7 @@ import de.hof_university.gpstracker.Model.position.Location;
 import de.hof_university.gpstracker.Model.track.Track;
 
 /**
+ * Speicherverwaltung der Tracks
  * Created by alex on 17.12.15.
  * GPSTracker
  */
@@ -36,6 +37,13 @@ public class StorageController implements StorageControllerInterface {
         this.context = context;
     }
 
+    /**
+     * Für das Laden von Tracks, welche an anderen Speicherstellen liegen
+     * @param uri
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static Track loadTrackFromUri(Uri uri) throws IOException, ClassNotFoundException {
         final File file = new File(uri.getPath());
         final FileInputStream fis = new FileInputStream(file);
@@ -47,6 +55,10 @@ public class StorageController implements StorageControllerInterface {
         return track;
     }
 
+    /**
+     * Erzeugt eine Liste aller vorhandenen Tracks
+     * @return
+     */
     public static List<String> loadTrackList(){
         ArrayList<String> list = new ArrayList<>();
         final File parent = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS);
@@ -57,6 +69,11 @@ public class StorageController implements StorageControllerInterface {
 
     }
 
+    /**
+     * Ist für den Lebenszyklus von Services ausgelegt
+     *
+     * Die Listener werden Registriert
+     */
     @Override
     public void onStartService() throws IOException, ClassNotFoundException {
         final File parent = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS);
@@ -65,6 +82,11 @@ public class StorageController implements StorageControllerInterface {
             parent.mkdir();
     }
 
+    /**
+     * Ist für den Lebenszyklus von Services ausgelegt
+     *
+     * Die Listener werden entfernt
+     */
     @Override
     public void onDestroyService() throws IOException {
         this.updateFiles(null);
@@ -77,6 +99,13 @@ public class StorageController implements StorageControllerInterface {
         this.updateFiles(track);
     }
 
+    /**
+     * Benennt Track um
+     * @param newName
+     * @param oldName
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     @Override
     public void renameFile(@NonNull final String newName, @NonNull final String oldName) throws IOException, ClassNotFoundException {
         final Track track = this.loadTrack(oldName);
@@ -94,6 +123,11 @@ public class StorageController implements StorageControllerInterface {
         return track;
     }
 
+    /**
+     * aktuellisiert log-datei für Auflistung aller Tracks
+     * @param track
+     * @throws IOException
+     */
     private void updateFiles(@NonNull final Track track) throws IOException {
         if (track != null) {
             final File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + StorageController.DIR_TRACKS + "/" + StorageController.TRACKS);

@@ -36,6 +36,7 @@ import de.hof_university.gpstracker.Model.radar.FriendsPositionModel;
 import de.hof_university.gpstracker.R;
 
 /**
+ * Verwaltet das Radar
  * Created by alex on 12.01.16.
  * GPSTracker
  */
@@ -53,6 +54,11 @@ public class RadarController implements RadarControllerInterface {
         this.configRadarView();
     }
 
+    /**
+     * Listener-methode, welche vom ConnectionController aufgerufen wird
+     * @param myPosition
+     * @param friendList
+     */
     @Override
     public void setListOfFriends(final Location myPosition, @NonNull final List<FriendsPositionModel> friendList) {
         this.clearRadar();
@@ -60,11 +66,19 @@ public class RadarController implements RadarControllerInterface {
         this.drawFriends(friendList);
     }
 
+    /**
+     * Gibt de zeichenen-Befehl an die Methode drawFriend
+     * @param friendList
+     */
     private void drawFriends(@NonNull final List<FriendsPositionModel> friendList) {
         for (final FriendsPositionModel friend : friendList)
             drawFriend(friend);
     }
 
+    /**
+     * Zeichnet den einzelnen Freund
+     * @param friend
+     */
     private void drawFriend(@NonNull final FriendsPositionModel friend) {
         //Toast.makeText(this.context, friend.getLocation().getLocation().toString(), Toast.LENGTH_LONG).show();
 
@@ -74,6 +88,10 @@ public class RadarController implements RadarControllerInterface {
         radarIsInvalidate();
     }
 
+    /**
+     * Verschiebt Radar auf aktuelle Position. Aktuell ein festgelegter Wert definiert
+     * @throws SecurityException
+     */
     private void showMyPosition() throws SecurityException {
         this.radarView.getController().setZoom(10);
         this.radarView.getController().setCenter(new GeoPoint(new Location(50.324759, 11.940344, new Date()).getLocation()));
@@ -111,10 +129,16 @@ public class RadarController implements RadarControllerInterface {
         radarIsInvalidate();
     }
 
+    /**
+     * Zeichnet das Radar neu
+     */
     private void radarIsInvalidate() {
         this.radarView.invalidate();
     }
 
+    /**
+     * Entfernt alle Overlays auf der Karte
+     */
     private void clearRadar() {
         this.radarView.getOverlays().clear();
 
@@ -127,6 +151,11 @@ public class RadarController implements RadarControllerInterface {
         this.radarView.invalidate();
     }
 
+    /**
+     * Lädt das Profilbild des eigenen Facebookbild
+     *
+     * Ist noch Fehleranfällig! Zusammenarbeit mit WP3 und WP5
+     */
     public void getProfileImage(){
         if (AccessToken.getCurrentAccessToken() != null){
             Profile profile = Profile.getCurrentProfile();
@@ -136,7 +165,9 @@ public class RadarController implements RadarControllerInterface {
         }
     }
 
-
+    /**
+     * Task für das Laden des Profilbildes
+     */
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
         @Override
