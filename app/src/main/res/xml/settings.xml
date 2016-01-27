@@ -5,16 +5,16 @@
         android:title="Radar">
 
         <SwitchPreference
+            android:defaultValue="false"
             android:key="radar_active"
-            android:title="Radar aktivieren"
-            android:defaultValue="false"/>
+            android:title="@string/activate_radar" />
 
         <ListPreference
-            android:key="radar_interval"
-            android:title="Aktualisierung"
-            android:summary="Interval für Radaraktualisierung"
             android:entries="@array/listentries"
-            android:entryValues="@array/listvalues"/>
+            android:entryValues="@array/listvalues"
+            android:key="radar_interval"
+            android:summary="@string/interval_rada"
+            android:title="@string/reload_radar" />
     </PreferenceCategory>
 
 </PreferenceScreen>         

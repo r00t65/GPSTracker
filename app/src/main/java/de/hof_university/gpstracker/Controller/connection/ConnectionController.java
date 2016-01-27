@@ -74,6 +74,10 @@ public class ConnectionController implements NotificationTrackListener{
     private Location location;
     private List<FriendsPositionModel> position;
 
+    // -----------------------
+    // Constructors
+    // ----------------------
+
     public ConnectionController(@NonNull final Context context , final RadarListener radarController){
         this.radarController = radarController;
         this.context = context;
@@ -96,6 +100,10 @@ public class ConnectionController implements NotificationTrackListener{
     public ConnectionController(String facebookId){
         this.facebookId = facebookId;
     }
+
+    // -------------------------------------------------
+    // Methode zum Abrufen der Positionen der Freunde
+    // -------------------------------------------------
 
     public void getWaypointsOfFriends()
     {
@@ -133,6 +141,9 @@ public class ConnectionController implements NotificationTrackListener{
 
     }
 
+    // ------------------------------------------------------
+    // Methoden für spätere Funktionen
+    // --------------------------------------------------
 
     public void newUser(){
         String json = "json={\"func\":\"newUser\", \"userId\"" + facebookId + "\"}";
@@ -160,6 +171,11 @@ public class ConnectionController implements NotificationTrackListener{
 
     }
 
+
+    // ----------------------------------------------------------------
+    // Methode zum hochladen der aktuellen Position des Benutzers
+    // ----------------------------------------------------------------
+
     @Override
     public void newPosition(@NonNull Location location) {
 
@@ -168,6 +184,12 @@ public class ConnectionController implements NotificationTrackListener{
 
         new HttpsAsyncTaskPosition().execute(SERVER_URL, json, "sendLastPosition");
     }
+
+
+    // -------------------------------------
+    // Methode zum hochladen eines Tracks
+    // -------------------------------------
+
 
     @Override
     public void trackFinish(@NonNull Track track) {
@@ -208,9 +230,18 @@ public class ConnectionController implements NotificationTrackListener{
 
     }
 
+    // ----------------------------------------------------------------
+    // Private Klasse für den asyncronen Up- und Download der Daten
+    // ----------------------------------------------------------------
+
     private class HttpsAsyncTaskPosition extends AsyncTask<String, Void, String>{
 
         private String action;
+
+
+        // ---------------------------------------
+        // Methode, zum Ausführen des AsyncTasks
+        // ---------------------------------------
 
         @Override
         protected String doInBackground(String... params) {
@@ -219,6 +250,11 @@ public class ConnectionController implements NotificationTrackListener{
             return receiveJsonData(params[0], params[1]);
 
         }
+
+
+        // ----------------------------------------------------------
+        // Methode, die nach dem Up- oder Download ausgeführt wird
+        // ----------------------------------------------------------
 
         @Override
         protected void onPostExecute(String s) {
@@ -236,6 +272,10 @@ public class ConnectionController implements NotificationTrackListener{
             }
 
         }
+
+        // ----------------------------------------
+        // Sellt die Verbindung zum Server her
+        // ----------------------------------------
 
         private String receiveJsonData(String urlString, String json) {
             String result = "";
@@ -327,6 +367,10 @@ public class ConnectionController implements NotificationTrackListener{
         }
 
 
+        // ----------------------------------------------
+        // Json Parser für die Positionen der Freunde
+        // ----------------------------------------------
+
         private void parsePosition(String json){
             position = new ArrayList<FriendsPositionModel>();
 
@@ -362,6 +406,11 @@ public class ConnectionController implements NotificationTrackListener{
         }
 
     }
+
+
+    // --------------------
+    // Getter und Setter
+    // --------------------
 
     public List<FriendsPositionModel> getPosition() {
         return position;
